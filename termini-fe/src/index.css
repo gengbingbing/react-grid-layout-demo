@@ -1,0 +1,187 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+
+  /* 亮色模式变量 */
+  --foreground-rgb: 30, 41, 59;
+  --background-rgb: 248, 250, 252;
+  --card-bg: 255, 255, 255;
+  --border-color: 226, 232, 240;
+  --header-bg: 255, 255, 255;
+  --panel-bg: 241, 245, 249;
+  --plugin-header-bg: 241, 245, 249;
+  --shadow-color: 0, 0, 0, 0.1;
+}
+
+/* 暗色模式变量 */
+.dark {
+  --foreground-rgb: 226, 232, 240;
+  --background-rgb: 17, 24, 39;
+  --card-bg: 30, 41, 59;
+  --border-color: 51, 65, 85;
+  --header-bg: 30, 41, 59;
+  --panel-bg: 17, 24, 39;
+  --plugin-header-bg: 30, 41, 59;
+  --shadow-color: 0, 0, 0, 0.3;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+body {
+  color: rgb(var(--foreground-rgb));
+  background-color: rgb(var(--background-rgb));
+}
+
+#root {
+  width: 100%;
+  height: 100%;
+}
+
+/* 全屏模式 */
+.fullscreen-mode {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 9999;
+  background-color: rgb(var(--background-rgb));
+}
+
+/* 全局样式类 */
+.bg-theme-card {
+  background-color: rgb(var(--card-bg));
+  box-shadow: 0 1px 3px rgba(var(--shadow-color));
+}
+
+.bg-theme-panel {
+  background-color: rgb(var(--panel-bg));
+}
+
+.border-theme {
+  border-color: rgb(var(--border-color));
+}
+
+.bg-theme-header {
+  background-color: rgb(var(--header-bg));
+  border-bottom: 1px solid rgb(var(--border-color));
+}
+
+.plugin-header {
+  background-color: rgb(var(--plugin-header-bg));
+  border-bottom: 1px solid rgb(var(--border-color));
+}
+
+.text-theme-primary {
+  @apply text-blue-600 dark:text-blue-400;
+}
+
+.btn-theme-primary {
+  @apply bg-blue-600 text-white hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 transition-colors duration-200;
+}
+
+.btn-theme-secondary {
+  @apply bg-gray-100 text-gray-700 hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-200 dark:hover:bg-gray-600 transition-colors duration-200;
+}
+
+/* 插件卡片样式 */
+.plugin-card {
+  @apply rounded-lg border border-theme bg-theme-card p-4 transition-all duration-200;
+  box-shadow: 0 2px 4px rgba(var(--shadow-color));
+}
+
+.dark .plugin-card {
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.25);
+}
+
+.plugin-card:hover {
+  @apply border-blue-400 dark:border-blue-500;
+  box-shadow: 0 4px 8px rgba(var(--shadow-color));
+}
+
+/* 插件容器样式 */
+.plugin-container {
+  @apply rounded-lg overflow-hidden bg-theme-card border border-theme;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.plugin-content {
+  flex: 1;
+  overflow: auto;
+  background-color: rgb(var(--card-bg));
+}
+
+/* 修复网格布局样式 */
+.react-grid-layout {
+  position: relative;
+  transition: height 200ms ease;
+  overflow-y: auto;
+}
+
+.react-grid-item {
+  transition: all 200ms ease;
+  transition-property: left, top, width, height;
+  border: 1px solid rgb(var(--border-color));
+  border-radius: 0.5rem;
+  overflow: hidden;
+  background-color: rgb(var(--card-bg));
+}
+
+.react-grid-item.resizing {
+  z-index: 1;
+  will-change: width, height;
+}
+
+.react-grid-item.react-draggable-dragging {
+  z-index: 3;
+  will-change: transform;
+}
+
+.react-grid-item.react-grid-placeholder {
+  background: rgba(0, 120, 240, 0.2);
+  border: 1px solid rgba(0, 120, 240, 0.5);
+  transition-duration: 100ms;
+  z-index: 2;
+  user-select: none;
+}
+
+/* 插件按钮区域相关样式 */
+.non-draggable {
+  pointer-events: auto !important;
+  z-index: 20 !important;
+}
+
+.non-draggable button {
+  pointer-events: auto !important;
+  position: relative;
+  z-index: 30 !important;
+}
+
+/* 确保拖拽区域样式正确 */
+.plugin-drag-handle {
+  cursor: move;
+  user-select: none;
+}
+
+/* 确保内容可以滚动 */
+.overflow-auto {
+  overflow: auto !important;
+}

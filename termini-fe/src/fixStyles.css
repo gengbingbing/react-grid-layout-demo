@@ -1,0 +1,41 @@
+/* 修复按钮样式问题 */
+.bg-primary {
+  background-color: #3b82f6 !important; /* 蓝色 */
+}
+
+.bg-primary-dark {
+  background-color: #2563eb !important; /* 深蓝色 */
+}
+
+/* 确保布局管理器菜单正确显示 */
+.layout-manager {
+  position: relative;
+  z-index: 50;
+}
+
+/* 修复悬浮效果 */
+.hover\:bg-primary-dark:hover {
+  background-color: #2563eb !important;
+}
+
+/* 修复圆角按钮 */
+.rounded-md {
+  border-radius: 0.375rem !important;
+}
+
+/* 确保文本颜色正确 */
+.text-white {
+  color: white !important;
+}
+
+/* 强制显示布局管理器下拉菜单 */
+.layout-dropdown {
+  display: block !important;
+  z-index: 999 !important;
+}
+
+/* 调整调试按钮样式 */
+button[title="查看布局存储信息"] {
+  background-color: #3b82f6 !important;
+  color: white !important;
+} 

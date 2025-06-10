@@ -1,0 +1,141 @@
+/* 标签容器拖拽和合并样式 - 加强版，适配明暗主题 */
+.tab-container-droppable {
+  transition: all 0.2s ease !important;
+  outline: 2px dashed rgba(56, 189, 248, 0.6) !important;
+  box-shadow: 0 0 15px rgba(56, 189, 248, 0.3) !important;
+  z-index: 10 !important;
+  position: relative !important;
+}
+
+.dark .tab-container-droppable {
+  outline: 2px dashed rgba(96, 165, 250, 0.6) !important;
+  box-shadow: 0 0 15px rgba(96, 165, 250, 0.3) !important;
+}
+
+.tab-container-droppable:hover {
+  outline: 3px dashed rgba(56, 189, 248, 0.8) !important;
+  box-shadow: 0 0 20px rgba(56, 189, 248, 0.4) !important;
+  transform: scale(1.01);
+}
+
+.dark .tab-container-droppable:hover {
+  outline: 3px dashed rgba(96, 165, 250, 0.8) !important;
+  box-shadow: 0 0 20px rgba(96, 165, 250, 0.4) !important;
+}
+
+.plugin-drag-over {
+  z-index: 20 !important;
+  transition: all 0.2s ease !important;
+  transform: scale(1.03) !important;
+  box-shadow: 0 0 25px rgba(56, 189, 248, 0.6) !important;
+  outline: 3px solid rgba(56, 189, 248, 0.8) !important;
+}
+
+.dark .plugin-drag-over {
+  box-shadow: 0 0 25px rgba(96, 165, 250, 0.6) !important;
+  outline: 3px solid rgba(96, 165, 250, 0.8) !important;
+}
+
+/* 强制启用标签容器拖拽 */
+[data-item-id^="tab-container-"] {
+  cursor: move !important;
+  user-select: none !important;
+  touch-action: none !important;
+  transition: all 0.2s ease !important;
+  position: relative !important;
+}
+
+[data-item-id^="tab-container-"]:hover {
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1) !important;
+}
+
+.dark [data-item-id^="tab-container-"]:hover {
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.1) !important;
+}
+
+/* 下拉菜单样式强化修复 */
+.tab-menu-dropdown {
+  display: block !important;
+  flex-direction: column !important;
+  position: absolute !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  z-index: 9999 !important;
+  pointer-events: auto !important;
+  width: 200px !important;
+  max-height: 300px !important;
+  overflow-y: auto !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15) !important;
+  transform-origin: top right !important;
+  animation: fadeInDropdown 0.2s ease-out forwards !important;
+  background-color: white !important;
+  border: 1px solid #e2e8f0 !important;
+  border-radius: 4px !important;
+}
+
+.dark .tab-menu-dropdown {
+  background-color: #1f2937 !important;
+  border-color: #4b5563 !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3) !important;
+}
+
+@keyframes fadeInDropdown {
+  from {
+    opacity: 0;
+    transform: scale(0.95) translateY(-5px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+/* 确保菜单显示在最顶层 */
+.space-y-1 {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 0.25rem !important;
+  width: 100% !important;
+}
+
+/* 增强拖拽时的视觉反馈 */
+body.dragging * {
+  cursor: grabbing !important;
+}
+
+.tab-drag-indicator {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: rgba(56, 189, 248, 0.9);
+  color: white;
+  padding: 10px 15px;
+  border-radius: 5px;
+  font-size: 16px;
+  font-weight: bold;
+  z-index: 9999;
+  pointer-events: none;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  animation: pulse 2s infinite;
+  white-space: nowrap;
+}
+
+@keyframes pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(56, 189, 248, 0.7);
+  }
+  70% {
+    box-shadow: 0 0 0 10px rgba(56, 189, 248, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(56, 189, 248, 0);
+  }
+}
+
+/* 用于防止拖拽的元素 */
+[data-no-drag="true"] {
+  pointer-events: auto !important;
+  position: relative !important;
+  z-index: 100 !important;
+} 
