@@ -1,0 +1,24 @@
+.HeaderPromoBanner {
+  background: var(--color-primary-dark);
+  padding: var(--spacing-5) var(--spacing-10);
+  padding-right: var(--spacing-16);
+  text-align: center;
+  position: relative;
+}
+
+.HeaderPromoBanner .cross-icon {
+  position: absolute;
+  right: var(--spacing-6);
+  top: 50%;
+  margin-top: -1.1rem;
+  width: 2.2rem;
+  height: 2.2rem;
+  cursor: pointer;
+  border-radius: var(--borderRadius-sm);
+  padding: 2px;
+  margin-left: var(--spacing-6);
+  flex-shrink: 0;
+}
+.HeaderPromoBanner .cross-icon:hover {
+  background: var(--color-hover);
+}

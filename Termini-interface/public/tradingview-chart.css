@@ -1,0 +1,81 @@
+.theme-dark:root {
+  --dark-main-bg: #16182e;
+  --color-blue-600: #2d42fc;
+  --tv-color-pane-background: var(--dark-main-bg);
+  --tv-color-platform-background: var(--dark-main-bg);
+  --tv-color-pane-background-secondary: var(--dark-main-bg);
+  --tv-color-toolbar-button-text-hover: var(--color-text-secondary);
+  --tv-color-toolbar-button-background-hover: var(--color-text-tertiary);
+  --tv-color-toolbar-button-text-active: var(--color-text-primary);
+  --tv-color-toolbar-toggle-button-background-active: var(--color-bg-sub);
+  --tv-color-toolbar-toggle-button-background-active-hover: var(--color-bg-main);
+  --tv-color-toolbar-button-background-expanded: var(--color-bg-main);
+
+  --tv-color-popup-background: #20243f;
+  --themed-color-bg-primary: #20243f;
+  --themed-color-properties-dialog-tab-bg: var(--color-primary);
+
+  --themed-color-properties-dialog-defaults-text: #b2b5be;
+  --tv-color-popup-element-background-hover: var(--color-bg-main);
+  --themed-color-item-row-bg-hover: var(--color-bg-main);
+  --themed-color-background-hover: var(--color-bg-main);
+  --tv-color-popup-element-text: var(--color-text-secondary);
+  --tv-color-toolbar-button-text:  var(--color-text-secondary);
+  --tv-color-toolbar-button-text-active-hover:  var(--color-text-primary);
+  --tv-toolbar-explicit-hover-margin: 0px;
+  --themed-color-common-tooltip-bg: #20243f;
+
+  --themed-color-container-fill-primary-accent: var(--color-primary);
+  --priceScaleModeButtons-background-activated: var(--color-primary);
+  --themed-color-background-selected: var(--color-primary);
+
+  --themed-color-background-special-secondary: var(--color-primary);
+}
+
+html.theme-dark button:not(:disabled),
+html.theme-dark [data-role="button"],
+html.theme-dark [data-role="list-item"],
+html.theme-dark [data-role="menuitem"] {
+  cursor: pointer;
+}
+
+html.theme-dark .chart-controls-bar {
+  display: none;
+  height: 0;
+}
+
+#header-toolbar-intervals button {
+  height: 26px;
+  border-radius: 4px;
+  margin: 0 1px;
+}
+
+#header-toolbar-intervals button:first-of-type {
+  margin-left: 8px;
+}
+#header-toolbar-intervals button[aria-checked="true"] {
+  background-color: #393e5e;
+  --tv-color-toolbar-button-background-hover: #393e5e;
+}
+
+[data-name="toolbar-drawing-toggle-button"][data-value="collapsed"] {
+  --tv-color-platform-background: var(--tv-color-toolbar-toggle-button-background-active);
+}
+
+[data-name="toolbar-drawing-toggle-button"][data-value="visible"] {
+  --tv-color-platform-background: var(--tv-color-toolbar-toggle-button-background-active);
+  --tv-color-pane-background: var(--tv-color-toolbar-toggle-button-background-active);
+  --themed-color-arrow-stroke: var(--dark-main-bg);
+}
+
+[data-name="toolbar-drawing-toggle-button"][data-value="collapsed"]:hover,
+[data-name="toolbar-drawing-toggle-button"][data-value="visible"]:hover {
+  --tv-color-toolbar-toggle-button-background-active-hover: #464a6e;
+  --tv-color-platform-background: #464a6e;
+  --tv-color-pane-background: #464a6e;
+}
+
+/* Hide tooltip tail */
+html.theme-dark .common-tooltip__ear-holder-EJBD96zX:after {
+  display: none;
+}

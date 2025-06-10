@@ -1,0 +1,985 @@
+msgid ""
+msgstr ""
+"POT-Creation-Date: 2022-08-06 13:30+0530\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: @lingui/cli\n"
+"Language: zh\n"
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: \n"
+"PO-Revision-Date: \n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Plural-Forms: \n"
+
+#: src/components/RatingToast/RatingToast.tsx
+msgid "Not likely"
+msgstr "不太可能"
+
+#: src/components/AddressDropdown/AddressDropdown.tsx
+msgid "Disconnect"
+msgstr "连线中断"
+
+#: src/components/ModalViews/RedirectModal.tsx
+msgid "Agree"
+msgstr "同意"
+
+#: src/pages/Aggregator/components/orders/DcaOrderHistory.tsx
+#: src/pages/Aggregator/components/orders/OpenDcaOrder.tsx
+#: src/pages/Aggregator/components/orders/OpenOrder.tsx
+#: src/pages/Aggregator/components/orders/OrderHistory.tsx
+#: src/pages/Aggregator/components/SwapBox.tsx
+#: src/pages/Aggregator/components/TokenListTable.tsx/index.tsx
+#: src/pages/Aggregator/components/Trending/index.tsx
+msgid "loading..."
+msgstr "加载中..."
+
+#: src/components/ToastifyDebug/ToastifyDebug.tsx
+msgid "Show error"
+msgstr "显示错误"
+
+#: src/pages/Aggregator/components/SwapBox.tsx
+msgid "To"
+msgstr "出售"
+
+#: src/lib/contracts/callContract.tsx
+msgid "View status."
+msgstr "查看状况"
+
+#: src/pages/Aggregator/components/orders/DcaOverView.tsx
+#: src/pages/Aggregator/components/SwapBox.tsx
+msgid "Orders"
+msgstr ""
+
+#: src/components/SettingsModal/SettingsModal.tsx
+msgid "The Max Network Fee is set to a higher value to handle potential increases in gas price during order execution. Any excess network fee will be refunded to your account when the order is executed."
+msgstr "最大网络费用设置为较高值，以处理订单执行期间可能出现的gas价格增长。执行订单时，任何多余的网络费用将退还到您的账户。"
+
+#: src/components/Header/AppHeaderLinks.tsx
+msgid "Stats"
+msgstr "数据统计"
+
+#: src/components/ModalViews/RedirectModal.tsx
+msgid "Don't show this message again for 30 days."
+msgstr "30天内不要再显示此信息"
+
+#: src/components/SettingsModal/SettingsModal.tsx
+msgid "Max Network Fee buffer below {0}% may result in failed orders."
+msgstr "网络费用缓冲低于 {0}% 可能导致订单失败。"
+
+#: src/pages/Aggregator/components/orders/DcaOrderHistory.tsx
+#: src/pages/Aggregator/components/orders/OpenDcaOrder.tsx
+msgid "Total Deposited"
+msgstr ""
+
+#: src/lib/wallets/connecters/binanceW3W/binanceWallet.ts
+msgid "Tap [Create Wallet] to start using your Web3 Wallet."
+msgstr "点击[创建钱包]开始使用您的Web3钱包"
+
+#: src/lib/wallets/connecters/binanceW3W/binanceWallet.ts
+msgid "Create or Import a Wallet"
+msgstr "创建或导入钱包"
+
+#: src/components/NetworkDropdown/NetworkDropdown.tsx
+msgid "Networks and Settings"
+msgstr "网络和设定"
+
+#: src/components/SettingsModal/SettingsModal.tsx
+msgid "Max network fee buffer precision is 0.01%"
+msgstr "最大网络费用缓冲精度为 0.01%"
+
+#: src/components/SearchInput/SearchInput.tsx
+msgid "Search Token"
+msgstr "搜索代币"
+
+#: src/components/BuyInputSection/BuyInputSection.tsx
+#: src/components/BuyInputSection/BuyInputSection.tsx
+#: src/components/InputSection/InputSection.jsx
+#: src/pages/Aggregator/components/SwapBox.tsx
+msgid "MAX"
+msgstr "最大值"
+
+#: src/components/SettingsModal/AggregatorSettingsModal.tsx
+#: src/components/SettingsModal/AggregatorSettingsModal.tsx
+#: src/components/SettingsModal/SettingsModal.tsx
+#: src/components/SettingsModal/SettingsModal.tsx
+msgid "Invalid slippage value"
+msgstr "无效的滑点值"
+
+#: src/components/SettingsModal/AggregatorSettingsModal.tsx
+#: src/components/SettingsModal/SettingsModal.tsx
+msgid "Slippage should be less than -5%"
+msgstr "滑点应小于 -5%"
+
+#: src/pages/Aggregator/components/orders/DcaTransactions.tsx
+msgid "Scheduled"
+msgstr ""
+
+#: src/pages/Aggregator/components/SwapBox.tsx
+msgid "Pay"
+msgstr ""
+
+#: src/pages/Aggregator/components/SwapBox.tsx
+msgid "Swap {0} to {1} failed."
+msgstr "从 {0} 兑换到 {1} 失败。"
+
+#: src/pages/Aggregator/components/orders/DcaOrderHistory.tsx
+#: src/pages/Aggregator/components/orders/OpenDcaOrder.tsx
+msgid "Transactions"
+msgstr ""
+
+#: src/pages/Aggregator/components/SwapBox.tsx
+msgid "Created limit order successful."
+msgstr "限价订单创建成功。"
+
+#: src/pages/Aggregator/components/SwapBox.tsx
+msgid "Order Execution Interval"
+msgstr ""
+
+#: src/pages/Aggregator/components/orders/DcaOrderHistory.tsx
+#: src/pages/Aggregator/components/orders/DcaTransactions.tsx
+#: src/pages/Aggregator/components/orders/OpenDcaOrder.tsx
+#: src/pages/Aggregator/components/orders/OpenOrder.tsx
+#: src/pages/Aggregator/components/orders/OrderHistory.tsx
+msgid "From/To"
+msgstr "从/到"
+
+#: src/pages/Aggregator/components/SwapBox.tsx
+msgid "Create Limit Order..."
+msgstr "创建限价订单..."
+
+#: src/components/ToastifyDebug/ToastifyDebug.tsx
+msgid "Copied"
+msgstr "已复制"
+
+#: src/components/SettingsModal/SettingsModal.tsx
+msgid "Invalid network fee buffer value"
+msgstr "无效的网络费用缓冲值"
+
+#: src/pages/Aggregator/components/SwapBox.tsx
+msgid "Create Limit Order"
+msgstr "创建限价订单"
+
+#: src/pages/Aggregator/components/SwapBox.tsx
+#: src/pages/Aggregator/components/SwapMarketInfo.tsx
+msgid "Best Price"
+msgstr "最优价格"
+
+#: src/pages/Aggregator/components/SwapLimitInfo.tsx
+msgid "Sell Order"
+msgstr "卖出订单"
+
+#: src/components/ToastifyDebug/ToastifyDebug.tsx
+msgid "Hide error"
+msgstr "隐藏错误"
+
+#: src/pages/Aggregator/components/orders/DcaOverView.tsx
+msgid "Created At"
+msgstr ""
+
+#: src/pages/PageNotFound/PageNotFound.jsx
+#: src/pages/PageNotFound/PageNotFound.jsx
+msgid "Page not found"
+msgstr "没有找到页面"
+
+#: src/components/ModalViews/RedirectModal.tsx
+msgid "The website is a community deployed and maintained instance of the open source Termini front end, hosted and served on the distributed, peer-to-peer <0>IPFS network</0>."
+msgstr "该网站是由社区部署和维护的开源Termini前端实例，托管并运行在分布式的点对点<0>IPFS网络</0>上。"
+
+#: src/pages/Aggregator/components/SwapLimitInfo.tsx
+msgid "Execution fee covers the gas cost for our keeper to execute your order. It ensures your transaction is processed reliably and on time."
+msgstr "执行费用涵盖了我们的守护者执行您订单的gas成本。它确保您的交易可靠且按时处理。"
+
+#: src/pages/Aggregator/components/TokenSelectModal.tsx
+msgid "Search"
+msgstr "搜索"
+
+#: src/pages/Aggregator/components/Trending/TrendCard.tsx
+msgid "Market Price"
+msgstr "市场价格"
+
+#: src/pages/Aggregator/components/SwapBox.tsx
+msgid "Increase your payment to at least 0.0001 tokens per order."
+msgstr ""
+
+#: src/components/Header/AppHeaderLinks.tsx
+msgid "Audit"
+msgstr "审计"
+
+#: src/pages/Aggregator/components/SwapTab.tsx
+msgid "Bots"
+msgstr ""
+
+#: src/components/Header/AppHeaderLinks.tsx
+msgid "Points"
+msgstr "积分"
+
+#: src/pages/Aggregator/components/orders/DcaOverView.tsx
+msgid "Every"
+msgstr ""
+
+#: src/lib/legacy.ts
+msgid "No open position, order cannot be executed unless a position is opened"
+msgstr "没有未结头寸，除非有头寸，否则订单不能被执行"
+
+#: src/components/SettingsModal/AggregatorSettingsModal.tsx
+msgid "Allowed Slippage below {defaultSippageDisplay}% may result in failed orders."
+msgstr "允许滑点低于 {defaultSippageDisplay}% 可能导致订单失败。"
+
+#: src/components/Header/AppHeaderUser.tsx
+#: src/pages/Aggregator/components/SwapBox.tsx
+msgid "Connect Wallet"
+msgstr "连接钱包"
+
+#: src/components/Header/AppHeaderLinks.tsx
+msgid "Launching"
+msgstr "启动"
+
+#: src/pages/Aggregator/components/SwapBox.tsx
+msgid "Approving {0}..."
+msgstr "正在批准 {0}..."
+
+#: src/components/StatsTooltip/ChainsStatsTooltipRow.tsx
+msgid "Total:"
+msgstr "总计："
+
+#: src/domain/tokens/approveTokens.tsx
+msgid "{0} Approved!"
+msgstr "{0} 通过!"
+
+#: src/lib/contracts/transactionErrors.tsx
+msgid "<0>Error submitting order.</0><1/><2>Signer address does not match receiver address.</2><3/><4>Please reload the page and try again.</4>"
+msgstr "<0>提交订单出错。</0><1/><2>签名地址与接收地址不匹配。</2><3/><4>请重新加载页面并重试。</4>"
+
+#: src/components/ApproveTokenButton/ApproveTokenButton.tsx
+msgid "Allow {0} to be spent"
+msgstr "允许使用 {0}"
+
+#: src/pages/Aggregator/components/orders/OpenDcaOrder.tsx
+msgid "Order stop failed!"
+msgstr ""
+
+#: src/lib/contracts/transactionErrors.tsx
+msgid "The mark price has changed, consider increasing your Allowed Slippage by clicking on the \"...\" icon next to your address."
+msgstr "标价已改变, 请考虑点击你地址旁的 \"...\" 图示来增加你的允许滑点"
+
+#: src/pages/Aggregator/components/orders/DcaOverView.tsx
+msgid "Orders Remaining"
+msgstr ""
+
+#: src/components/ModalViews/RedirectModal.tsx
+msgid "Launch App"
+msgstr "启动应用程序"
+
+#: src/pages/Aggregator/components/SwapMarketInfo.tsx
+msgid "Slippage tolerance"
+msgstr "滑点容忍度"
+
+#: src/lib/contracts/callContract.tsx
+#: src/lib/contracts/callContract.tsx
+#: src/lib/contracts/callContract.tsx
+msgid "Transaction sent."
+msgstr "交易送出"
+
+#: src/pages/Aggregator/components/SwapMarketInfo.tsx
+msgid "Minimum received"
+msgstr "最低收到数量"
+
+#: src/pages/Aggregator/components/SwapBox.tsx
+msgid "Number of Orders cannot be lower than 2."
+msgstr ""
+
+#: src/pages/Aggregator/components/SwapBox.tsx
+msgid "into"
+msgstr ""
+
+#: src/pages/Aggregator/components/SwapBox.tsx
+msgid "Split"
+msgstr ""
+
+#: src/pages/Aggregator/components/orders/DcaTransactions.tsx
+msgid "No transaction data"
+msgstr ""
+
+#: src/pages/Aggregator/components/SwapBox.tsx
+msgid "To minimise the predictability of your DCA strategy, orders are filled within a randomised padding of +/- 30 seconds."
+msgstr ""
+
+#: src/pages/Aggregator/components/orders/DcaTransactions.tsx
+msgid "Refund"
+msgstr ""
+
+#: src/components/Header/AppHeaderLinks.tsx
+msgid "Bridge"
+msgstr "跨链桥"
+
+#: src/components/Header/AppHeaderLinks.tsx
+msgid "Trade"
+msgstr ""
+
+#: src/pages/Aggregator/components/orders/DcaOrderHistory.tsx
+#: src/pages/Aggregator/components/orders/OpenDcaOrder.tsx
+msgid "OverView"
+msgstr ""
+
+#: src/pages/Aggregator/components/orders/DcaOverView.tsx
+msgid "Each Order Size"
+msgstr ""
+
+#: src/pages/Aggregator/components/orders/OrderEditor.tsx
+msgid "Update Order"
+msgstr "更新订单"
+
+#: src/pages/Aggregator/components/SwapBox.tsx
+msgid "This is the time period during which the order wilbe active. Please note that orders may becompleted earlier than this time, or remainunfilled based on the specified parameters."
+msgstr ""
+
+#: src/pages/Aggregator/components/SwapBox.tsx
+msgid "Trigger price is higher than market price"
+msgstr "触发价格高于市场价格"
+
+#: src/pages/Aggregator/components/SwapMarketInfo.tsx
+msgid "Network Fee"
+msgstr "网络费用"
+
+#: src/pages/Aggregator/components/SwapBox.tsx
+msgid "Swap {0} to {1} successful."
+msgstr "从 {0} 兑换到 {1} 成功。"
+
+#: src/pages/Aggregator/components/SwapBox.tsx
+msgid "Swap {0} to {1} submitted!"
+msgstr "从 {0} 兑换到 {1} 已提交！"
+
+#: src/components/NetworkDropdown/LanguagePopupHome.tsx
+#: src/components/NetworkDropdown/NetworkDropdown.tsx
+#: src/hooks/useLanguageModal.tsx
+msgid "Select Language"
+msgstr "选择语言"
+
+#: src/pages/Aggregator/components/TokenListTable.tsx/index.tsx
+#: src/pages/Aggregator/components/Trending/index.tsx
+msgid "No data here."
+msgstr "没有数据"
+
+#: src/lib/legacy.ts
+msgid "Order cannot be executed as the remaining position would be smaller than $5.00"
+msgstr "订单无法执行，剩余头寸小于5美元"
+
+#: src/pages/Aggregator/components/orders/DcaOrderHistory.tsx
+#: src/pages/Aggregator/components/orders/OpenDcaOrder.tsx
+msgid "Empty"
+msgstr ""
+
+#: src/pages/Aggregator/index.tsx
+msgid "All"
+msgstr "全部"
+
+#: src/pages/Aggregator/components/orders/OrderEditor.tsx
+msgid "Updating Order..."
+msgstr "正在更新订单..."
+
+#: src/components/NotifyModal/NotifyModal.tsx
+msgid "Get notify from Termini to stay on top of your trades, liquidation risk, and more."
+msgstr "从Termini获取通知，以保持对您的交易、清算风险等的关注。"
+
+#: src/components/SettingsModal/AggregatorSettingsModal.tsx
+msgid "Allowed Slippage"
+msgstr "允许滑点"
+
+#: src/pages/Aggregator/components/orders/OrderEditor.tsx
+msgid "Order update failed."
+msgstr "订单更新失败。"
+
+#: src/pages/Aggregator/components/orders/DcaOrderHistory.tsx
+#: src/pages/Aggregator/components/orders/OpenDcaOrder.tsx
+msgid "Stopped"
+msgstr ""
+
+#: src/pages/Aggregator/components/SwapBox.tsx
+msgid "Waiting for Approval"
+msgstr "等待批准"
+
+#: src/pages/Aggregator/components/SwapLimitInfo.tsx
+msgid "Platform Fee"
+msgstr "平台费用"
+
+#: src/components/NetworkDropdown/NetworkDropdown.tsx
+msgid "More Options"
+msgstr "更多选项"
+
+#: src/pages/Aggregator/components/orders/OpenOrder.tsx
+msgid "Your order will only execute if the price reaches a level where your desired token amount can be fully swapped. This may differ from the displayed market price due to liquidity conditions."
+msgstr "只有当价格达到您所需代币数量可以完全兑换的水平时，您的订单才会执行。由于流动性条件，这可能与显示的市场价格不同。"
+
+#: src/components/AddressDropdown/AddressDropdown.tsx
+msgid "View in Explorer"
+msgstr "在浏览器中查看"
+
+#: src/lib/wallets/connecters/binanceW3W/binanceWallet.ts
+msgid "After you scan, a connection prompt will appear for you to connect your wallet."
+msgstr "扫描后，将出现连接提示，您可以连接您的钱包"
+
+#: src/pages/Aggregator/components/SwapMarketInfo.tsx
+msgid "Fee"
+msgstr "费用"
+
+#: src/domain/tokens/approveTokens.tsx
+msgid "Approval failed"
+msgstr "核准失败"
+
+#: src/pages/Aggregator/components/orders/OpenOrder.tsx
+msgid "Order cancel submitted!"
+msgstr "订单取消已提交！"
+
+#: src/pages/Aggregator/components/SwapLimitInfo.tsx
+msgid "To Buy"
+msgstr "购买"
+
+#: src/components/Header/AppHeaderLinks.tsx
+msgid "Earn"
+msgstr ""
+
+#: src/pages/Aggregator/components/SwapBox.tsx
+msgid "Unwrap"
+msgstr "解包"
+
+#: src/context/PendingTxnsContext/PendingTxnsContext.tsx
+msgid "Txn failed. <0>View</0>."
+msgstr "交易失败。<0>查看</0>。"
+
+#: src/pages/Aggregator/components/TokenSelectModal.tsx
+msgid "Select a token"
+msgstr "选择代币"
+
+#: src/components/SettingsModal/AggregatorSettingsModal.tsx
+#: src/components/SettingsModal/SettingsModal.tsx
+msgid "Transaction deadline"
+msgstr "交易截止时间"
+
+#: src/lib/wallets/connecters/binanceW3W/binanceWallet.ts
+msgid "Log in to your Binance app and tap [Wallets]. Go to [Web3]."
+msgstr "登录到您的币安应用程序并点击[钱包]。转到[Web3]。"
+
+#: src/pages/Aggregator/index.tsx
+msgid "Open Orders {0}"
+msgstr "未完成订单 {0}"
+
+#: src/components/Header/AppHeaderLinks.tsx
+msgid "Docs"
+msgstr "文档"
+
+#: src/components/AddressDropdown/AddressDropdown.tsx
+msgid "Address copied to your clipboard"
+msgstr "地址已复制到剪贴板"
+
+#: src/components/Header/AppHeaderLinks.tsx
+#: src/components/NetworkDropdown/NetworkDropdown.tsx
+#: src/components/NetworkDropdown/NetworkDropdown.tsx
+#: src/components/SettingsModal/SettingsModal.tsx
+msgid "Settings"
+msgstr "设置"
+
+#: src/pages/Aggregator/components/SwapTab.tsx
+msgid "Coming Soon"
+msgstr "即将推出"
+
+#: src/components/NetworkDropdown/NetworkDropdown.tsx
+#: src/components/NetworkDropdown/NetworkDropdown.tsx
+msgid "Networks"
+msgstr "网络"
+
+#: src/pages/Aggregator/components/orders/OpenOrder.tsx
+msgid "Order cancel successfully!"
+msgstr "订单取消成功！"
+
+#: src/lib/legacy.ts
+msgid "Order cannot be executed as it would reduce the position's leverage below 1"
+msgstr "订单无法被执行，这将使头寸的杠杆率低于1"
+
+#: src/components/SettingsModal/AggregatorSettingsModal.tsx
+#: src/components/SettingsModal/SettingsModal.tsx
+msgid "Max slippage precision is -0.01%"
+msgstr "最大滑点精度为 -0.01%"
+
+#: src/pages/Aggregator/index.tsx
+msgid "Favorites"
+msgstr "收藏夹"
+
+#: src/pages/Aggregator/components/orders/OpenDcaOrder.tsx
+msgid "Stop and Withdraw"
+msgstr ""
+
+#: src/pages/Aggregator/components/orders/DcaOverView.tsx
+msgid "Average Price"
+msgstr ""
+
+#: src/pages/Aggregator/components/SwapTab.tsx
+#: src/pages/Aggregator/components/SwapTab.tsx
+msgid "Beta"
+msgstr "Beta"
+
+#: src/components/SettingsModal/SettingsModal.tsx
+msgid "Max Network Fee Buffer"
+msgstr "最大网络费用缓冲"
+
+#: src/pages/Aggregator/components/orders/OrderEditor.tsx
+msgid "Order updated!"
+msgstr "订单已更新！"
+
+#: src/lib/contracts/callContract.tsx
+msgid "Transaction completed!"
+msgstr "交易完成!"
+
+#: src/lib/legacy.ts
+msgid "Decentralized Perpetual Exchange | Termini"
+msgstr "去中心化永续交易所 | Termini"
+
+#: src/components/Header/AppHeaderLinks.tsx
+msgid "Referrals"
+msgstr "推荐"
+
+#: src/pages/Aggregator/components/SwapBox.tsx
+msgid "Create DCA Order..."
+msgstr ""
+
+#: src/App/MainRoutes.tsx
+#: src/pages/Aggregator/components/DexscreenerFrameKline.tsx
+msgid "Loading..."
+msgstr "加载中..."
+
+#: src/components/Header/AppHeaderLinks.tsx
+msgid "Trades"
+msgstr "交易"
+
+#: src/pages/Aggregator/components/SwapBox.tsx
+msgid "Please enter an interval above 0."
+msgstr ""
+
+#: src/pages/Aggregator/components/TokenListTable.tsx/index.tsx
+msgid "Price"
+msgstr "价格"
+
+#: src/pages/Aggregator/components/SwapBox.tsx
+msgid "Incorrect Network"
+msgstr "网络错误"
+
+#: src/pages/Aggregator/components/SwapBox.tsx
+msgid "Unwrap {0}..."
+msgstr "解包 {0}..."
+
+#: src/pages/Aggregator/components/orders/OpenOrder.tsx
+#: src/pages/Aggregator/components/SwapLimitInfo.tsx
+msgid "Expiry"
+msgstr "到期时间"
+
+#: src/pages/Aggregator/components/orders/OpenDcaOrder.tsx
+msgid "Order stop submitted!"
+msgstr ""
+
+#: src/domain/tokens/approveTokens.tsx
+msgid "Approval submitted! <0>View status.</0>"
+msgstr "核准已提交！<0>查看交易状态</0>"
+
+#: src/pages/Aggregator/components/orders/DcaOverView.tsx
+msgid "Next Order At"
+msgstr ""
+
+#: src/pages/Aggregator/components/SwapBox.tsx
+msgid "orders to buy"
+msgstr ""
+
+#: src/components/RatingToast/RatingToast.tsx
+msgid "How likely are you to recommend our service to a friend or colleague?"
+msgstr "您有多大可能向朋友或同事推荐我们的服务？"
+
+#: src/pages/Aggregator/components/orders/OpenOrder.tsx
+msgid "Cancel"
+msgstr "取消"
+
+#: src/pages/Aggregator/components/SwapBox.tsx
+msgid "Insufficient liquidity"
+msgstr "流动性不足"
+
+#: src/pages/Aggregator/components/SwapBox.tsx
+msgid "order"
+msgstr ""
+
+#: src/components/Header/AppHeaderLinks.tsx
+msgid "Farms"
+msgstr "农场"
+
+#: src/lib/wallets/connecters/binanceW3W/binanceWallet.ts
+msgid "Open Binance app"
+msgstr "打开币安应用"
+
+#: src/pages/Aggregator/components/orders/OpenOrder.tsx
+#: src/pages/Aggregator/components/orders/OpenOrder.tsx
+msgid "Edit"
+msgstr "编辑"
+
+#: src/pages/Aggregator/components/SwapBox.tsx
+msgid "From"
+msgstr "购买"
+
+#: src/pages/Aggregator/components/SwapBox.tsx
+msgid "Wrap {0}..."
+msgstr "包装 {0}..."
+
+#: src/components/Header/AppHeaderLinks.tsx
+msgid "Perp Pools"
+msgstr "永续合约池"
+
+#: src/pages/Aggregator/components/SwapLimitInfo.tsx
+msgid "Maximum available Orders:"
+msgstr ""
+
+#: src/pages/Aggregator/components/SwapBox.tsx
+msgid "Approve {0}"
+msgstr "批准 {0}"
+
+#: src/pages/Aggregator/components/orders/OrderEditor.tsx
+msgid "Limit price is higher than market price"
+msgstr "限价高于市场价格"
+
+#: src/pages/Aggregator/components/SwapBox.tsx
+#: src/pages/Aggregator/components/TokenSelectModal.tsx
+msgid "Balance"
+msgstr "余额"
+
+#: src/components/Header/AppHeaderLinks.tsx
+msgid "Swap Pools"
+msgstr "交换池"
+
+#: src/pages/Aggregator/components/SwapBox.tsx
+msgid "Limit order submitted!"
+msgstr "限价订单已提交！"
+
+#: src/pages/Aggregator/components/SwapBox.tsx
+msgid "Wrap"
+msgstr "包装"
+
+#: src/components/Header/AppHeaderUser.tsx
+msgid "Connect"
+msgstr "连接"
+
+#: src/components/ModalViews/RedirectModal.tsx
+msgid "By clicking Agree you accept the <0>T&Cs</0> and <1>Referral T&Cs</1>.<2/><3/>"
+msgstr "点击同意即表示您接受<0>条款和条件</0>以及<1>推荐条款和条件</1>。<2/><3/>"
+
+#: src/lib/wallets/connecters/binanceW3W/binanceWallet.ts
+msgid "Scan the QR code"
+msgstr "扫描二维码"
+
+#: src/components/SettingsModal/SettingsModal.tsx
+msgid "Show leverage slider"
+msgstr "显示杠杆滑块"
+
+#: src/pages/Aggregator/components/orders/OrderEditor.tsx
+msgid "Order update submitted!"
+msgstr "订单更新已提交！"
+
+#: src/pages/Aggregator/index.tsx
+msgid "My Transactions"
+msgstr "我的交易"
+
+#: src/pages/Aggregator/components/TokenSelectModal.tsx
+msgid "Token Name"
+msgstr "代币名称"
+
+#: src/context/PendingTxnsContext/PendingTxnsContext.tsx
+#: src/lib/contracts/notifications.tsx
+#: src/lib/contracts/notifications.tsx
+msgid "View"
+msgstr "浏览"
+
+#: src/domain/tokens/approveTokens.tsx
+msgid "There is not enough {0} in your account on {networkName} to send this transaction."
+msgstr "您在 {networkName} 上的账户中没有足够的 {0} 来发送此交易。"
+
+#: src/components/AddressView/AddressView.tsx
+msgid "You"
+msgstr "您"
+
+#: src/pages/Aggregator/components/SwapBox.tsx
+msgid "Receive"
+msgstr ""
+
+#: src/pages/Aggregator/components/SwapLimitInfo.tsx
+msgid "Execution Fee"
+msgstr "执行费用"
+
+#: src/components/Header/AppHeaderLinks.tsx
+msgid "Pools"
+msgstr "流动性池"
+
+#: src/components/Header/AppHeaderLinks.tsx
+#: src/pages/Aggregator/index.tsx
+msgid "Meme"
+msgstr "模因币"
+
+#: src/components/NotifyModal/NotifyModal.tsx
+msgid "Termini Notify"
+msgstr "Termini 通知"
+
+#: src/components/ToastifyDebug/ToastifyDebug.tsx
+msgid "Copy error"
+msgstr "复制错误"
+
+#: src/pages/Aggregator/components/SwapBox.tsx
+msgid "Insufficient {0} balance"
+msgstr "{0} 余额不足"
+
+#: src/pages/Aggregator/components/SwapBox.tsx
+msgid "every"
+msgstr ""
+
+#: src/components/Common/SEO.tsx
+msgid "Termini | Native One-stop trading Platform build on Soneium"
+msgstr "Termini | 基于Soneium构建的原生一站式交易平台"
+
+#: src/pages/Aggregator/components/orders/OrderEditor.tsx
+msgid "Edit order"
+msgstr "编辑订单"
+
+#: src/pages/Aggregator/components/orders/DcaTransactions.tsx
+msgid "Date"
+msgstr ""
+
+#: src/pages/Aggregator/components/orders/OpenOrder.tsx
+#: src/pages/Aggregator/components/orders/OrderHistory.tsx
+msgid "Trigger Price"
+msgstr "触发价格"
+
+#: src/pages/Aggregator/components/orders/DcaOrderHistory.tsx
+#: src/pages/Aggregator/components/orders/OpenDcaOrder.tsx
+#: src/pages/Aggregator/components/orders/OpenOrder.tsx
+#: src/pages/Aggregator/components/orders/OrderHistory.tsx
+msgid "Total Filled"
+msgstr "已成交总量"
+
+#: src/pages/Aggregator/components/orders/DcaOverView.tsx
+msgid "Estimated End Date"
+msgstr ""
+
+#: src/pages/Aggregator/index.tsx
+msgid "Trends"
+msgstr "趋势"
+
+#: src/pages/Aggregator/components/Trending/TrendCard.tsx
+msgid "The best route offers the maximum theoretical save."
+msgstr "最佳路径提供理论上的最大节省。"
+
+#: src/pages/Aggregator/components/SwapLimitInfo.tsx
+msgid "Current Orders:"
+msgstr ""
+
+#: src/pages/Aggregator/components/SwapBox.tsx
+msgid "Created DCA order successful."
+msgstr ""
+
+#: src/pages/Aggregator/components/orders/DcaOverView.tsx
+msgid "{0} Withdrawn"
+msgstr ""
+
+#: src/pages/Aggregator/components/SwapBox.tsx
+msgid "Smart Route"
+msgstr "智能路径"
+
+#: src/pages/Aggregator/components/SwapBox.tsx
+msgid "Create DCA Order"
+msgstr ""
+
+#: src/pages/Aggregator/components/SwapBox.tsx
+msgid "Swap {0}..."
+msgstr "兑换 {0}..."
+
+#: src/pages/Aggregator/components/SwapBox.tsx
+msgid "Number of Orders cannot be higher than {0}."
+msgstr ""
+
+#: src/lib/contracts/transactionErrors.tsx
+msgid "<0>Your wallet is not connected to {0}.</0><1/><2>Switch to {1}</2>"
+msgstr "<0>您的钱包未连接到 {0}。</0><1/><2>切换到 {1}</2>"
+
+#: src/lib/contracts/transactionErrors.tsx
+msgid "Transaction was cancelled."
+msgstr "交易已取消"
+
+#: src/pages/Aggregator/components/orders/OpenOrder.tsx
+msgid "Order cancel failed!"
+msgstr "订单取消失败！"
+
+#: src/lib/legacy.ts
+msgid "Order size is bigger than position, will only be executable if position increases"
+msgstr "订单规模大于头寸，只有在头寸增加的情况下才会执行"
+
+#: src/pages/Aggregator/components/orders/DcaOrderHistory.tsx
+#: src/pages/Aggregator/components/orders/DcaTransactions.tsx
+#: src/pages/Aggregator/components/orders/OpenDcaOrder.tsx
+#: src/pages/Aggregator/components/orders/OrderHistory.tsx
+msgid "Completed"
+msgstr "已完成"
+
+#: src/pages/Aggregator/components/SwapBox.tsx
+#: src/pages/Aggregator/components/SwapBox.tsx
+msgid "Orders Full"
+msgstr "订单已满"
+
+#: src/pages/Aggregator/components/SwapMarketInfo.tsx
+msgid "Route"
+msgstr "路径"
+
+#: src/pages/Aggregator/components/orders/OrderEditor.tsx
+#: src/pages/Aggregator/components/orders/OrderEditor.tsx
+msgid "Enter new Price"
+msgstr "输入新价格"
+
+#: src/components/Common/SEO.tsx
+msgid "One-stop trading Platform on @soneium, offering AMM, Perp, AI Agent launch, and Meme Launch."
+msgstr "基于 @soneium 的一站式交易平台，提供 AMM、永续合约、AI 代理发布和 Meme 发布。"
+
+#: src/pages/Aggregator/components/orders/DcaOrderHistory.tsx
+#: src/pages/Aggregator/components/orders/OpenDcaOrder.tsx
+#: src/pages/Aggregator/components/orders/OpenOrder.tsx
+#: src/pages/Aggregator/components/orders/OrderHistory.tsx
+msgid "No order data here."
+msgstr "这里没有订单数据。"
+
+#: src/pages/Aggregator/components/TokenListTable.tsx/index.tsx
+msgid "Total Liquidity"
+msgstr "总流动性"
+
+#: src/components/NotifyModal/NotifyModal.tsx
+msgid "Discover Termini Alerts"
+msgstr "探索 Termini 提醒功能"
+
+#: src/pages/Aggregator/components/SwapBox.tsx
+msgid "DCA order submitted!"
+msgstr ""
+
+#: src/components/Header/AppHeaderLinks.tsx
+msgid "Leaderboard"
+msgstr "排行榜"
+
+#: src/pages/Aggregator/components/SwapBox.tsx
+msgid "Create limit order failed."
+msgstr "创建限价订单失败。"
+
+#: src/pages/Aggregator/components/SwapBox.tsx
+msgid "Enter the amount"
+msgstr ""
+
+#: src/components/SettingsModal/AggregatorSettingsModal.tsx
+#: src/components/SettingsModal/SettingsModal.tsx
+msgid "Save"
+msgstr "保存"
+
+#: src/pages/Aggregator/components/SwapBox.tsx
+msgid "Create DCA order failed."
+msgstr ""
+
+#: src/pages/PageNotFound/PageNotFound.jsx
+msgid "<0>Return to </0><1>Homepage</1>"
+msgstr "<0>返回</0><1>首页</1>"
+
+#: src/components/SettingsModal/AggregatorSettingsModal.tsx
+msgid "Aggregator Settings"
+msgstr "聚合器设置"
+
+#: src/pages/Aggregator/components/SwapLimitInfo.tsx
+msgid "Available Orders"
+msgstr ""
+
+#: src/pages/Aggregator/components/Trending/TrendCard.tsx
+msgid "Max Save"
+msgstr "最大节省"
+
+#: src/lib/contracts/transactionErrors.tsx
+msgid "Transaction failed"
+msgstr "交易失败"
+
+#: src/pages/Aggregator/components/SwapLimitInfo.tsx
+msgid "Buy {0} at Rate"
+msgstr "以价格购买 {0}"
+
+#: src/components/SettingsModal/SettingsModal.tsx
+msgid "Display PNL after fees"
+msgstr "显示扣除费用后的盈亏"
+
+#: src/pages/Aggregator/components/orders/DcaTransactions.tsx
+#: src/pages/Aggregator/components/orders/OrderHistory.tsx
+msgid "Status"
+msgstr "状态"
+
+#: src/components/SettingsModal/SettingsModal.tsx
+msgid "Include PNL in leverage display"
+msgstr "在杠杆显示中包含盈亏"
+
+#: src/lib/contracts/transactionErrors.tsx
+msgid "Transaction failed due to RPC error.<0/><1/>Please try changing the RPC url in your wallet settings with the help of <2>chainlist.org</2>."
+msgstr "由于RPC错误，交易失败。<0/><1/>请尝试在钱包设置中更改RPC网址，可参考<2>chainlist.org</2>获取帮助。"
+
+#: src/pages/Aggregator/components/orders/index.tsx
+#: src/pages/Aggregator/components/SwapTab.tsx
+msgid "DCA"
+msgstr "DCA"
+
+#: src/pages/Aggregator/components/orders/OrderHistory.tsx
+msgid "Created/Executed"
+msgstr "创建/执行时间"
+
+#: src/pages/Aggregator/components/orders/DcaTransactions.tsx
+msgid "Execution Price"
+msgstr ""
+
+#: src/pages/Aggregator/components/orders/DcaOverView.tsx
+msgid "DCA {0} Balance"
+msgstr ""
+
+#: src/pages/Aggregator/components/SwapBox.tsx
+#: src/pages/Aggregator/components/SwapTab.tsx
+msgid "Swap"
+msgstr "兑换"
+
+#: src/components/Header/AppHeaderLinks.tsx
+#: src/components/NetworkDropdown/NetworkDropdown.tsx
+msgid "Language"
+msgstr "语言"
+
+#: src/pages/Aggregator/components/orders/OpenDcaOrder.tsx
+msgid "Order stop successfully!"
+msgstr ""
+
+#: src/pages/Aggregator/index.tsx
+msgid "Order History"
+msgstr "订单历史"
+
+#: src/pages/Aggregator/components/SwapBox.tsx
+msgid "execute"
+msgstr ""
+
+#: src/components/RatingToast/RatingToast.tsx
+msgid "Very likely"
+msgstr "非常可能"
+
+#: src/components/ModalViews/RedirectModal.tsx
+msgid "You are leaving SONEFI.xyz and will be redirected to a third party, independent website."
+msgstr "您正在离开 SONEFI.xyz，将被重定向到第三方独立网站。"
+
+#: src/pages/Aggregator/components/orders/index.tsx
+#: src/pages/Aggregator/components/SwapTab.tsx
+msgid "Limit"
+msgstr "限价"
+
+#: src/lib/contracts/transactionErrors.tsx
+msgid "There is not enough {0} in your account on {1} to send this transaction."
+msgstr "您在 {1} 上的账户中没有足够的 {0} 来发送此交易。"
+
+#: src/domain/tokens/approveTokens.tsx
+msgid "Approval was cancelled"
+msgstr "核准已被取消"
+
+#: src/components/AddressDropdown/AddressDropdown.tsx
+msgid "Copy Address"
+msgstr "复制地址"

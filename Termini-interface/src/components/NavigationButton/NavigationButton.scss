@@ -1,0 +1,57 @@
+.NavigationButton {
+  display: flex;
+  overflow: hidden;
+  border-radius: var(--borderRadius-sm);
+  min-height: 30px;
+
+  &.clickable {
+    user-select: none;
+    cursor: pointer;
+  }
+
+  &-button {
+    display: flex;
+    align-items: center;
+    flex: 1;
+
+    background-color: var(--color-bg-sub);
+    .clickable &:not([disabled]):hover {
+      background: var(--color-hover);
+    }
+
+    .clickable &:not([disabled]):active {
+      background: var(--color-active);
+    }
+  }
+
+  &-button-text {
+    flex: 1;
+    color: var(--color-text-primary);
+    font-size: var(--fontSize-sm);
+    padding: var(--spacing-3) var(--spacing-4);
+  }
+
+  &-button-arrow {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 var(--spacing-3);
+  }
+
+  &-close {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 var(--spacing-3);
+    cursor: pointer;
+
+    background-color: var(--color-bg-sub);
+    &:not([disabled]):hover {
+      background: var(--color-hover);
+    }
+
+    &:not([disabled]):active {
+      background: var(--color-active);
+    }
+  }
+}

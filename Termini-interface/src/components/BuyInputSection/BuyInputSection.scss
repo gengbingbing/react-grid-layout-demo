@@ -1,0 +1,77 @@
+.buy-input {
+  .buy-input-top-row {
+    display: inline-flex;
+    justify-content: space-between;
+    font-size: var(--fontSize-base);
+  }
+  .InputSection-static-input {
+    font-size: var(--fontSize-lg);
+  }
+
+  &.Exchange-swap-section {
+    min-height: 9.2rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+
+    .Exchange-swap-input-container {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .Exchange-swap-max {
+      position: unset;
+      color: var(--color-text-primary);
+      font-size: var(--fontSize-base);
+      line-height: var(--lineHeight-normal);
+    }
+
+    .PositionEditor-token-symbol {
+      display: flex;
+      align-items: center;
+      margin-left: var(--spacing-4);
+      gap: var(--spacing-2);
+    }
+
+    &-top {
+      padding-bottom: 0;
+    }
+
+    .selected-token {
+      display: flex;
+      align-items: center;
+    }
+  }
+}
+
+.PercentSelector {
+  appearance: none;
+  padding: 0;
+  margin: 0;
+  list-style: none;
+
+  position: absolute;
+  top: calc(100% + var(--spacing-2));
+  left: -14px;
+
+  display: flex;
+  border-radius: var(--borderRadius-sm);
+  background-color: var(--color-bg-sub);
+
+  box-shadow: 0px 4px 14px 0px rgba(0, 0, 0, 0.25);
+  backdrop-filter: blur(7px);
+
+  .PercentSelector-item {
+    padding: var(--spacing-2) var(--spacing-3);
+    cursor: pointer;
+    border-radius: var(--borderRadius-sm);
+    width: 4.5rem;
+    text-align: center;
+    font-size: var(--fontSize-sm);
+
+    &:hover {
+      background: var(--color-hover);
+    }
+  }
+}

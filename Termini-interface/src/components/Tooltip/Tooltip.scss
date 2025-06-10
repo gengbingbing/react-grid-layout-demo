@@ -1,0 +1,223 @@
+.Tooltip {
+  position: relative;
+}
+
+.Tooltip-popup {
+  font-size: var(--fontSize-sm);
+  font-weight: normal;
+  line-height: var(--lineHeight-tight);
+  position: absolute;
+  border-radius: var(--borderRadius-md);
+  padding: var(--spacing-4);
+  letter-spacing: 0.4px;
+  width: max-content;
+  min-width: 28rem;
+  max-width: 80rem;
+  text-align: left;
+  white-space: normal;
+  background: var(--color-bg-tips);
+  box-shadow: var(--shadow-sm);
+  backdrop-filter: blur(10px);
+  z-index: 10000;
+  color: #A3A3A3;
+
+  a {
+    color: var(--color-text-secondary);
+    text-decoration: underline;
+  }
+
+  // &::after {
+  //   content: "";
+  //   height: 8px;
+  //   width: 8px;
+  //   transform: rotate(45deg);
+  //   position: absolute;
+  //   display: none;
+  // }
+}
+
+.Tooltip.nowrap .Tooltip-popup {
+  min-width: auto;
+  white-space: nowrap;
+}
+
+.Tooltip-popup :first-child {
+  margin-top: 0;
+}
+
+.Tooltip-popup :last-child {
+  margin-bottom: 0;
+}
+
+.Tooltip-popup.left-bottom {
+  // left: 0;
+  // transform: translateY(0.8rem);
+  // top: 100%;
+
+  &::after {
+    display: block;
+    top: -4px;
+    background: var(--color-bg-main);
+  }
+}
+
+// .Tooltip-popup.right-bottom {
+//   right: 0;
+//   transform: translateY(0.8rem);
+//   top: 100%;
+
+//   &::after {
+//     display: block;
+//     top: -4px;
+//     right: 8px;
+//     background: var(--color-bg-main);
+//   }
+// }
+
+// .Tooltip-popup.right-top {
+//   right: 0;
+//   transform: translateY(-0.8rem);
+//   bottom: 100%;
+
+//   &::after {
+//     display: block;
+//     bottom: -4px;
+//     right: 8px;
+//     background: var(--color-bg-main);
+//   }
+// }
+// .Tooltip-popup.right {
+//   left: 3rem;
+//   transform: translateY(50%);
+//   bottom: 100%;
+
+//   &::after {
+//     display: block;
+//     left: -4px;
+//     top: 50%;
+//     background: var(--color-bg-main);
+//   }
+// }
+
+// .Tooltip-popup.left-top {
+//   left: 0;
+//   transform: translateY(-0.8rem);
+//   bottom: 100%;
+
+//   &::after {
+//     display: block;
+//     bottom: -4px;
+//     left: 8px;
+//     background: var(--color-bg-main);
+//   }
+// }
+
+// .Tooltip-popup.center-bottom {
+//   left: 50%;
+//   transform: translateY(0.8rem) translateX(-50%);
+//   top: 100%;
+
+//   &::after {
+//     display: block;
+//     background: var(--color-bg-main);
+//     left: 50%;
+//     top: -4px;
+//   }
+// }
+
+// .Tooltip-popup.center-top {
+//   left: 50%;
+//   transform: translateY(-0.8rem) translateX(-50%);
+//   bottom: 100%;
+
+//   &::after {
+//     display: block;
+//     background: var(--color-bg-main);
+//     left: 50%;
+//     bottom: -4px;
+//   }
+// }
+
+.Tooltip-handle {
+  z-index: 1;
+  cursor: help;
+  position: relative;
+  display: inline-flex;
+  text-decoration: underline;
+  text-decoration-style: dashed;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 2px;
+  text-decoration-color: rgba(255, 255, 255, 0.6);
+  align-items: center;
+}
+
+.Tooltip-handle.plain:after {
+  border-bottom: none;
+}
+
+.Tooltip-error {
+  .Tooltip-handle {
+    color: var(--color-error);
+    text-decoration-color: var(--color-error);
+  }
+}
+
+.Tooltip.no-underline .Tooltip-handle::after {
+  content: unset;
+}
+
+.Tooltip-divider {
+  height: 1px;
+  background-color: var(--color-border);
+  margin: var(--spacing-2) 0;
+}
+
+.Tooltip-row {
+  display: grid;
+  margin: 0 0 var(--spacing-2) 0;
+  grid-template-columns: 1fr auto;
+}
+
+.Tooltip-row > span.label {
+  margin-right: var(--spacing-2);
+}
+
+.Tooltip-row-values {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.Tooltip-row-values li:not(:first-child) {
+  padding: var(--spacing-1) 0 0 0;
+  text-align: right;
+}
+
+.Tooltip-number {
+  color: var(--color-text-primary)
+}
+
+.Tooltip-flex {
+  display: flex;
+  flex-direction: column;
+}
+
+.Tooltip-disabled-wrapper {
+  pointer-events: none;
+  display: flex;
+  flex: 0 0 100%;
+}
+
+.z-index-1001 {
+  z-index: 1001;
+}
+
+@media (max-width: 700px) {
+  .Tooltip-row {
+    display: block;
+    margin-bottom: var(--spacing-4);
+  }
+  .Tooltip-row > span.label {
+    display: block;
+  }
+}

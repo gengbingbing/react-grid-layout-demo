@@ -1,0 +1,68 @@
+.Percentage-input-wrapper {
+  position: relative;
+  .Percentage-list {
+    position: absolute;
+    display: flex;
+    list-style: none;
+    border-radius: var(--borderRadius-sm);
+    right: 0;
+    padding: 0;
+    margin-top: 1.5px;
+    top: 100%;
+    z-index: 2;
+    background-color: var(--color-bg-sub);
+
+    li {
+      padding: var(--spacing-2) var(--spacing-3);
+      cursor: pointer;
+      border-radius: var(--borderRadius-sm);
+      width: 4.5rem;
+      text-align: center;
+      &:hover {
+        background: var(--color-hover);
+      }
+    }
+  }
+  .Percentage-input {
+    display: flex;
+    align-items: center;
+    border: 1px solid var(--color-border);
+    border-radius: var(--borderRadius-sm);
+    padding-right: var(--spacing-2);
+    line-height: 1;
+    background: var(--color-bg-main);
+
+    label {
+      cursor: pointer;
+    }
+
+    &:hover,
+    &:focus {
+      border-color: var(--color-primary-dark);
+    }
+    &:focus-within {
+      border-color: var(--color-primary);
+    }
+
+    &.input-error {
+      border-color: var(--color-warning);
+    }
+
+    input {
+      width: 4rem;
+      padding: var(--spacing-1) var(--spacing-1);
+      font-size: var(--fontSize-sm);
+      border-radius: var(--borderRadius-sm);
+      text-align: right;
+    }
+    span {
+      opacity: 0.7;
+    }
+  }
+}
+
+.Percentage-input-negative-sign {
+  padding-left: var(--spacing-1);
+  cursor: text;
+  user-select: none;
+}

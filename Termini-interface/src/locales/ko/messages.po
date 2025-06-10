@@ -1,0 +1,985 @@
+msgid ""
+msgstr ""
+"POT-Creation-Date: 2022-08-06 13:30+0530\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: @lingui/cli\n"
+"Language: ko\n"
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: \n"
+"PO-Revision-Date: \n"
+"Last-Translator: Tourist\n"
+"Language-Team: \n"
+"Plural-Forms: \n"
+
+#: src/components/RatingToast/RatingToast.tsx
+msgid "Not likely"
+msgstr "가능성 낮음"
+
+#: src/components/AddressDropdown/AddressDropdown.tsx
+msgid "Disconnect"
+msgstr "연결 끊기"
+
+#: src/components/ModalViews/RedirectModal.tsx
+msgid "Agree"
+msgstr "동의하기"
+
+#: src/pages/Aggregator/components/orders/DcaOrderHistory.tsx
+#: src/pages/Aggregator/components/orders/OpenDcaOrder.tsx
+#: src/pages/Aggregator/components/orders/OpenOrder.tsx
+#: src/pages/Aggregator/components/orders/OrderHistory.tsx
+#: src/pages/Aggregator/components/SwapBox.tsx
+#: src/pages/Aggregator/components/TokenListTable.tsx/index.tsx
+#: src/pages/Aggregator/components/Trending/index.tsx
+msgid "loading..."
+msgstr "로딩 중..."
+
+#: src/components/ToastifyDebug/ToastifyDebug.tsx
+msgid "Show error"
+msgstr "오류 표시"
+
+#: src/pages/Aggregator/components/SwapBox.tsx
+msgid "To"
+msgstr ""
+
+#: src/lib/contracts/callContract.tsx
+msgid "View status."
+msgstr "상태 보기."
+
+#: src/pages/Aggregator/components/orders/DcaOverView.tsx
+#: src/pages/Aggregator/components/SwapBox.tsx
+msgid "Orders"
+msgstr ""
+
+#: src/components/SettingsModal/SettingsModal.tsx
+msgid "The Max Network Fee is set to a higher value to handle potential increases in gas price during order execution. Any excess network fee will be refunded to your account when the order is executed."
+msgstr "최대 네트워크 수수료는 주문 실행 중 가스 가격 상승에 대비하여 높게 설정됩니다. 주문이 실행되면 초과 네트워크 수수료는 계정으로 환불됩니다."
+
+#: src/components/Header/AppHeaderLinks.tsx
+msgid "Stats"
+msgstr "통계"
+
+#: src/components/ModalViews/RedirectModal.tsx
+msgid "Don't show this message again for 30 days."
+msgstr "30일 동안 이 메시지를 다시 표시하지 않습니다."
+
+#: src/components/SettingsModal/SettingsModal.tsx
+msgid "Max Network Fee buffer below {0}% may result in failed orders."
+msgstr "최대 네트워크 수수료 버퍼가 {0}% 미만이면 주문이 실패할 수 있습니다."
+
+#: src/pages/Aggregator/components/orders/DcaOrderHistory.tsx
+#: src/pages/Aggregator/components/orders/OpenDcaOrder.tsx
+msgid "Total Deposited"
+msgstr ""
+
+#: src/lib/wallets/connecters/binanceW3W/binanceWallet.ts
+msgid "Tap [Create Wallet] to start using your Web3 Wallet."
+msgstr "웹3 지갑을 사용하려면 [지갑 생성]을 탭하세요."
+
+#: src/lib/wallets/connecters/binanceW3W/binanceWallet.ts
+msgid "Create or Import a Wallet"
+msgstr "지갑 생성 또는 가져오기"
+
+#: src/components/NetworkDropdown/NetworkDropdown.tsx
+msgid "Networks and Settings"
+msgstr "네트워크 및 설정"
+
+#: src/components/SettingsModal/SettingsModal.tsx
+msgid "Max network fee buffer precision is 0.01%"
+msgstr "최대 네트워크 수수료 버퍼 정밀도는 0.01%입니다"
+
+#: src/components/SearchInput/SearchInput.tsx
+msgid "Search Token"
+msgstr "토큰 검색"
+
+#: src/components/BuyInputSection/BuyInputSection.tsx
+#: src/components/BuyInputSection/BuyInputSection.tsx
+#: src/components/InputSection/InputSection.jsx
+#: src/pages/Aggregator/components/SwapBox.tsx
+msgid "MAX"
+msgstr "최대"
+
+#: src/components/SettingsModal/AggregatorSettingsModal.tsx
+#: src/components/SettingsModal/AggregatorSettingsModal.tsx
+#: src/components/SettingsModal/SettingsModal.tsx
+#: src/components/SettingsModal/SettingsModal.tsx
+msgid "Invalid slippage value"
+msgstr "유효하지 않은 슬리피지 값"
+
+#: src/components/SettingsModal/AggregatorSettingsModal.tsx
+#: src/components/SettingsModal/SettingsModal.tsx
+msgid "Slippage should be less than -5%"
+msgstr "슬리피지는 -5% 미만이어야 합니다"
+
+#: src/pages/Aggregator/components/orders/DcaTransactions.tsx
+msgid "Scheduled"
+msgstr ""
+
+#: src/pages/Aggregator/components/SwapBox.tsx
+msgid "Pay"
+msgstr ""
+
+#: src/pages/Aggregator/components/SwapBox.tsx
+msgid "Swap {0} to {1} failed."
+msgstr "{0}에서 {1}(으)로 스왑 실패."
+
+#: src/pages/Aggregator/components/orders/DcaOrderHistory.tsx
+#: src/pages/Aggregator/components/orders/OpenDcaOrder.tsx
+msgid "Transactions"
+msgstr ""
+
+#: src/pages/Aggregator/components/SwapBox.tsx
+msgid "Created limit order successful."
+msgstr "리밋 주문 생성 성공."
+
+#: src/pages/Aggregator/components/SwapBox.tsx
+msgid "Order Execution Interval"
+msgstr ""
+
+#: src/pages/Aggregator/components/orders/DcaOrderHistory.tsx
+#: src/pages/Aggregator/components/orders/DcaTransactions.tsx
+#: src/pages/Aggregator/components/orders/OpenDcaOrder.tsx
+#: src/pages/Aggregator/components/orders/OpenOrder.tsx
+#: src/pages/Aggregator/components/orders/OrderHistory.tsx
+msgid "From/To"
+msgstr "보내는 곳/받는 곳"
+
+#: src/pages/Aggregator/components/SwapBox.tsx
+msgid "Create Limit Order..."
+msgstr "리밋 주문 생성 중..."
+
+#: src/components/ToastifyDebug/ToastifyDebug.tsx
+msgid "Copied"
+msgstr "복사됨"
+
+#: src/components/SettingsModal/SettingsModal.tsx
+msgid "Invalid network fee buffer value"
+msgstr "잘못된 네트워크 수수료 버퍼 값"
+
+#: src/pages/Aggregator/components/SwapBox.tsx
+msgid "Create Limit Order"
+msgstr "리밋 주문 생성"
+
+#: src/pages/Aggregator/components/SwapBox.tsx
+#: src/pages/Aggregator/components/SwapMarketInfo.tsx
+msgid "Best Price"
+msgstr "최고 가격"
+
+#: src/pages/Aggregator/components/SwapLimitInfo.tsx
+msgid "Sell Order"
+msgstr ""
+
+#: src/components/ToastifyDebug/ToastifyDebug.tsx
+msgid "Hide error"
+msgstr "오류 숨기기"
+
+#: src/pages/Aggregator/components/orders/DcaOverView.tsx
+msgid "Created At"
+msgstr ""
+
+#: src/pages/PageNotFound/PageNotFound.jsx
+#: src/pages/PageNotFound/PageNotFound.jsx
+msgid "Page not found"
+msgstr "페이지를 찾을 수 없습니다"
+
+#: src/components/ModalViews/RedirectModal.tsx
+msgid "The website is a community deployed and maintained instance of the open source Termini front end, hosted and served on the distributed, peer-to-peer <0>IPFS network</0>."
+msgstr "이 웹사이트는 분산형 P2P <0>IPFS 네트워크</0>에서 호스팅 및 제공되는 오픈 소스 Termini 프론트엔드의 커뮤니티 배포 및 유지 관리 인스턴스입니다."
+
+#: src/pages/Aggregator/components/SwapLimitInfo.tsx
+msgid "Execution fee covers the gas cost for our keeper to execute your order. It ensures your transaction is processed reliably and on time."
+msgstr ""
+
+#: src/pages/Aggregator/components/TokenSelectModal.tsx
+msgid "Search"
+msgstr "검색"
+
+#: src/pages/Aggregator/components/Trending/TrendCard.tsx
+msgid "Market Price"
+msgstr "시장 가격"
+
+#: src/pages/Aggregator/components/SwapBox.tsx
+msgid "Increase your payment to at least 0.0001 tokens per order."
+msgstr ""
+
+#: src/components/Header/AppHeaderLinks.tsx
+msgid "Audit"
+msgstr "감사"
+
+#: src/pages/Aggregator/components/SwapTab.tsx
+msgid "Bots"
+msgstr ""
+
+#: src/components/Header/AppHeaderLinks.tsx
+msgid "Points"
+msgstr "포인트"
+
+#: src/pages/Aggregator/components/orders/DcaOverView.tsx
+msgid "Every"
+msgstr ""
+
+#: src/lib/legacy.ts
+msgid "No open position, order cannot be executed unless a position is opened"
+msgstr "열려있는 포지션이 없습니다. 열려있는 포지션이 없는 경우 주문은 실행될 수 없습니다."
+
+#: src/components/SettingsModal/AggregatorSettingsModal.tsx
+msgid "Allowed Slippage below {defaultSippageDisplay}% may result in failed orders."
+msgstr "{defaultSippageDisplay}% 미만의 허용된 슬리피지는 주문 실패를 초래할 수 있습니다."
+
+#: src/components/Header/AppHeaderUser.tsx
+#: src/pages/Aggregator/components/SwapBox.tsx
+msgid "Connect Wallet"
+msgstr "지갑 연동"
+
+#: src/components/Header/AppHeaderLinks.tsx
+msgid "Launching"
+msgstr "출시 중"
+
+#: src/pages/Aggregator/components/SwapBox.tsx
+msgid "Approving {0}..."
+msgstr "{0} 승인 중..."
+
+#: src/components/StatsTooltip/ChainsStatsTooltipRow.tsx
+msgid "Total:"
+msgstr "총계:"
+
+#: src/domain/tokens/approveTokens.tsx
+msgid "{0} Approved!"
+msgstr "{0} 승인됨!"
+
+#: src/lib/contracts/transactionErrors.tsx
+msgid "<0>Error submitting order.</0><1/><2>Signer address does not match receiver address.</2><3/><4>Please reload the page and try again.</4>"
+msgstr "<0>주문 제출 오류.</0><1/><2>서명자 주소가 수신자 주소와 일치하지 않습니다.</2><3/><4>페이지를 새로 고치고 다시 시도하세요.</4>"
+
+#: src/components/ApproveTokenButton/ApproveTokenButton.tsx
+msgid "Allow {0} to be spent"
+msgstr "{0} 사용 허용"
+
+#: src/pages/Aggregator/components/orders/OpenDcaOrder.tsx
+msgid "Order stop failed!"
+msgstr ""
+
+#: src/lib/contracts/transactionErrors.tsx
+msgid "The mark price has changed, consider increasing your Allowed Slippage by clicking on the \"...\" icon next to your address."
+msgstr "시장 평균가가 변화되었습니다. 귀하의 주소 옆에 \"...\" 아이콘을 클릭해서 허용 가능한 슬리피지 증가를 고려해보세요."
+
+#: src/pages/Aggregator/components/orders/DcaOverView.tsx
+msgid "Orders Remaining"
+msgstr ""
+
+#: src/components/ModalViews/RedirectModal.tsx
+msgid "Launch App"
+msgstr "앱 실행하기"
+
+#: src/pages/Aggregator/components/SwapMarketInfo.tsx
+msgid "Slippage tolerance"
+msgstr "슬리피지 허용 범위"
+
+#: src/lib/contracts/callContract.tsx
+#: src/lib/contracts/callContract.tsx
+#: src/lib/contracts/callContract.tsx
+msgid "Transaction sent."
+msgstr "트랜잭션 전송됨."
+
+#: src/pages/Aggregator/components/SwapMarketInfo.tsx
+msgid "Minimum received"
+msgstr "최소 수령액"
+
+#: src/pages/Aggregator/components/SwapBox.tsx
+msgid "Number of Orders cannot be lower than 2."
+msgstr ""
+
+#: src/pages/Aggregator/components/SwapBox.tsx
+msgid "into"
+msgstr ""
+
+#: src/pages/Aggregator/components/SwapBox.tsx
+msgid "Split"
+msgstr ""
+
+#: src/pages/Aggregator/components/orders/DcaTransactions.tsx
+msgid "No transaction data"
+msgstr ""
+
+#: src/pages/Aggregator/components/SwapBox.tsx
+msgid "To minimise the predictability of your DCA strategy, orders are filled within a randomised padding of +/- 30 seconds."
+msgstr ""
+
+#: src/pages/Aggregator/components/orders/DcaTransactions.tsx
+msgid "Refund"
+msgstr ""
+
+#: src/components/Header/AppHeaderLinks.tsx
+msgid "Bridge"
+msgstr "브릿지"
+
+#: src/components/Header/AppHeaderLinks.tsx
+msgid "Trade"
+msgstr ""
+
+#: src/pages/Aggregator/components/orders/DcaOrderHistory.tsx
+#: src/pages/Aggregator/components/orders/OpenDcaOrder.tsx
+msgid "OverView"
+msgstr ""
+
+#: src/pages/Aggregator/components/orders/DcaOverView.tsx
+msgid "Each Order Size"
+msgstr ""
+
+#: src/pages/Aggregator/components/orders/OrderEditor.tsx
+msgid "Update Order"
+msgstr "주문 업데이트"
+
+#: src/pages/Aggregator/components/SwapBox.tsx
+msgid "This is the time period during which the order wilbe active. Please note that orders may becompleted earlier than this time, or remainunfilled based on the specified parameters."
+msgstr ""
+
+#: src/pages/Aggregator/components/SwapBox.tsx
+msgid "Trigger price is higher than market price"
+msgstr "트리거 가격이 시장 가격보다 높습니다"
+
+#: src/pages/Aggregator/components/SwapMarketInfo.tsx
+msgid "Network Fee"
+msgstr "네트워크 수수료"
+
+#: src/pages/Aggregator/components/SwapBox.tsx
+msgid "Swap {0} to {1} successful."
+msgstr "{0}에서 {1}(으)로 스왑 성공."
+
+#: src/pages/Aggregator/components/SwapBox.tsx
+msgid "Swap {0} to {1} submitted!"
+msgstr "{0}에서 {1}(으)로 스왑 제출됨!"
+
+#: src/components/NetworkDropdown/LanguagePopupHome.tsx
+#: src/components/NetworkDropdown/NetworkDropdown.tsx
+#: src/hooks/useLanguageModal.tsx
+msgid "Select Language"
+msgstr "언어 선택"
+
+#: src/pages/Aggregator/components/TokenListTable.tsx/index.tsx
+#: src/pages/Aggregator/components/Trending/index.tsx
+msgid "No data here."
+msgstr ""
+
+#: src/lib/legacy.ts
+msgid "Order cannot be executed as the remaining position would be smaller than $5.00"
+msgstr "포지션의 금액이 $5.00 이하로 남게되면 주문은 실행될 수 없습니다"
+
+#: src/pages/Aggregator/components/orders/DcaOrderHistory.tsx
+#: src/pages/Aggregator/components/orders/OpenDcaOrder.tsx
+msgid "Empty"
+msgstr ""
+
+#: src/pages/Aggregator/index.tsx
+msgid "All"
+msgstr "전체"
+
+#: src/pages/Aggregator/components/orders/OrderEditor.tsx
+msgid "Updating Order..."
+msgstr "주문 업데이트 중..."
+
+#: src/components/NotifyModal/NotifyModal.tsx
+msgid "Get notify from Termini to stay on top of your trades, liquidation risk, and more."
+msgstr ""
+
+#: src/components/SettingsModal/AggregatorSettingsModal.tsx
+msgid "Allowed Slippage"
+msgstr "허용된 슬리피지"
+
+#: src/pages/Aggregator/components/orders/OrderEditor.tsx
+msgid "Order update failed."
+msgstr "주문 업데이트 실패."
+
+#: src/pages/Aggregator/components/orders/DcaOrderHistory.tsx
+#: src/pages/Aggregator/components/orders/OpenDcaOrder.tsx
+msgid "Stopped"
+msgstr ""
+
+#: src/pages/Aggregator/components/SwapBox.tsx
+msgid "Waiting for Approval"
+msgstr "승인 대기 중"
+
+#: src/pages/Aggregator/components/SwapLimitInfo.tsx
+msgid "Platform Fee"
+msgstr ""
+
+#: src/components/NetworkDropdown/NetworkDropdown.tsx
+msgid "More Options"
+msgstr "더 많은 설정"
+
+#: src/pages/Aggregator/components/orders/OpenOrder.tsx
+msgid "Your order will only execute if the price reaches a level where your desired token amount can be fully swapped. This may differ from the displayed market price due to liquidity conditions."
+msgstr ""
+
+#: src/components/AddressDropdown/AddressDropdown.tsx
+msgid "View in Explorer"
+msgstr "Explorer에서 보기"
+
+#: src/lib/wallets/connecters/binanceW3W/binanceWallet.ts
+msgid "After you scan, a connection prompt will appear for you to connect your wallet."
+msgstr "스캔 후, 지갑을 연결할 수 있는 연결 프롬프트가 나타납니다."
+
+#: src/pages/Aggregator/components/SwapMarketInfo.tsx
+msgid "Fee"
+msgstr "수수료"
+
+#: src/domain/tokens/approveTokens.tsx
+msgid "Approval failed"
+msgstr "승인 실패"
+
+#: src/pages/Aggregator/components/orders/OpenOrder.tsx
+msgid "Order cancel submitted!"
+msgstr "주문 취소 제출됨!"
+
+#: src/pages/Aggregator/components/SwapLimitInfo.tsx
+msgid "To Buy"
+msgstr ""
+
+#: src/components/Header/AppHeaderLinks.tsx
+msgid "Earn"
+msgstr ""
+
+#: src/pages/Aggregator/components/SwapBox.tsx
+msgid "Unwrap"
+msgstr "언랩"
+
+#: src/context/PendingTxnsContext/PendingTxnsContext.tsx
+msgid "Txn failed. <0>View</0>."
+msgstr "트랜잭션 실패. <0>보기</0>."
+
+#: src/pages/Aggregator/components/TokenSelectModal.tsx
+msgid "Select a token"
+msgstr "토큰 선택"
+
+#: src/components/SettingsModal/AggregatorSettingsModal.tsx
+#: src/components/SettingsModal/SettingsModal.tsx
+msgid "Transaction deadline"
+msgstr "트랜잭션 기한"
+
+#: src/lib/wallets/connecters/binanceW3W/binanceWallet.ts
+msgid "Log in to your Binance app and tap [Wallets]. Go to [Web3]."
+msgstr "Binance 앱에 로그인하고 [지갑]을 탭하세요. [Web3]로 이동하세요."
+
+#: src/pages/Aggregator/index.tsx
+msgid "Open Orders {0}"
+msgstr "미체결 주문 {0}"
+
+#: src/components/Header/AppHeaderLinks.tsx
+msgid "Docs"
+msgstr "문서"
+
+#: src/components/AddressDropdown/AddressDropdown.tsx
+msgid "Address copied to your clipboard"
+msgstr "주소가 클립보드에 복사되었습니다"
+
+#: src/components/Header/AppHeaderLinks.tsx
+#: src/components/NetworkDropdown/NetworkDropdown.tsx
+#: src/components/NetworkDropdown/NetworkDropdown.tsx
+#: src/components/SettingsModal/SettingsModal.tsx
+msgid "Settings"
+msgstr "설정"
+
+#: src/pages/Aggregator/components/SwapTab.tsx
+msgid "Coming Soon"
+msgstr "곧 출시 예정"
+
+#: src/components/NetworkDropdown/NetworkDropdown.tsx
+#: src/components/NetworkDropdown/NetworkDropdown.tsx
+msgid "Networks"
+msgstr "네트워크"
+
+#: src/pages/Aggregator/components/orders/OpenOrder.tsx
+msgid "Order cancel successfully!"
+msgstr "주문 취소 성공!"
+
+#: src/lib/legacy.ts
+msgid "Order cannot be executed as it would reduce the position's leverage below 1"
+msgstr "포지션의 레버리지가 1 미만으로 감소하므로 주문을 실행할 수 없습니다"
+
+#: src/components/SettingsModal/AggregatorSettingsModal.tsx
+#: src/components/SettingsModal/SettingsModal.tsx
+msgid "Max slippage precision is -0.01%"
+msgstr "최대 슬리피지 정밀도는 -0.01%입니다"
+
+#: src/pages/Aggregator/index.tsx
+msgid "Favorites"
+msgstr "즐겨찾기"
+
+#: src/pages/Aggregator/components/orders/OpenDcaOrder.tsx
+msgid "Stop and Withdraw"
+msgstr ""
+
+#: src/pages/Aggregator/components/orders/DcaOverView.tsx
+msgid "Average Price"
+msgstr ""
+
+#: src/pages/Aggregator/components/SwapTab.tsx
+#: src/pages/Aggregator/components/SwapTab.tsx
+msgid "Beta"
+msgstr "Beta"
+
+#: src/components/SettingsModal/SettingsModal.tsx
+msgid "Max Network Fee Buffer"
+msgstr "최대 네트워크 수수료 버퍼"
+
+#: src/pages/Aggregator/components/orders/OrderEditor.tsx
+msgid "Order updated!"
+msgstr "주문 업데이트됨!"
+
+#: src/lib/contracts/callContract.tsx
+msgid "Transaction completed!"
+msgstr "트랜잭션 완료!"
+
+#: src/lib/legacy.ts
+msgid "Decentralized Perpetual Exchange | Termini"
+msgstr "분산형 영구 거래소 | Termini"
+
+#: src/components/Header/AppHeaderLinks.tsx
+msgid "Referrals"
+msgstr "추천"
+
+#: src/pages/Aggregator/components/SwapBox.tsx
+msgid "Create DCA Order..."
+msgstr ""
+
+#: src/App/MainRoutes.tsx
+#: src/pages/Aggregator/components/DexscreenerFrameKline.tsx
+msgid "Loading..."
+msgstr "로딩중..."
+
+#: src/components/Header/AppHeaderLinks.tsx
+msgid "Trades"
+msgstr "거래"
+
+#: src/pages/Aggregator/components/SwapBox.tsx
+msgid "Please enter an interval above 0."
+msgstr ""
+
+#: src/pages/Aggregator/components/TokenListTable.tsx/index.tsx
+msgid "Price"
+msgstr "가격"
+
+#: src/pages/Aggregator/components/SwapBox.tsx
+msgid "Incorrect Network"
+msgstr "잘못된 네트워크"
+
+#: src/pages/Aggregator/components/SwapBox.tsx
+msgid "Unwrap {0}..."
+msgstr "{0} 언랩 중..."
+
+#: src/pages/Aggregator/components/orders/OpenOrder.tsx
+#: src/pages/Aggregator/components/SwapLimitInfo.tsx
+msgid "Expiry"
+msgstr "만료"
+
+#: src/pages/Aggregator/components/orders/OpenDcaOrder.tsx
+msgid "Order stop submitted!"
+msgstr ""
+
+#: src/domain/tokens/approveTokens.tsx
+msgid "Approval submitted! <0>View status.</0>"
+msgstr "승인 제출완료! <0>상태 보기</0>"
+
+#: src/pages/Aggregator/components/orders/DcaOverView.tsx
+msgid "Next Order At"
+msgstr ""
+
+#: src/pages/Aggregator/components/SwapBox.tsx
+msgid "orders to buy"
+msgstr ""
+
+#: src/components/RatingToast/RatingToast.tsx
+msgid "How likely are you to recommend our service to a friend or colleague?"
+msgstr "친구나 동료에게 우리 서비스를 추천할 가능성이 얼마나 되나요?"
+
+#: src/pages/Aggregator/components/orders/OpenOrder.tsx
+msgid "Cancel"
+msgstr "취소"
+
+#: src/pages/Aggregator/components/SwapBox.tsx
+msgid "Insufficient liquidity"
+msgstr "유동성 부족"
+
+#: src/pages/Aggregator/components/SwapBox.tsx
+msgid "order"
+msgstr ""
+
+#: src/components/Header/AppHeaderLinks.tsx
+msgid "Farms"
+msgstr "팜"
+
+#: src/lib/wallets/connecters/binanceW3W/binanceWallet.ts
+msgid "Open Binance app"
+msgstr "Binance 앱 열기"
+
+#: src/pages/Aggregator/components/orders/OpenOrder.tsx
+#: src/pages/Aggregator/components/orders/OpenOrder.tsx
+msgid "Edit"
+msgstr "편집"
+
+#: src/pages/Aggregator/components/SwapBox.tsx
+msgid "From"
+msgstr "출발"
+
+#: src/pages/Aggregator/components/SwapBox.tsx
+msgid "Wrap {0}..."
+msgstr "{0} 랩 중..."
+
+#: src/components/Header/AppHeaderLinks.tsx
+msgid "Perp Pools"
+msgstr "퍼프 풀"
+
+#: src/pages/Aggregator/components/SwapLimitInfo.tsx
+msgid "Maximum available Orders:"
+msgstr ""
+
+#: src/pages/Aggregator/components/SwapBox.tsx
+msgid "Approve {0}"
+msgstr "{0} 승인"
+
+#: src/pages/Aggregator/components/orders/OrderEditor.tsx
+msgid "Limit price is higher than market price"
+msgstr "리밋 가격이 시장 가격보다 높습니다"
+
+#: src/pages/Aggregator/components/SwapBox.tsx
+#: src/pages/Aggregator/components/TokenSelectModal.tsx
+msgid "Balance"
+msgstr ""
+
+#: src/components/Header/AppHeaderLinks.tsx
+msgid "Swap Pools"
+msgstr "스왑 풀"
+
+#: src/pages/Aggregator/components/SwapBox.tsx
+msgid "Limit order submitted!"
+msgstr "리밋 주문 제출됨!"
+
+#: src/pages/Aggregator/components/SwapBox.tsx
+msgid "Wrap"
+msgstr "랩"
+
+#: src/components/Header/AppHeaderUser.tsx
+msgid "Connect"
+msgstr "연동"
+
+#: src/components/ModalViews/RedirectModal.tsx
+msgid "By clicking Agree you accept the <0>T&Cs</0> and <1>Referral T&Cs</1>.<2/><3/>"
+msgstr "동의를 클릭하면 <0>이용약관</0> 및 <1>추천 이용약관</1>에 동의하게 됩니다.<2/><3/>"
+
+#: src/lib/wallets/connecters/binanceW3W/binanceWallet.ts
+msgid "Scan the QR code"
+msgstr "QR 코드 스캔"
+
+#: src/components/SettingsModal/SettingsModal.tsx
+msgid "Show leverage slider"
+msgstr "레버리지 슬라이더 표시"
+
+#: src/pages/Aggregator/components/orders/OrderEditor.tsx
+msgid "Order update submitted!"
+msgstr "주문 업데이트 제출됨!"
+
+#: src/pages/Aggregator/index.tsx
+msgid "My Transactions"
+msgstr "내 트랜잭션"
+
+#: src/pages/Aggregator/components/TokenSelectModal.tsx
+msgid "Token Name"
+msgstr "토큰 이름"
+
+#: src/context/PendingTxnsContext/PendingTxnsContext.tsx
+#: src/lib/contracts/notifications.tsx
+#: src/lib/contracts/notifications.tsx
+msgid "View"
+msgstr "보기"
+
+#: src/domain/tokens/approveTokens.tsx
+msgid "There is not enough {0} in your account on {networkName} to send this transaction."
+msgstr "{networkName}의 계정에 이 트랜잭션을 보낼 {0}이(가) 충분하지 않습니다."
+
+#: src/components/AddressView/AddressView.tsx
+msgid "You"
+msgstr "나"
+
+#: src/pages/Aggregator/components/SwapBox.tsx
+msgid "Receive"
+msgstr ""
+
+#: src/pages/Aggregator/components/SwapLimitInfo.tsx
+msgid "Execution Fee"
+msgstr ""
+
+#: src/components/Header/AppHeaderLinks.tsx
+msgid "Pools"
+msgstr "풀"
+
+#: src/components/Header/AppHeaderLinks.tsx
+#: src/pages/Aggregator/index.tsx
+msgid "Meme"
+msgstr "밈"
+
+#: src/components/NotifyModal/NotifyModal.tsx
+msgid "Termini Notify"
+msgstr "Termini 알림"
+
+#: src/components/ToastifyDebug/ToastifyDebug.tsx
+msgid "Copy error"
+msgstr "오류 복사"
+
+#: src/pages/Aggregator/components/SwapBox.tsx
+msgid "Insufficient {0} balance"
+msgstr "{0} 잔액 부족"
+
+#: src/pages/Aggregator/components/SwapBox.tsx
+msgid "every"
+msgstr ""
+
+#: src/components/Common/SEO.tsx
+msgid "Termini | Native One-stop trading Platform build on Soneium"
+msgstr "@soneium에서 제공하는 원스톱 트레이딩 플랫폼으로, AMM, 퍼프, AI 에이전트 출시 및 밈 출시를 제공합니다."
+
+#: src/pages/Aggregator/components/orders/OrderEditor.tsx
+msgid "Edit order"
+msgstr "주문 편집"
+
+#: src/pages/Aggregator/components/orders/DcaTransactions.tsx
+msgid "Date"
+msgstr ""
+
+#: src/pages/Aggregator/components/orders/OpenOrder.tsx
+#: src/pages/Aggregator/components/orders/OrderHistory.tsx
+msgid "Trigger Price"
+msgstr "트리거 가격"
+
+#: src/pages/Aggregator/components/orders/DcaOrderHistory.tsx
+#: src/pages/Aggregator/components/orders/OpenDcaOrder.tsx
+#: src/pages/Aggregator/components/orders/OpenOrder.tsx
+#: src/pages/Aggregator/components/orders/OrderHistory.tsx
+msgid "Total Filled"
+msgstr "총 체결량"
+
+#: src/pages/Aggregator/components/orders/DcaOverView.tsx
+msgid "Estimated End Date"
+msgstr ""
+
+#: src/pages/Aggregator/index.tsx
+msgid "Trends"
+msgstr "트렌드"
+
+#: src/pages/Aggregator/components/Trending/TrendCard.tsx
+msgid "The best route offers the maximum theoretical save."
+msgstr "최적의 경로는 이론적으로 최대 절감을 제공합니다."
+
+#: src/pages/Aggregator/components/SwapLimitInfo.tsx
+msgid "Current Orders:"
+msgstr ""
+
+#: src/pages/Aggregator/components/SwapBox.tsx
+msgid "Created DCA order successful."
+msgstr ""
+
+#: src/pages/Aggregator/components/orders/DcaOverView.tsx
+msgid "{0} Withdrawn"
+msgstr ""
+
+#: src/pages/Aggregator/components/SwapBox.tsx
+msgid "Smart Route"
+msgstr "스마트 라우팅"
+
+#: src/pages/Aggregator/components/SwapBox.tsx
+msgid "Create DCA Order"
+msgstr ""
+
+#: src/pages/Aggregator/components/SwapBox.tsx
+msgid "Swap {0}..."
+msgstr "{0} 스왑 중..."
+
+#: src/pages/Aggregator/components/SwapBox.tsx
+msgid "Number of Orders cannot be higher than {0}."
+msgstr ""
+
+#: src/lib/contracts/transactionErrors.tsx
+msgid "<0>Your wallet is not connected to {0}.</0><1/><2>Switch to {1}</2>"
+msgstr "<0>지갑이 {0}에 연결되어 있지 않습니다.</0><1/><2>{1}로 전환하세요</2>"
+
+#: src/lib/contracts/transactionErrors.tsx
+msgid "Transaction was cancelled."
+msgstr "트랜잭션 실패됨."
+
+#: src/pages/Aggregator/components/orders/OpenOrder.tsx
+msgid "Order cancel failed!"
+msgstr "주문 취소 실패!"
+
+#: src/lib/legacy.ts
+msgid "Order size is bigger than position, will only be executable if position increases"
+msgstr "주문의 사이즈가 포지션을 초과했습니다. 포지션을 증가하는 경우에만 실행 가능합니다."
+
+#: src/pages/Aggregator/components/orders/DcaOrderHistory.tsx
+#: src/pages/Aggregator/components/orders/DcaTransactions.tsx
+#: src/pages/Aggregator/components/orders/OpenDcaOrder.tsx
+#: src/pages/Aggregator/components/orders/OrderHistory.tsx
+msgid "Completed"
+msgstr "완료됨"
+
+#: src/pages/Aggregator/components/SwapBox.tsx
+#: src/pages/Aggregator/components/SwapBox.tsx
+msgid "Orders Full"
+msgstr "주문 가득참"
+
+#: src/pages/Aggregator/components/SwapMarketInfo.tsx
+msgid "Route"
+msgstr "경로"
+
+#: src/pages/Aggregator/components/orders/OrderEditor.tsx
+#: src/pages/Aggregator/components/orders/OrderEditor.tsx
+msgid "Enter new Price"
+msgstr "새 가격 입력"
+
+#: src/components/Common/SEO.tsx
+msgid "One-stop trading Platform on @soneium, offering AMM, Perp, AI Agent launch, and Meme Launch."
+msgstr "@soneium에서 제공하는 원스톱 트레이딩 플랫폼으로, AMM, 퍼프, AI 에이전트 출시 및 밈 출시를 제공합니다."
+
+#: src/pages/Aggregator/components/orders/DcaOrderHistory.tsx
+#: src/pages/Aggregator/components/orders/OpenDcaOrder.tsx
+#: src/pages/Aggregator/components/orders/OpenOrder.tsx
+#: src/pages/Aggregator/components/orders/OrderHistory.tsx
+msgid "No order data here."
+msgstr "주문 데이터가 없습니다."
+
+#: src/pages/Aggregator/components/TokenListTable.tsx/index.tsx
+msgid "Total Liquidity"
+msgstr "총 유동성"
+
+#: src/components/NotifyModal/NotifyModal.tsx
+msgid "Discover Termini Alerts"
+msgstr "Termini 알림 발견하기"
+
+#: src/pages/Aggregator/components/SwapBox.tsx
+msgid "DCA order submitted!"
+msgstr ""
+
+#: src/components/Header/AppHeaderLinks.tsx
+msgid "Leaderboard"
+msgstr "리더보드"
+
+#: src/pages/Aggregator/components/SwapBox.tsx
+msgid "Create limit order failed."
+msgstr "리밋 주문 생성 실패."
+
+#: src/pages/Aggregator/components/SwapBox.tsx
+msgid "Enter the amount"
+msgstr ""
+
+#: src/components/SettingsModal/AggregatorSettingsModal.tsx
+#: src/components/SettingsModal/SettingsModal.tsx
+msgid "Save"
+msgstr "저장"
+
+#: src/pages/Aggregator/components/SwapBox.tsx
+msgid "Create DCA order failed."
+msgstr ""
+
+#: src/pages/PageNotFound/PageNotFound.jsx
+msgid "<0>Return to </0><1>Homepage</1>"
+msgstr "<0>홈페이지로 </0><1>돌아가기</1>"
+
+#: src/components/SettingsModal/AggregatorSettingsModal.tsx
+msgid "Aggregator Settings"
+msgstr "애그리게이터 설정"
+
+#: src/pages/Aggregator/components/SwapLimitInfo.tsx
+msgid "Available Orders"
+msgstr ""
+
+#: src/pages/Aggregator/components/Trending/TrendCard.tsx
+msgid "Max Save"
+msgstr ""
+
+#: src/lib/contracts/transactionErrors.tsx
+msgid "Transaction failed"
+msgstr "트랜잭션 실패"
+
+#: src/pages/Aggregator/components/SwapLimitInfo.tsx
+msgid "Buy {0} at Rate"
+msgstr ""
+
+#: src/components/SettingsModal/SettingsModal.tsx
+msgid "Display PNL after fees"
+msgstr "수수료 후 PNL 표시"
+
+#: src/pages/Aggregator/components/orders/DcaTransactions.tsx
+#: src/pages/Aggregator/components/orders/OrderHistory.tsx
+msgid "Status"
+msgstr "상태"
+
+#: src/components/SettingsModal/SettingsModal.tsx
+msgid "Include PNL in leverage display"
+msgstr "레버리지 표시에 PNL 포함"
+
+#: src/lib/contracts/transactionErrors.tsx
+msgid "Transaction failed due to RPC error.<0/><1/>Please try changing the RPC url in your wallet settings with the help of <2>chainlist.org</2>."
+msgstr "RPC 오류로 인해 트랜잭션이 실패했습니다.<0/><1/><2>chainlist.org</2>의 도움을 받아 지갑 설정에서 RPC URL을 변경해 보세요."
+
+#: src/pages/Aggregator/components/orders/index.tsx
+#: src/pages/Aggregator/components/SwapTab.tsx
+msgid "DCA"
+msgstr "DCA"
+
+#: src/pages/Aggregator/components/orders/OrderHistory.tsx
+msgid "Created/Executed"
+msgstr "생성/실행됨"
+
+#: src/pages/Aggregator/components/orders/DcaTransactions.tsx
+msgid "Execution Price"
+msgstr ""
+
+#: src/pages/Aggregator/components/orders/DcaOverView.tsx
+msgid "DCA {0} Balance"
+msgstr ""
+
+#: src/pages/Aggregator/components/SwapBox.tsx
+#: src/pages/Aggregator/components/SwapTab.tsx
+msgid "Swap"
+msgstr "스왑"
+
+#: src/components/Header/AppHeaderLinks.tsx
+#: src/components/NetworkDropdown/NetworkDropdown.tsx
+msgid "Language"
+msgstr "언어"
+
+#: src/pages/Aggregator/components/orders/OpenDcaOrder.tsx
+msgid "Order stop successfully!"
+msgstr ""
+
+#: src/pages/Aggregator/index.tsx
+msgid "Order History"
+msgstr "주문 내역"
+
+#: src/pages/Aggregator/components/SwapBox.tsx
+msgid "execute"
+msgstr ""
+
+#: src/components/RatingToast/RatingToast.tsx
+msgid "Very likely"
+msgstr "매우 가능성 높음"
+
+#: src/components/ModalViews/RedirectModal.tsx
+msgid "You are leaving SONEFI.xyz and will be redirected to a third party, independent website."
+msgstr "SONEFI.xyz를 떠나 제3자의 독립적인 웹사이트로 리디렉션됩니다."
+
+#: src/pages/Aggregator/components/orders/index.tsx
+#: src/pages/Aggregator/components/SwapTab.tsx
+msgid "Limit"
+msgstr "리밋"
+
+#: src/lib/contracts/transactionErrors.tsx
+msgid "There is not enough {0} in your account on {1} to send this transaction."
+msgstr "{1}의 계정에 이 트랜잭션을 보낼 {0}이(가) 충분하지 않습니다."
+
+#: src/domain/tokens/approveTokens.tsx
+msgid "Approval was cancelled"
+msgstr "제출 취소되었습니다"
+
+#: src/components/AddressDropdown/AddressDropdown.tsx
+msgid "Copy Address"
+msgstr "주소 복사"

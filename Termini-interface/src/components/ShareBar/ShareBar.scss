@@ -1,0 +1,55 @@
+.ShareBar {
+  background: var(--color-border);
+  position: relative;
+  height: 2px;
+  width: 100%;
+  min-width: 10rem;
+}
+
+.ShareBar-fill {
+  height: 100%;
+  background: var(--color-primary);
+}
+
+.ShareBar-fill__percentage {
+  display: flex;
+  height: var(--spacing-6);
+  font-size: var(--fontSize-sm);
+
+  .ShareBar-fill__left,
+  .ShareBar-fill__right {
+    height: 100%;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .ShareBar-fill__left {
+    background-color: color-mix(in srgb, var(--color-success) 15%, transparent);
+    color: var(--color-success);
+    border-top-left-radius: var(--borderRadius-sm);
+    border-bottom-left-radius: var(--borderRadius-sm);
+  }
+
+  .ShareBar-fill__right {
+    background-color: color-mix(in srgb, var(--color-error) 15%, transparent);
+    color: var(--color-error);
+    border-top-right-radius: var(--borderRadius-sm);
+    border-bottom-right-radius: var(--borderRadius-sm);
+    text-align: center;
+  }
+}
+
+.ShareBar.warning .ShareBar-fill {
+  background-color: var(--color-warning);
+}
+
+.ShareBar.balance {
+  background: var(--color-error);
+  width: 100%;
+  min-width: 10rem;
+
+  .ShareBar-fill {
+    background: var(--color-success);
+  }
+}

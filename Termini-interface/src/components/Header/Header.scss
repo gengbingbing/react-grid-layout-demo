@@ -1,0 +1,452 @@
+.App-header-backdrop {
+  background-color: rgba(0, 0, 0, 0.9);
+  position: fixed;
+  z-index: 1000;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+}
+
+.App-header.large {
+  height: 6.2rem;
+  backdrop-filter: blur(4px);
+  display: flex;
+  justify-content: space-between;
+  position: relative;
+  padding-left: var(--spacing-12);
+  padding-right: var(--spacing-12);
+  background: var(--color-bg-base);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.App-header.large::after {
+  height: 1.3rem;
+  width: 100%;
+  content: " ";
+  background: transparent linear-gradient(180deg, rgba(0, 0, 0, 0.19) 0%, transparent 100%) 0% 0% no-repeat padding-box;
+  position: absolute;
+  bottom: -1.3rem;
+  left: 0;
+}
+
+.App-header.large .App-header-links {
+  display: flex;
+  min-width: 0;
+}
+
+.App-header-link-home {
+  display: none;
+}
+
+.App-header-drawer {
+  background: var(--color-bg-sub) 0% 0% no-repeat padding-box;
+  opacity: 1;
+  position: fixed;
+  z-index: 1001;
+  right: 0;
+  top: 0;
+  left: inherit;
+  height: 100vh;
+  width: 30.4rem;
+  overflow-y: auto;
+  -ms-overflow-style: none;
+  /* Internet Explorer 10+ */
+  scrollbar-width: none;
+  /* Firefox */
+}
+
+.App-header-drawer::-webkit-scrollbar {
+  display: none;
+  /* Safari and Chrome */
+}
+
+.App-header-drawer .App-header-link-container .a,
+.App-header-drawer .App-header-link-container a {
+  font-size: var(--fontSize-base);
+  line-height: var(--lineHeight-normal);
+  font-weight: normal;
+  letter-spacing: 0.1px;
+  color: var(--color-text-primary);
+  padding: var(--spacing-4) var(--spacing-6);
+  text-decoration: none;
+  display: block;
+}
+
+.App-header-drawer .App-header-link-container .a:hover,
+.App-header-drawer .App-header-link-container .a:focus,
+.App-header-drawer .App-header-link-container .a:active,
+.App-header-drawer .App-header-link-container a:hover,
+.App-header-drawer .App-header-link-container a:focus,
+.App-header-drawer .App-header-link-container a.active {
+  color: var(--color-text-primary);
+}
+
+.App-header.large .App-header-link-container {
+  min-width: 0;
+}
+
+.App-header-links-header {
+  height: 6.2rem;
+  display: flex;
+  align-items: center;
+  z-index: 3;
+}
+
+.App-header-container-left {
+  display: flex;
+  align-items: center;
+  min-width: 0;
+}
+
+.App-header-top {
+  width: 100%;
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  /* z-index: 2; */
+}
+
+.App-header-menu-icon-block {
+  display: flex;
+  align-items: center;
+  border: solid 1px var(--color-border);
+  border-radius: var(--borderRadius-sm);
+  height: 3.6rem;
+}
+
+.App-header-menu-icon {
+  color: var(--color-text-primary);
+  font-size: 2rem;
+  cursor: pointer;
+  opacity: 0.7;
+  margin: 0.7rem;
+}
+
+.App-header-menu-icon:hover {
+  opacity: 0.9;
+}
+
+.App-header a.App-header-link-main,
+.App-header .App-header-link-main {
+  font-size: 1.7rem;
+  padding: var(--spacing-6);
+  margin-left: calc(-1 * var(--spacing-6));
+  display: flex;
+  margin-right: var(--spacing-5);
+}
+
+.App-header-link-main img {
+  display: inline-block;
+  height: 2.15rem;
+  vertical-align: middle;
+}
+
+.App-header-link-main img.small {
+  display: none;
+}
+
+.App-header .a,
+.App-header a {
+  text-decoration: none;
+  vertical-align: middle;
+  display: inline-block;
+  cursor: pointer;
+}
+
+.App-header .a:hover,
+.App-header a:hover {
+  opacity: 1;
+  color: var(--color-text-primary);
+}
+
+.App-header-container-left .a,
+.App-header-container-left a,
+.App-header-container-left .App-menu-header-link {
+  padding: 1.8rem 1.7rem;
+  display: block;
+  color: var(--color-text-tertiary);
+  font-size: var(--fontSize-base);
+  line-height: var(--lineHeight-normal);
+  font-weight: normal;
+}
+
+.App-header.large .App-header-container-left a,
+.App-header.large .App-header-container-left .menuHeader {
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.App-header-container-left a.active {
+  color: var(--color-text-primary);
+}
+
+.App-header-container-left a.active {
+  color: var(--color-text-primary);
+}
+
+.App-menu-header-link.active {
+  color: var(--color-text-primary);
+}
+
+.App-header-container-right {
+  display: flex;
+  align-items: center;
+}
+
+.App-header-user {
+  display: flex;
+  align-items: center;
+}
+
+.App-header-user-link {
+  margin-right: var(--spacing-10);
+}
+
+.App-header-user-address {
+  border: 1px solid var(--color-disabledBorder);
+  height: 3.6rem;
+  border-radius: var(--borderRadius-mds);
+  display: inline-flex;
+  align-items: center;
+  color: var(--color-text-primary);
+  position: relative;
+  padding-top: 0;
+  padding-bottom: 0;
+}
+
+@media (max-width: 1200px) {
+  .App-header-user-address {
+    padding: 0 0px;
+  }
+
+  .App-header-user-link {
+    margin-right: var(--spacing-6);
+  }
+
+  .App-header-link-home {
+    display: block;
+  }
+
+  .App-header-user {
+    padding-bottom: 0;
+  }
+
+  .App-header-container-right {
+    display: flex;
+    align-items: center;
+  }
+
+  .App-header-link-desktop {
+    display: none;
+  }
+
+  .App-header {
+    grid-template-columns: 1fr auto auto auto auto;
+  }
+
+  .App-header-link-main img {
+    height: 2.1rem;
+  }
+
+  .App-header.small {
+    height: 6.2rem;
+    backdrop-filter: blur(4px);
+    display: flex;
+    justify-content: space-between;
+    position: relative;
+    padding-left: var(--spacing-6);
+    padding-right: var(--spacing-6);
+    background: transparent 0% 0% no-repeat padding-box;
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .App-header.small::after {
+    height: 1.3rem;
+    width: 100%;
+    content: " ";
+    background: transparent linear-gradient(180deg, rgba(0, 0, 0, 0.19) 0%, transparent 100%) 0% 0% no-repeat padding-box;
+    position: absolute;
+    bottom: -1.3rem;
+    left: 0;
+  }
+
+  a.App-header-user-account {
+    margin-right: 0;
+  }
+}
+
+@media (max-width: 600px) {
+  .App-header-link-main img.big {
+    display: none;
+  }
+
+  .App-header-link-main img.small {
+    display: inline-block;
+  }
+}
+
+@media (max-width: 450px) {
+  .App-header-user-link {
+    margin-right: var(--spacing-2);
+  }
+
+  .App-header-menu-icon-block {
+    margin-left: 0;
+    margin-right: var(--spacing-1);
+  }
+
+  .App-header-menu-icon {
+    margin: var(--spacing-1) var(--spacing-2);
+  }
+
+  .App-header.small {
+    padding-left: var(--spacing-2);
+    padding-right: var(--spacing-2);
+  }
+
+  .App-header .App-header-link-main {
+    padding: 0.155rem !important;
+    margin-left: 0rem !important;
+  }
+}
+
+@supports not ((-webkit-backdrop-filter: none) or (backdrop-filter: none)) {
+  .App-header-drawer {
+    background: var(--color-bg-main);
+  }
+}
+
+.App-header-dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+.App-header-dropdown-toggle {
+  font-size: var(--fontSize-base);
+  line-height: 1.8rem;
+  font-weight: normal;
+  letter-spacing: 0.1px;
+  color: var(--color-text-primary);
+  padding: var(--spacing-4) var(--spacing-6);
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+}
+
+.App-header-dropdown-menu {
+  z-index: 1;
+  padding-left: var(--spacing-10);
+}
+
+.App-header-dropdown-menu a {
+  color: var(--color-text-primary) !important;
+  padding: var(--spacing-2) var(--spacing-3) !important;
+  text-decoration: none !important;
+  display: block !important;
+}
+
+.App-header-dropdown-menu a:hover {
+  background-color: var(--color-hover);
+}
+
+.menuIcon {
+  transition: transform 0.3s ease;
+}
+
+.App-header-network-selector {
+  position: relative;
+}
+
+.network-icons-container {
+  display: flex;
+  align-items: center;
+  border: 1px solid var(--color-disabledBorder);
+  border-radius: var(--borderRadius-mds);
+  height: 36px;
+  background: var(--color-background-2);
+  padding: 0 var(--spacing-2)
+}
+
+.network-icon {
+  width: 24px;
+  height: 24px;
+  margin-right: 8px;
+  cursor: pointer;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+  opacity: 0.6;
+  /* 默认状态下的透明度 */
+}
+.network-icon:hover{
+  opacity: 1;
+}
+.network-icon:last-child {
+  margin-right: 0;
+}
+
+.network-icon.active {
+  opacity: 1;
+  /* 选中状态下的透明度 */
+  /* 移除之前的边框样式 */
+}
+
+.network-more-icon {
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.network-dropdown {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  margin-top: 4px;
+  background: var(--color-background-2);
+  border: 1px solid var(--color-border);
+  border-radius: var(--borderRadius-md);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  z-index: 100;
+  min-width: 160px;
+}
+
+
+.network-dropdown-item {
+  display: flex;
+  align-items: center;
+  padding: 8px 12px;
+  cursor: pointer;
+  transition: background 0.2s;
+  opacity: 0.6;
+  /* 默认状态下的透明度 */
+}
+
+.network-dropdown-item:hover {
+  background: var(--color-background-3);
+}
+
+.network-dropdown-item.active {
+  opacity: 1;
+  /* 选中状态下的透明度 */
+  background: color-mix(in srgb, var(--color-primary) 10%, transparent);
+}
+
+.network-dropdown-item img {
+  margin-right: 8px;
+}
+
+.settingBox {
+  @apply hidden md:flex;
+  width: 36px;
+  height: 36px;
+  border-radius: var(--borderRadius-mds);
+  justify-content: center;
+  align-items: center;
+  border: 1px solid var(--color-disabledBorder);
+}

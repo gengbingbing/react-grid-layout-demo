@@ -1,0 +1,86 @@
+.aggregator-swap-to {
+    transition: var(--transition-default);
+    overflow: hidden;
+    border: 1px solid transparent;
+}
+
+.aggregator-swap-to.new-trade {
+    animation: flash 1s ease forwards; /* 动画持续时间为 1 秒，使用 ease 过渡 */
+    animation-iteration-count: 3; /* 设置动画重复 3 次 */
+}
+
+@keyframes flash {
+    0% {
+        background-color: var(--color-bg-main);
+    }
+    10% {
+        transform: translate(-2px, -2px); /* 向左上抖动 */
+    }
+    20% {
+        transform: translate(2px, 2px); /* 向右下抖动 */
+    }
+    30% {
+        transform: translate(-2px, 2px); /* 向左下抖动 */
+    }
+    40% {
+        transform: translate(2px, -2px); /* 向右上抖动 */
+    }
+    50% {
+        box-shadow: 0 0 20px var(--color-success);
+        background-color: var(--color-bg-sub);
+    }
+    60% {
+        transform: translate(-2px, -2px); /* 向左上抖动 */
+    }
+    70% {
+        transform: translate(2px, 2px); /* 向右下抖动 */
+    }
+    80% {
+        transform: translate(-2px, 2px); /* 向左下抖动 */
+    }
+    90% {
+        transform: translate(2px, -2px); /* 向右上抖动 */
+    }
+    100% {
+        background-color: var(--color-bg-main);
+    }
+}
+
+@media (max-width: 1000px) {
+    .item-btn-card {
+        height: 25px;
+        border-radius: var(--borderRadius-sm);
+        border: 0.5px solid var(--color-border);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex: 1;
+        font-size: var(--fontSize-sm);
+        font-weight: var(--fontWeight-normal);
+        color: var(--color-text-secondary);
+        width: 100%;
+        padding: 3px;
+    }
+    .aggregator-swap-to {
+        width: 100%;
+    }
+}
+
+.aggregator-swap-to {
+    .react-loading-skeleton {
+        background: var(--color-bg-main) !important;
+    }
+}
+  
+@keyframes react-loading-skeleton {
+    0% {
+      transform: translateX(-100%);
+    }
+    60% {
+      transform: translateX(100%);
+    }
+    100% {
+      transform: translateX(100%);
+    }
+}
+  

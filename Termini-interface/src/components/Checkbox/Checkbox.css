@@ -1,0 +1,59 @@
+.Checkbox {
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+}
+
+@media (pointer: coarse) {
+  .Checkbox {
+    user-select: none;
+  }
+}
+
+.Checkbox.disabled {
+  cursor: default;
+  pointer-events: none;
+}
+
+.Checkbox-icon-wrapper {
+  display: inline-flex;
+  align-items: center;
+}
+
+.Checkbox .Checkbox-icon {
+  font-size: var(--fontSize-md);
+  color: var(--color-primary);
+  margin-right: var(--spacing-2);
+  margin-bottom: 0;
+}
+
+.Checkbox.noLabel .Checkbox-icon,
+.Checkbox.fullRow .Checkbox-icon {
+  margin-right: 0;
+}
+
+.Checkbox.disabled .Checkbox-icon {
+  color: var(--color-text-disable);
+}
+
+.Checkbox-icon.inactive {
+  color: var(--color-text-secondary);
+}
+
+.Checkbox-label {
+  display: inline-block;
+  vertical-align: middle;
+  font-size: var(--fontSize-base);
+  line-height: var(--lineHeight-normal);
+  text-align: left;
+  flex: 1;
+}
+
+.Checkbox.fullRow {
+  width: 100%;
+  display: flex;
+  grid-template-columns: 1fr auto;
+  flex-direction: row-reverse;
+  font-size: var(--fontSize-sm);
+  margin-bottom: var(--spacing-1);
+}

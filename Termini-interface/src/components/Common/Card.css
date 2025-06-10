@@ -1,0 +1,23 @@
+.card {
+  border-radius: 0.4rem;
+  background: var(--color-bg-main);
+}
+
+.card-header {
+  font-size: var(--fontSize-lg);
+  line-height: var(--lineHeight-normal);
+  font-weight: var(--fontWeight-normal);
+  letter-spacing: 0px;
+  color: var(--color-text-primary);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.card-divider {
+  height: 1px;
+  background: var(--color-border);
+}
+.card-body {
+  padding: 1.5rem;
+}

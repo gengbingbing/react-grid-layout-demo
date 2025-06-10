@@ -1,0 +1,311 @@
+html,
+body,
+#root {
+  margin: 0;
+  padding: 0;
+  color: var(--color-text-primary);
+  font-size: 10px;
+  background-color: var(--color-bg-base);
+}
+
+/**
+ * @see https://aykevl.nl/2014/09/fix-jumping-scrollbar
+ * Used body selector and !important to avoid collisions with [data-scroll-locked] attribute
+ * attached by react-remove-scroll lib, which is uncontrollable.
+ */
+body {
+  width: 100vw;
+  overflow-x: hidden !important;
+}
+
+body {
+  margin: 0;
+  font-family: "Poppins-Regular","Outfit", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
+    sans-serif;
+  -webkit-font-smoothing: subpixel-antialiased;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New", monospace;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  letter-spacing: 0.05rem;
+}
+
+input {
+  font-family: "RelativeNumber";
+}
+
+@supports (scrollbar-width: auto) {
+  :root {
+    scrollbar-color: #343434 var(--color-bg-main);
+  }
+}
+
+@supports selector(::-webkit-scrollbar) {
+  ::-webkit-scrollbar {
+    width: 0.6rem;
+    height: 0.6rem;
+  }
+  
+  /* Track */
+  ::-webkit-scrollbar-track {
+    background: #17182e;
+  }
+  
+  /* Handle */
+  ::-webkit-scrollbar-thumb {
+    background: var(--color-text-secondary);
+    border-radius: 1.5rem;
+  }
+  
+  /* Handle on hover */
+  ::-webkit-scrollbar-thumb:hover {
+    background: #b3b4c2;
+  }
+}
+
+:root {
+  --main-bg-color: var(--color-bg-base);
+  --dark-main: var(--color-bg-main);
+  --dark-main-bg: var(--color-bg-main);
+  --dark-main-accent: var(--color-text-primary);
+  --primary-btn-bg: var(--color-primaryColor);
+  --soneium-blue: #00481D;
+  --border-radius-sm: 0.4rem; // 4px
+  --error-red: var(--color-web3-red);
+  --error-red-hover: var(--color-red-400);
+  --green: var(--color-web3-green);
+  --default-container-max-width: 126.4rem;
+  --default-container-padding: 3.2rem;
+  --default-container-padding-mobile: 1rem;
+  --toastify-color-dark: var(--color-web3-green);
+}
+
+a {
+  color: var(--color-text-primary);
+}
+
+.Card-title {
+  font-size: 3.1rem;
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+input[type="number"] {
+  -moz-appearance: textfield;
+}
+
+// TODO: remove this
+input {
+  font-size: var(--fontSize-base);
+  color: var(--color-text-primary);
+  outline: none;
+  background: none;
+  padding: 1.25rem;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+button {
+  outline: none;
+  cursor: pointer;
+}
+
+button:disabled,
+button.App-cta:disabled {
+  cursor: not-allowed;
+  opacity: 0.9;
+  box-shadow: none;
+}
+
+table {
+  margin: 0;
+  padding: 0;
+}
+
+tr {
+  margin: 0;
+  padding: 0;
+}
+
+.align-right {
+  text-align: right;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.muted {
+  color: var(--color-text-primary);
+}
+
+.strong {
+  font-weight: bold;
+}
+
+.clickable {
+  cursor: pointer;
+}
+
+.transition-arrow {
+  vertical-align: middle;
+  margin-top: -0.31rem;
+}
+
+.label,
+.label a {
+  color: var(--color-text-primary);
+}
+
+ul {
+  padding-left: 2.325rem;
+  margin-bottom: 0;
+}
+
+ul li {
+  padding-bottom: 1.5rem;
+}
+
+a.plain {
+  text-decoration: none;
+}
+
+.checkbox:checked:before {
+  background-color: green;
+}
+
+.default-container {
+  max-width: var(--default-container-max-width);
+  padding-left: var(--default-container-padding);
+  padding-right: var(--default-container-padding);
+  margin: 0 auto;
+
+  @media (max-width: 600px) {
+    padding-left: var(--default-container-padding-mobile);
+    padding-right: var(--default-container-padding-mobile);
+  }
+}
+
+.default-container-mobile-one-sided {
+  max-width: var(--default-container-max-width);
+  margin: 0 auto;
+  padding-left: var(--default-container-padding);
+  padding-right: var(--default-container-padding);
+
+  // Media order matters
+  @media (max-width: 1264px) {
+    margin-left: var(--default-container-padding);
+    padding-left: 0;
+    max-width: none;
+  }
+
+  @media (max-width: 600px) {
+    margin-left: var(--default-container-padding-mobile);
+    padding-left: 0;
+    max-width: none;
+  }
+}
+
+@keyframes ripple {
+  to {
+    transform: scale(2);
+    opacity: 0.4;
+  }
+}
+
+button.btn-link {
+  margin-top: 1.5rem;
+  background: none;
+  color: var(--color-text-primary);
+  border: none;
+  padding: 0;
+  font-size: var(--fontSize-base);
+  display: block;
+  text-align: left;
+}
+
+.logout-icon {
+  vertical-align: middle;
+  font-size: 1.7rem;
+  margin-top: -0.31rem;
+  margin-right: 0.5rem;
+  margin-left: -0.465rem;
+  opacity: 0.8;
+}
+
+button.btn-link:hover {
+  text-decoration: underline;
+}
+
+button.btn-link:hover .logout-icon {
+  opacity: 1;
+}
+
+.page-container {
+  padding-top: 6.2rem;
+}
+
+.default-sm-container {
+  max-width: 108.8rem;
+}
+
+.page-layout {
+  min-height: calc(100vh - 62px);
+  display: flex;
+  flex-direction: column;
+  padding-bottom: calc(4.65rem + 20rem);
+  padding-top: 4.65rem;
+}
+
+.default-cursor.App-cta {
+  cursor: default;
+}
+
+.gap-right > *:not(:last-child) {
+  margin-right: 1rem;
+}
+
+.debug-key {
+  overflow-wrap: break-word;
+  max-width: 30rem;
+}
+
+.subtext {
+  font-size: 1.2rem;
+  color: var(--color-text-primary);
+  margin-left: 0.25rem;
+}
+
+a:hover .text-red {
+  color: var(--error-red-hover);
+}
+
+.Toastify__toast-container {
+  width: 37rem;
+}
+
+@media screen and (max-width: 480px) {
+  .Toastify__toast-container {
+    width: 100vw;
+  }
+}
+
+.gap-right-xs > *:not(:last-child) {
+  margin-right: 0.5rem;
+}
+
+.checkbox-inline {
+  display: inline-flex;
+}

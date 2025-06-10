@@ -1,0 +1,9 @@
+.link-underline {
+  text-decoration: underline;
+  cursor: pointer;
+  display: inline-flex;
+  color: var(--color-text-primary);
+  &:hover {
+    color: var(--color-text-primary);
+  }
+}

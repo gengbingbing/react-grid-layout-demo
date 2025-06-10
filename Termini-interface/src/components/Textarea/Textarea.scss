@@ -1,0 +1,7 @@
+.textarea-bg {
+  background: linear-gradient(
+    90deg,
+    var(--color-bg-sub) 0%,
+    color-mix(in srgb, var(--color-hover) 40%, transparent) 100%
+  );
+}

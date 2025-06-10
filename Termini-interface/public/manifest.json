@@ -1,0 +1,17 @@
+{
+  "short_name": "Termini",
+  "name": "Termini",
+  "description": "One-stop trading Platform on @soneium, offering AMM, Perp, AI Agent launch, and Meme Launch.",
+  "iconPath": "logo.png",
+  "icons": [
+    {
+      "src": "favicon/apple-icon.png",
+      "sizes": "32x32",
+      "type": "image/png"
+    }
+  ],
+  "start_url": "./index.html",
+  "display": "standalone",
+  "theme_color": "#2d42fc",
+  "background_color": "#ffffff"
+}

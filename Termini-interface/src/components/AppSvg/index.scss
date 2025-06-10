@@ -1,0 +1,27 @@
+.svg-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  /* 只有当添加了 svg-with-color 类时，才应用颜色样式 */
+  .svg-icon.svg-with-color .svg-content {
+    color: var(--svg-color, currentColor);
+  }
+  
+  // .svg-icon.svg-with-color .svg-content path,
+  // .svg-icon.svg-with-color .svg-content circle,
+  // .svg-icon.svg-with-color .svg-content rect,
+  // .svg-icon.svg-with-color .svg-content line,
+  // .svg-icon.svg-with-color .svg-content polyline,
+  // .svg-icon.svg-with-color .svg-content polygon {
+  //   stroke: currentColor;
+  // }
+  
+  /* 对于那些没有明确指定 fill="none" 的元素，应用填充颜色 */
+  .svg-icon.svg-with-color .svg-content path:not([fill="none"]),
+  .svg-icon.svg-with-color .svg-content circle:not([fill="none"]),
+  .svg-icon.svg-with-color .svg-content rect:not([fill="none"]),
+  .svg-icon.svg-with-color .svg-content polygon:not([fill="none"]) {
+    fill: currentColor;
+  }

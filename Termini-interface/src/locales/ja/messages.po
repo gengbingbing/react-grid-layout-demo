@@ -1,0 +1,985 @@
+msgid ""
+msgstr ""
+"POT-Creation-Date: 2022-08-06 13:30+0530\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: @lingui/cli\n"
+"Language: ja\n"
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: \n"
+"PO-Revision-Date: \n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Plural-Forms: \n"
+
+#: src/components/RatingToast/RatingToast.tsx
+msgid "Not likely"
+msgstr "可能性は低い"
+
+#: src/components/AddressDropdown/AddressDropdown.tsx
+msgid "Disconnect"
+msgstr "接続停止"
+
+#: src/components/ModalViews/RedirectModal.tsx
+msgid "Agree"
+msgstr "同意する"
+
+#: src/pages/Aggregator/components/orders/DcaOrderHistory.tsx
+#: src/pages/Aggregator/components/orders/OpenDcaOrder.tsx
+#: src/pages/Aggregator/components/orders/OpenOrder.tsx
+#: src/pages/Aggregator/components/orders/OrderHistory.tsx
+#: src/pages/Aggregator/components/SwapBox.tsx
+#: src/pages/Aggregator/components/TokenListTable.tsx/index.tsx
+#: src/pages/Aggregator/components/Trending/index.tsx
+msgid "loading..."
+msgstr "読み込み中..."
+
+#: src/components/ToastifyDebug/ToastifyDebug.tsx
+msgid "Show error"
+msgstr "エラーを表示"
+
+#: src/pages/Aggregator/components/SwapBox.tsx
+msgid "To"
+msgstr ""
+
+#: src/lib/contracts/callContract.tsx
+msgid "View status."
+msgstr "状況を見る"
+
+#: src/pages/Aggregator/components/orders/DcaOverView.tsx
+#: src/pages/Aggregator/components/SwapBox.tsx
+msgid "Orders"
+msgstr ""
+
+#: src/components/SettingsModal/SettingsModal.tsx
+msgid "The Max Network Fee is set to a higher value to handle potential increases in gas price during order execution. Any excess network fee will be refunded to your account when the order is executed."
+msgstr "最大ネットワーク手数料は、注文実行中のガス価格の潜在的な上昇に対応するために高い値に設定されています。注文が実行されると、過剰なネットワーク手数料はアカウントに返金されます。"
+
+#: src/components/Header/AppHeaderLinks.tsx
+msgid "Stats"
+msgstr "統計"
+
+#: src/components/ModalViews/RedirectModal.tsx
+msgid "Don't show this message again for 30 days."
+msgstr "30日間このメッセージを表示しない"
+
+#: src/components/SettingsModal/SettingsModal.tsx
+msgid "Max Network Fee buffer below {0}% may result in failed orders."
+msgstr "最大ネットワーク手数料バッファが{0}%未満の場合、注文が失敗する可能性があります。"
+
+#: src/pages/Aggregator/components/orders/DcaOrderHistory.tsx
+#: src/pages/Aggregator/components/orders/OpenDcaOrder.tsx
+msgid "Total Deposited"
+msgstr ""
+
+#: src/lib/wallets/connecters/binanceW3W/binanceWallet.ts
+msgid "Tap [Create Wallet] to start using your Web3 Wallet."
+msgstr "ウェブ3ウォレットを使用するには[ウォレットを作成]をタップしてください。"
+
+#: src/lib/wallets/connecters/binanceW3W/binanceWallet.ts
+msgid "Create or Import a Wallet"
+msgstr "ウォレットの作成またはインポート"
+
+#: src/components/NetworkDropdown/NetworkDropdown.tsx
+msgid "Networks and Settings"
+msgstr "ネットワークと設定"
+
+#: src/components/SettingsModal/SettingsModal.tsx
+msgid "Max network fee buffer precision is 0.01%"
+msgstr "最大ネットワーク手数料バッファの精度は0.01%です"
+
+#: src/components/SearchInput/SearchInput.tsx
+msgid "Search Token"
+msgstr "トークンを検索"
+
+#: src/components/BuyInputSection/BuyInputSection.tsx
+#: src/components/BuyInputSection/BuyInputSection.tsx
+#: src/components/InputSection/InputSection.jsx
+#: src/pages/Aggregator/components/SwapBox.tsx
+msgid "MAX"
+msgstr "最大"
+
+#: src/components/SettingsModal/AggregatorSettingsModal.tsx
+#: src/components/SettingsModal/AggregatorSettingsModal.tsx
+#: src/components/SettingsModal/SettingsModal.tsx
+#: src/components/SettingsModal/SettingsModal.tsx
+msgid "Invalid slippage value"
+msgstr "無効なスリッページ値"
+
+#: src/components/SettingsModal/AggregatorSettingsModal.tsx
+#: src/components/SettingsModal/SettingsModal.tsx
+msgid "Slippage should be less than -5%"
+msgstr ""
+
+#: src/pages/Aggregator/components/orders/DcaTransactions.tsx
+msgid "Scheduled"
+msgstr ""
+
+#: src/pages/Aggregator/components/SwapBox.tsx
+msgid "Pay"
+msgstr ""
+
+#: src/pages/Aggregator/components/SwapBox.tsx
+msgid "Swap {0} to {1} failed."
+msgstr "{0}から{1}へのスワップが失敗しました。"
+
+#: src/pages/Aggregator/components/orders/DcaOrderHistory.tsx
+#: src/pages/Aggregator/components/orders/OpenDcaOrder.tsx
+msgid "Transactions"
+msgstr ""
+
+#: src/pages/Aggregator/components/SwapBox.tsx
+msgid "Created limit order successful."
+msgstr "指値注文が正常に作成されました。"
+
+#: src/pages/Aggregator/components/SwapBox.tsx
+msgid "Order Execution Interval"
+msgstr ""
+
+#: src/pages/Aggregator/components/orders/DcaOrderHistory.tsx
+#: src/pages/Aggregator/components/orders/DcaTransactions.tsx
+#: src/pages/Aggregator/components/orders/OpenDcaOrder.tsx
+#: src/pages/Aggregator/components/orders/OpenOrder.tsx
+#: src/pages/Aggregator/components/orders/OrderHistory.tsx
+msgid "From/To"
+msgstr "送信元/送信先"
+
+#: src/pages/Aggregator/components/SwapBox.tsx
+msgid "Create Limit Order..."
+msgstr "指値注文を作成中..."
+
+#: src/components/ToastifyDebug/ToastifyDebug.tsx
+msgid "Copied"
+msgstr "コピーしました"
+
+#: src/components/SettingsModal/SettingsModal.tsx
+msgid "Invalid network fee buffer value"
+msgstr "無効なネットワーク手数料バッファ値"
+
+#: src/pages/Aggregator/components/SwapBox.tsx
+msgid "Create Limit Order"
+msgstr "指値注文を作成"
+
+#: src/pages/Aggregator/components/SwapBox.tsx
+#: src/pages/Aggregator/components/SwapMarketInfo.tsx
+msgid "Best Price"
+msgstr "最良価格"
+
+#: src/pages/Aggregator/components/SwapLimitInfo.tsx
+msgid "Sell Order"
+msgstr ""
+
+#: src/components/ToastifyDebug/ToastifyDebug.tsx
+msgid "Hide error"
+msgstr "エラーを非表示"
+
+#: src/pages/Aggregator/components/orders/DcaOverView.tsx
+msgid "Created At"
+msgstr ""
+
+#: src/pages/PageNotFound/PageNotFound.jsx
+#: src/pages/PageNotFound/PageNotFound.jsx
+msgid "Page not found"
+msgstr "ページが見つかりません"
+
+#: src/components/ModalViews/RedirectModal.tsx
+msgid "The website is a community deployed and maintained instance of the open source Termini front end, hosted and served on the distributed, peer-to-peer <0>IPFS network</0>."
+msgstr "このウェブサイトは、分散型ピアツーピアの<0>IPFSネットワーク</0>でホストおよび提供されているオープンソースのTerminiフロントエンドのコミュニティによって展開および維持されているインスタンスです。"
+
+#: src/pages/Aggregator/components/SwapLimitInfo.tsx
+msgid "Execution fee covers the gas cost for our keeper to execute your order. It ensures your transaction is processed reliably and on time."
+msgstr ""
+
+#: src/pages/Aggregator/components/TokenSelectModal.tsx
+msgid "Search"
+msgstr "検索"
+
+#: src/pages/Aggregator/components/Trending/TrendCard.tsx
+msgid "Market Price"
+msgstr "市場価格"
+
+#: src/pages/Aggregator/components/SwapBox.tsx
+msgid "Increase your payment to at least 0.0001 tokens per order."
+msgstr ""
+
+#: src/components/Header/AppHeaderLinks.tsx
+msgid "Audit"
+msgstr "監査"
+
+#: src/pages/Aggregator/components/SwapTab.tsx
+msgid "Bots"
+msgstr ""
+
+#: src/components/Header/AppHeaderLinks.tsx
+msgid "Points"
+msgstr "ポイント"
+
+#: src/pages/Aggregator/components/orders/DcaOverView.tsx
+msgid "Every"
+msgstr ""
+
+#: src/lib/legacy.ts
+msgid "No open position, order cannot be executed unless a position is opened"
+msgstr "オープンのポジションはありません。オープンのポジションがない場合、注文は執行できません"
+
+#: src/components/SettingsModal/AggregatorSettingsModal.tsx
+msgid "Allowed Slippage below {defaultSippageDisplay}% may result in failed orders."
+msgstr "{defaultSippageDisplay}%未満の許容スリッページは、注文の失敗を招く可能性があります。"
+
+#: src/components/Header/AppHeaderUser.tsx
+#: src/pages/Aggregator/components/SwapBox.tsx
+msgid "Connect Wallet"
+msgstr "ウォレット接続"
+
+#: src/components/Header/AppHeaderLinks.tsx
+msgid "Launching"
+msgstr "ローンチ中"
+
+#: src/pages/Aggregator/components/SwapBox.tsx
+msgid "Approving {0}..."
+msgstr "{0}を承認中..."
+
+#: src/components/StatsTooltip/ChainsStatsTooltipRow.tsx
+msgid "Total:"
+msgstr "合計："
+
+#: src/domain/tokens/approveTokens.tsx
+msgid "{0} Approved!"
+msgstr "{0}が承認されました！"
+
+#: src/lib/contracts/transactionErrors.tsx
+msgid "<0>Error submitting order.</0><1/><2>Signer address does not match receiver address.</2><3/><4>Please reload the page and try again.</4>"
+msgstr "<0>注文の送信エラー。</0><1/><2>署名者アドレスが受信者アドレスと一致しません。</2><3/><4>ページを再読み込みして再試行してください。</4>"
+
+#: src/components/ApproveTokenButton/ApproveTokenButton.tsx
+msgid "Allow {0} to be spent"
+msgstr "{0}の使用を許可"
+
+#: src/pages/Aggregator/components/orders/OpenDcaOrder.tsx
+msgid "Order stop failed!"
+msgstr ""
+
+#: src/lib/contracts/transactionErrors.tsx
+msgid "The mark price has changed, consider increasing your Allowed Slippage by clicking on the \"...\" icon next to your address."
+msgstr "マーク価格が変化したため、アドレスの横に表示されている\"...\"アイコンをクリックして最大許容スリッページを増やすことを検討してください。"
+
+#: src/pages/Aggregator/components/orders/DcaOverView.tsx
+msgid "Orders Remaining"
+msgstr ""
+
+#: src/components/ModalViews/RedirectModal.tsx
+msgid "Launch App"
+msgstr "アプリ起動"
+
+#: src/pages/Aggregator/components/SwapMarketInfo.tsx
+msgid "Slippage tolerance"
+msgstr "スリッページ許容範囲"
+
+#: src/lib/contracts/callContract.tsx
+#: src/lib/contracts/callContract.tsx
+#: src/lib/contracts/callContract.tsx
+msgid "Transaction sent."
+msgstr "取引は送信済です。"
+
+#: src/pages/Aggregator/components/SwapMarketInfo.tsx
+msgid "Minimum received"
+msgstr "最小受取額"
+
+#: src/pages/Aggregator/components/SwapBox.tsx
+msgid "Number of Orders cannot be lower than 2."
+msgstr ""
+
+#: src/pages/Aggregator/components/SwapBox.tsx
+msgid "into"
+msgstr ""
+
+#: src/pages/Aggregator/components/SwapBox.tsx
+msgid "Split"
+msgstr ""
+
+#: src/pages/Aggregator/components/orders/DcaTransactions.tsx
+msgid "No transaction data"
+msgstr ""
+
+#: src/pages/Aggregator/components/SwapBox.tsx
+msgid "To minimise the predictability of your DCA strategy, orders are filled within a randomised padding of +/- 30 seconds."
+msgstr ""
+
+#: src/pages/Aggregator/components/orders/DcaTransactions.tsx
+msgid "Refund"
+msgstr ""
+
+#: src/components/Header/AppHeaderLinks.tsx
+msgid "Bridge"
+msgstr "ブリッジ"
+
+#: src/components/Header/AppHeaderLinks.tsx
+msgid "Trade"
+msgstr ""
+
+#: src/pages/Aggregator/components/orders/DcaOrderHistory.tsx
+#: src/pages/Aggregator/components/orders/OpenDcaOrder.tsx
+msgid "OverView"
+msgstr ""
+
+#: src/pages/Aggregator/components/orders/DcaOverView.tsx
+msgid "Each Order Size"
+msgstr ""
+
+#: src/pages/Aggregator/components/orders/OrderEditor.tsx
+msgid "Update Order"
+msgstr "注文を更新"
+
+#: src/pages/Aggregator/components/SwapBox.tsx
+msgid "This is the time period during which the order wilbe active. Please note that orders may becompleted earlier than this time, or remainunfilled based on the specified parameters."
+msgstr ""
+
+#: src/pages/Aggregator/components/SwapBox.tsx
+msgid "Trigger price is higher than market price"
+msgstr "トリガー価格が市場価格より高いです"
+
+#: src/pages/Aggregator/components/SwapMarketInfo.tsx
+msgid "Network Fee"
+msgstr "ネットワーク手数料"
+
+#: src/pages/Aggregator/components/SwapBox.tsx
+msgid "Swap {0} to {1} successful."
+msgstr "{0}から{1}へのスワップが成功しました。"
+
+#: src/pages/Aggregator/components/SwapBox.tsx
+msgid "Swap {0} to {1} submitted!"
+msgstr "{0}から{1}へのスワップが送信されました！"
+
+#: src/components/NetworkDropdown/LanguagePopupHome.tsx
+#: src/components/NetworkDropdown/NetworkDropdown.tsx
+#: src/hooks/useLanguageModal.tsx
+msgid "Select Language"
+msgstr "言語選択"
+
+#: src/pages/Aggregator/components/TokenListTable.tsx/index.tsx
+#: src/pages/Aggregator/components/Trending/index.tsx
+msgid "No data here."
+msgstr ""
+
+#: src/lib/legacy.ts
+msgid "Order cannot be executed as the remaining position would be smaller than $5.00"
+msgstr "ポジション金額が$5未満になるため注文を執行できません"
+
+#: src/pages/Aggregator/components/orders/DcaOrderHistory.tsx
+#: src/pages/Aggregator/components/orders/OpenDcaOrder.tsx
+msgid "Empty"
+msgstr ""
+
+#: src/pages/Aggregator/index.tsx
+msgid "All"
+msgstr "すべて"
+
+#: src/pages/Aggregator/components/orders/OrderEditor.tsx
+msgid "Updating Order..."
+msgstr "注文を更新中..."
+
+#: src/components/NotifyModal/NotifyModal.tsx
+msgid "Get notify from Termini to stay on top of your trades, liquidation risk, and more."
+msgstr ""
+
+#: src/components/SettingsModal/AggregatorSettingsModal.tsx
+msgid "Allowed Slippage"
+msgstr "許容スリッページ"
+
+#: src/pages/Aggregator/components/orders/OrderEditor.tsx
+msgid "Order update failed."
+msgstr "注文の更新に失敗しました。"
+
+#: src/pages/Aggregator/components/orders/DcaOrderHistory.tsx
+#: src/pages/Aggregator/components/orders/OpenDcaOrder.tsx
+msgid "Stopped"
+msgstr ""
+
+#: src/pages/Aggregator/components/SwapBox.tsx
+msgid "Waiting for Approval"
+msgstr "承認待ち"
+
+#: src/pages/Aggregator/components/SwapLimitInfo.tsx
+msgid "Platform Fee"
+msgstr ""
+
+#: src/components/NetworkDropdown/NetworkDropdown.tsx
+msgid "More Options"
+msgstr "別の選択肢"
+
+#: src/pages/Aggregator/components/orders/OpenOrder.tsx
+msgid "Your order will only execute if the price reaches a level where your desired token amount can be fully swapped. This may differ from the displayed market price due to liquidity conditions."
+msgstr ""
+
+#: src/components/AddressDropdown/AddressDropdown.tsx
+msgid "View in Explorer"
+msgstr "Explorerで見る"
+
+#: src/lib/wallets/connecters/binanceW3W/binanceWallet.ts
+msgid "After you scan, a connection prompt will appear for you to connect your wallet."
+msgstr "スキャン後、ウォレットを接続するためのプロンプトが表示されます。"
+
+#: src/pages/Aggregator/components/SwapMarketInfo.tsx
+msgid "Fee"
+msgstr "手数料"
+
+#: src/domain/tokens/approveTokens.tsx
+msgid "Approval failed"
+msgstr "承認が失敗しました"
+
+#: src/pages/Aggregator/components/orders/OpenOrder.tsx
+msgid "Order cancel submitted!"
+msgstr "注文キャンセルが送信されました！"
+
+#: src/pages/Aggregator/components/SwapLimitInfo.tsx
+msgid "To Buy"
+msgstr ""
+
+#: src/components/Header/AppHeaderLinks.tsx
+msgid "Earn"
+msgstr ""
+
+#: src/pages/Aggregator/components/SwapBox.tsx
+msgid "Unwrap"
+msgstr "アンラップ"
+
+#: src/context/PendingTxnsContext/PendingTxnsContext.tsx
+msgid "Txn failed. <0>View</0>."
+msgstr "取引失敗。<0>表示</0>。"
+
+#: src/pages/Aggregator/components/TokenSelectModal.tsx
+msgid "Select a token"
+msgstr "トークンを選択"
+
+#: src/components/SettingsModal/AggregatorSettingsModal.tsx
+#: src/components/SettingsModal/SettingsModal.tsx
+msgid "Transaction deadline"
+msgstr "取引期限"
+
+#: src/lib/wallets/connecters/binanceW3W/binanceWallet.ts
+msgid "Log in to your Binance app and tap [Wallets]. Go to [Web3]."
+msgstr "Binanceアプリにログインし、[ウォレット]をタップして[Web3]に移動します。"
+
+#: src/pages/Aggregator/index.tsx
+msgid "Open Orders {0}"
+msgstr "未約定注文 {0}"
+
+#: src/components/Header/AppHeaderLinks.tsx
+msgid "Docs"
+msgstr "ドキュメント"
+
+#: src/components/AddressDropdown/AddressDropdown.tsx
+msgid "Address copied to your clipboard"
+msgstr "アドレスがクリップボードにコピーされました"
+
+#: src/components/Header/AppHeaderLinks.tsx
+#: src/components/NetworkDropdown/NetworkDropdown.tsx
+#: src/components/NetworkDropdown/NetworkDropdown.tsx
+#: src/components/SettingsModal/SettingsModal.tsx
+msgid "Settings"
+msgstr "設定"
+
+#: src/pages/Aggregator/components/SwapTab.tsx
+msgid "Coming Soon"
+msgstr "近日公開"
+
+#: src/components/NetworkDropdown/NetworkDropdown.tsx
+#: src/components/NetworkDropdown/NetworkDropdown.tsx
+msgid "Networks"
+msgstr "ネットワーク"
+
+#: src/pages/Aggregator/components/orders/OpenOrder.tsx
+msgid "Order cancel successfully!"
+msgstr "注文が正常にキャンセルされました！"
+
+#: src/lib/legacy.ts
+msgid "Order cannot be executed as it would reduce the position's leverage below 1"
+msgstr "ポジションのレバレッジが1未満に減少するため、注文を実行できません"
+
+#: src/components/SettingsModal/AggregatorSettingsModal.tsx
+#: src/components/SettingsModal/SettingsModal.tsx
+msgid "Max slippage precision is -0.01%"
+msgstr "最大スリッページ精度は-0.01%"
+
+#: src/pages/Aggregator/index.tsx
+msgid "Favorites"
+msgstr "お気に入り"
+
+#: src/pages/Aggregator/components/orders/OpenDcaOrder.tsx
+msgid "Stop and Withdraw"
+msgstr ""
+
+#: src/pages/Aggregator/components/orders/DcaOverView.tsx
+msgid "Average Price"
+msgstr ""
+
+#: src/pages/Aggregator/components/SwapTab.tsx
+#: src/pages/Aggregator/components/SwapTab.tsx
+msgid "Beta"
+msgstr "Beta"
+
+#: src/components/SettingsModal/SettingsModal.tsx
+msgid "Max Network Fee Buffer"
+msgstr "最大ネットワーク手数料バッファ"
+
+#: src/pages/Aggregator/components/orders/OrderEditor.tsx
+msgid "Order updated!"
+msgstr "注文が更新されました！"
+
+#: src/lib/contracts/callContract.tsx
+msgid "Transaction completed!"
+msgstr "取引完了!"
+
+#: src/lib/legacy.ts
+msgid "Decentralized Perpetual Exchange | Termini"
+msgstr "分散型永続取引所 | Termini"
+
+#: src/components/Header/AppHeaderLinks.tsx
+msgid "Referrals"
+msgstr "紹介"
+
+#: src/pages/Aggregator/components/SwapBox.tsx
+msgid "Create DCA Order..."
+msgstr ""
+
+#: src/App/MainRoutes.tsx
+#: src/pages/Aggregator/components/DexscreenerFrameKline.tsx
+msgid "Loading..."
+msgstr "ロード中"
+
+#: src/components/Header/AppHeaderLinks.tsx
+msgid "Trades"
+msgstr "取引"
+
+#: src/pages/Aggregator/components/SwapBox.tsx
+msgid "Please enter an interval above 0."
+msgstr ""
+
+#: src/pages/Aggregator/components/TokenListTable.tsx/index.tsx
+msgid "Price"
+msgstr "価格"
+
+#: src/pages/Aggregator/components/SwapBox.tsx
+msgid "Incorrect Network"
+msgstr "ネットワークが正しくありません"
+
+#: src/pages/Aggregator/components/SwapBox.tsx
+msgid "Unwrap {0}..."
+msgstr "{0}をアンラップ中..."
+
+#: src/pages/Aggregator/components/orders/OpenOrder.tsx
+#: src/pages/Aggregator/components/SwapLimitInfo.tsx
+msgid "Expiry"
+msgstr "有効期限"
+
+#: src/pages/Aggregator/components/orders/OpenDcaOrder.tsx
+msgid "Order stop submitted!"
+msgstr ""
+
+#: src/domain/tokens/approveTokens.tsx
+msgid "Approval submitted! <0>View status.</0>"
+msgstr "承認が提出されました! <0>状況を確認する</0>"
+
+#: src/pages/Aggregator/components/orders/DcaOverView.tsx
+msgid "Next Order At"
+msgstr ""
+
+#: src/pages/Aggregator/components/SwapBox.tsx
+msgid "orders to buy"
+msgstr ""
+
+#: src/components/RatingToast/RatingToast.tsx
+msgid "How likely are you to recommend our service to a friend or colleague?"
+msgstr "友人や同僚に私たちのサービスを推薦する可能性はどのくらいですか？"
+
+#: src/pages/Aggregator/components/orders/OpenOrder.tsx
+msgid "Cancel"
+msgstr "キャンセル"
+
+#: src/pages/Aggregator/components/SwapBox.tsx
+msgid "Insufficient liquidity"
+msgstr "流動性不足"
+
+#: src/pages/Aggregator/components/SwapBox.tsx
+msgid "order"
+msgstr ""
+
+#: src/components/Header/AppHeaderLinks.tsx
+msgid "Farms"
+msgstr "ファーム"
+
+#: src/lib/wallets/connecters/binanceW3W/binanceWallet.ts
+msgid "Open Binance app"
+msgstr "Binanceアプリを開く"
+
+#: src/pages/Aggregator/components/orders/OpenOrder.tsx
+#: src/pages/Aggregator/components/orders/OpenOrder.tsx
+msgid "Edit"
+msgstr "編集"
+
+#: src/pages/Aggregator/components/SwapBox.tsx
+msgid "From"
+msgstr ""
+
+#: src/pages/Aggregator/components/SwapBox.tsx
+msgid "Wrap {0}..."
+msgstr "{0}をラップ中..."
+
+#: src/components/Header/AppHeaderLinks.tsx
+msgid "Perp Pools"
+msgstr "パーププール"
+
+#: src/pages/Aggregator/components/SwapLimitInfo.tsx
+msgid "Maximum available Orders:"
+msgstr ""
+
+#: src/pages/Aggregator/components/SwapBox.tsx
+msgid "Approve {0}"
+msgstr "{0}を承認"
+
+#: src/pages/Aggregator/components/orders/OrderEditor.tsx
+msgid "Limit price is higher than market price"
+msgstr "指値価格が市場価格より高いです"
+
+#: src/pages/Aggregator/components/SwapBox.tsx
+#: src/pages/Aggregator/components/TokenSelectModal.tsx
+msgid "Balance"
+msgstr "残高"
+
+#: src/components/Header/AppHeaderLinks.tsx
+msgid "Swap Pools"
+msgstr "スワッププール"
+
+#: src/pages/Aggregator/components/SwapBox.tsx
+msgid "Limit order submitted!"
+msgstr "指値注文が送信されました！"
+
+#: src/pages/Aggregator/components/SwapBox.tsx
+msgid "Wrap"
+msgstr "ラップ"
+
+#: src/components/Header/AppHeaderUser.tsx
+msgid "Connect"
+msgstr "接続"
+
+#: src/components/ModalViews/RedirectModal.tsx
+msgid "By clicking Agree you accept the <0>T&Cs</0> and <1>Referral T&Cs</1>.<2/><3/>"
+msgstr "同意をクリックすると、<0>利用規約</0>と<1>紹介利用規約</1>に同意したことになります。<2/><3/>"
+
+#: src/lib/wallets/connecters/binanceW3W/binanceWallet.ts
+msgid "Scan the QR code"
+msgstr "QRコードをスキャン"
+
+#: src/components/SettingsModal/SettingsModal.tsx
+msgid "Show leverage slider"
+msgstr "レバレッジスライダーを表示"
+
+#: src/pages/Aggregator/components/orders/OrderEditor.tsx
+msgid "Order update submitted!"
+msgstr "注文更新が送信されました！"
+
+#: src/pages/Aggregator/index.tsx
+msgid "My Transactions"
+msgstr "マイ取引"
+
+#: src/pages/Aggregator/components/TokenSelectModal.tsx
+msgid "Token Name"
+msgstr "トークン名"
+
+#: src/context/PendingTxnsContext/PendingTxnsContext.tsx
+#: src/lib/contracts/notifications.tsx
+#: src/lib/contracts/notifications.tsx
+msgid "View"
+msgstr "見る"
+
+#: src/domain/tokens/approveTokens.tsx
+msgid "There is not enough {0} in your account on {networkName} to send this transaction."
+msgstr "{networkName}のアカウントにこの取引を送信するのに十分な{0}がありません。"
+
+#: src/components/AddressView/AddressView.tsx
+msgid "You"
+msgstr "あなた"
+
+#: src/pages/Aggregator/components/SwapBox.tsx
+msgid "Receive"
+msgstr ""
+
+#: src/pages/Aggregator/components/SwapLimitInfo.tsx
+msgid "Execution Fee"
+msgstr ""
+
+#: src/components/Header/AppHeaderLinks.tsx
+msgid "Pools"
+msgstr "プール"
+
+#: src/components/Header/AppHeaderLinks.tsx
+#: src/pages/Aggregator/index.tsx
+msgid "Meme"
+msgstr "ミーム"
+
+#: src/components/NotifyModal/NotifyModal.tsx
+msgid "Termini Notify"
+msgstr "Termini通知"
+
+#: src/components/ToastifyDebug/ToastifyDebug.tsx
+msgid "Copy error"
+msgstr "エラーをコピー"
+
+#: src/pages/Aggregator/components/SwapBox.tsx
+msgid "Insufficient {0} balance"
+msgstr "{0}の残高が不足しています"
+
+#: src/pages/Aggregator/components/SwapBox.tsx
+msgid "every"
+msgstr ""
+
+#: src/components/Common/SEO.tsx
+msgid "Termini | Native One-stop trading Platform build on Soneium"
+msgstr ""
+
+#: src/pages/Aggregator/components/orders/OrderEditor.tsx
+msgid "Edit order"
+msgstr "注文を編集"
+
+#: src/pages/Aggregator/components/orders/DcaTransactions.tsx
+msgid "Date"
+msgstr ""
+
+#: src/pages/Aggregator/components/orders/OpenOrder.tsx
+#: src/pages/Aggregator/components/orders/OrderHistory.tsx
+msgid "Trigger Price"
+msgstr "トリガー価格"
+
+#: src/pages/Aggregator/components/orders/DcaOrderHistory.tsx
+#: src/pages/Aggregator/components/orders/OpenDcaOrder.tsx
+#: src/pages/Aggregator/components/orders/OpenOrder.tsx
+#: src/pages/Aggregator/components/orders/OrderHistory.tsx
+msgid "Total Filled"
+msgstr "合計約定量"
+
+#: src/pages/Aggregator/components/orders/DcaOverView.tsx
+msgid "Estimated End Date"
+msgstr ""
+
+#: src/pages/Aggregator/index.tsx
+msgid "Trends"
+msgstr "トレンド"
+
+#: src/pages/Aggregator/components/Trending/TrendCard.tsx
+msgid "The best route offers the maximum theoretical save."
+msgstr ""
+
+#: src/pages/Aggregator/components/SwapLimitInfo.tsx
+msgid "Current Orders:"
+msgstr ""
+
+#: src/pages/Aggregator/components/SwapBox.tsx
+msgid "Created DCA order successful."
+msgstr ""
+
+#: src/pages/Aggregator/components/orders/DcaOverView.tsx
+msgid "{0} Withdrawn"
+msgstr ""
+
+#: src/pages/Aggregator/components/SwapBox.tsx
+msgid "Smart Route"
+msgstr "スマートルート"
+
+#: src/pages/Aggregator/components/SwapBox.tsx
+msgid "Create DCA Order"
+msgstr ""
+
+#: src/pages/Aggregator/components/SwapBox.tsx
+msgid "Swap {0}..."
+msgstr "{0}をスワップ中..."
+
+#: src/pages/Aggregator/components/SwapBox.tsx
+msgid "Number of Orders cannot be higher than {0}."
+msgstr ""
+
+#: src/lib/contracts/transactionErrors.tsx
+msgid "<0>Your wallet is not connected to {0}.</0><1/><2>Switch to {1}</2>"
+msgstr "<0>ウォレットが{0}に接続されていません。</0><1/><2>{1}に切り替えてください</2>"
+
+#: src/lib/contracts/transactionErrors.tsx
+msgid "Transaction was cancelled."
+msgstr "取引はキャンセルされました。"
+
+#: src/pages/Aggregator/components/orders/OpenOrder.tsx
+msgid "Order cancel failed!"
+msgstr "注文キャンセルに失敗しました！"
+
+#: src/lib/legacy.ts
+msgid "Order size is bigger than position, will only be executable if position increases"
+msgstr "注文サイズがポジションより大きいため、ポジションが拡大した場合にだけ執行可能です"
+
+#: src/pages/Aggregator/components/orders/DcaOrderHistory.tsx
+#: src/pages/Aggregator/components/orders/DcaTransactions.tsx
+#: src/pages/Aggregator/components/orders/OpenDcaOrder.tsx
+#: src/pages/Aggregator/components/orders/OrderHistory.tsx
+msgid "Completed"
+msgstr "完了"
+
+#: src/pages/Aggregator/components/SwapBox.tsx
+#: src/pages/Aggregator/components/SwapBox.tsx
+msgid "Orders Full"
+msgstr "注文がいっぱいです"
+
+#: src/pages/Aggregator/components/SwapMarketInfo.tsx
+msgid "Route"
+msgstr "ルート"
+
+#: src/pages/Aggregator/components/orders/OrderEditor.tsx
+#: src/pages/Aggregator/components/orders/OrderEditor.tsx
+msgid "Enter new Price"
+msgstr "新しい価格を入力"
+
+#: src/components/Common/SEO.tsx
+msgid "One-stop trading Platform on @soneium, offering AMM, Perp, AI Agent launch, and Meme Launch."
+msgstr "@soneiumでのワンストップトレーディングプラットフォーム、AMM、パープ、AIエージェント起動、ミーム起動を提供。"
+
+#: src/pages/Aggregator/components/orders/DcaOrderHistory.tsx
+#: src/pages/Aggregator/components/orders/OpenDcaOrder.tsx
+#: src/pages/Aggregator/components/orders/OpenOrder.tsx
+#: src/pages/Aggregator/components/orders/OrderHistory.tsx
+msgid "No order data here."
+msgstr "注文データがありません。"
+
+#: src/pages/Aggregator/components/TokenListTable.tsx/index.tsx
+msgid "Total Liquidity"
+msgstr "総流動性"
+
+#: src/components/NotifyModal/NotifyModal.tsx
+msgid "Discover Termini Alerts"
+msgstr "Terminiアラートを発見"
+
+#: src/pages/Aggregator/components/SwapBox.tsx
+msgid "DCA order submitted!"
+msgstr ""
+
+#: src/components/Header/AppHeaderLinks.tsx
+msgid "Leaderboard"
+msgstr "リーダーボード"
+
+#: src/pages/Aggregator/components/SwapBox.tsx
+msgid "Create limit order failed."
+msgstr "指値注文の作成に失敗しました。"
+
+#: src/pages/Aggregator/components/SwapBox.tsx
+msgid "Enter the amount"
+msgstr ""
+
+#: src/components/SettingsModal/AggregatorSettingsModal.tsx
+#: src/components/SettingsModal/SettingsModal.tsx
+msgid "Save"
+msgstr "保存"
+
+#: src/pages/Aggregator/components/SwapBox.tsx
+msgid "Create DCA order failed."
+msgstr ""
+
+#: src/pages/PageNotFound/PageNotFound.jsx
+msgid "<0>Return to </0><1>Homepage</1>"
+msgstr "<0>ホームページに</0><1>戻る</1>"
+
+#: src/components/SettingsModal/AggregatorSettingsModal.tsx
+msgid "Aggregator Settings"
+msgstr "アグリゲーター設定"
+
+#: src/pages/Aggregator/components/SwapLimitInfo.tsx
+msgid "Available Orders"
+msgstr ""
+
+#: src/pages/Aggregator/components/Trending/TrendCard.tsx
+msgid "Max Save"
+msgstr "最大節約"
+
+#: src/lib/contracts/transactionErrors.tsx
+msgid "Transaction failed"
+msgstr "取引に失敗しました"
+
+#: src/pages/Aggregator/components/SwapLimitInfo.tsx
+msgid "Buy {0} at Rate"
+msgstr ""
+
+#: src/components/SettingsModal/SettingsModal.tsx
+msgid "Display PNL after fees"
+msgstr "手数料後のPNLを表示"
+
+#: src/pages/Aggregator/components/orders/DcaTransactions.tsx
+#: src/pages/Aggregator/components/orders/OrderHistory.tsx
+msgid "Status"
+msgstr "ステータス"
+
+#: src/components/SettingsModal/SettingsModal.tsx
+msgid "Include PNL in leverage display"
+msgstr "レバレッジ表示にPNLを含める"
+
+#: src/lib/contracts/transactionErrors.tsx
+msgid "Transaction failed due to RPC error.<0/><1/>Please try changing the RPC url in your wallet settings with the help of <2>chainlist.org</2>."
+msgstr "RPCエラーにより取引が失敗しました。<0/><1/><2>chainlist.org</2>の助けを借りて、ウォレット設定でRPC URLを変更してみてください。"
+
+#: src/pages/Aggregator/components/orders/index.tsx
+#: src/pages/Aggregator/components/SwapTab.tsx
+msgid "DCA"
+msgstr "DCA"
+
+#: src/pages/Aggregator/components/orders/OrderHistory.tsx
+msgid "Created/Executed"
+msgstr "作成/実行"
+
+#: src/pages/Aggregator/components/orders/DcaTransactions.tsx
+msgid "Execution Price"
+msgstr ""
+
+#: src/pages/Aggregator/components/orders/DcaOverView.tsx
+msgid "DCA {0} Balance"
+msgstr ""
+
+#: src/pages/Aggregator/components/SwapBox.tsx
+#: src/pages/Aggregator/components/SwapTab.tsx
+msgid "Swap"
+msgstr "スワップ"
+
+#: src/components/Header/AppHeaderLinks.tsx
+#: src/components/NetworkDropdown/NetworkDropdown.tsx
+msgid "Language"
+msgstr "言語"
+
+#: src/pages/Aggregator/components/orders/OpenDcaOrder.tsx
+msgid "Order stop successfully!"
+msgstr ""
+
+#: src/pages/Aggregator/index.tsx
+msgid "Order History"
+msgstr "注文履歴"
+
+#: src/pages/Aggregator/components/SwapBox.tsx
+msgid "execute"
+msgstr ""
+
+#: src/components/RatingToast/RatingToast.tsx
+msgid "Very likely"
+msgstr "可能性は高い"
+
+#: src/components/ModalViews/RedirectModal.tsx
+msgid "You are leaving SONEFI.xyz and will be redirected to a third party, independent website."
+msgstr "SONEFI.xyzを離れ、第三者の独立したウェブサイトにリダイレクトされます。"
+
+#: src/pages/Aggregator/components/orders/index.tsx
+#: src/pages/Aggregator/components/SwapTab.tsx
+msgid "Limit"
+msgstr "指値"
+
+#: src/lib/contracts/transactionErrors.tsx
+msgid "There is not enough {0} in your account on {1} to send this transaction."
+msgstr "{1}のアカウントにこの取引を送信するのに十分な{0}がありません。"
+
+#: src/domain/tokens/approveTokens.tsx
+msgid "Approval was cancelled"
+msgstr "承認がキャンセルされました"
+
+#: src/components/AddressDropdown/AddressDropdown.tsx
+msgid "Copy Address"
+msgstr "アドレスをコピー"
