@@ -267,7 +267,6 @@ msgid "Referrals"
 msgstr "추천"
 
 #: src/App/MainRoutes.tsx
-#: src/App/MainRoutes.tsx
 msgid "Loading..."
 msgstr "로딩중..."
 

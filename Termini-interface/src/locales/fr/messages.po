@@ -267,7 +267,6 @@ msgid "Referrals"
 msgstr "Parrainages"
 
 #: src/App/MainRoutes.tsx
-#: src/App/MainRoutes.tsx
 msgid "Loading..."
 msgstr "Chargement..."
 

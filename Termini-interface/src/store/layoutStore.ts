@@ -236,10 +236,13 @@ const smartCompactLayout = (layout: Layout[], cols: number = 12): Layout[] => {
   
   console.log('开始智能布局重排，原始布局:', layout.map(item => ({ i: item.i, x: item.x, y: item.y, w: item.w, h: item.h })));
   
-  // 第一步：基础垂直紧缩，移除空白行
-  let compactedLayout = basicVerticalCompact(layout, cols);
+  // 第一步：智能重排，解决占满宽度元素的阻塞问题
+  let compactedLayout = intelligentRearrangement(layout, cols);
   
-  // 第二步：水平优化，让元素扩展填充空白区域
+  // 第二步：基础垂直紧缩，移除空白行
+  compactedLayout = basicVerticalCompact(compactedLayout, cols);
+  
+  // 第三步：水平优化，让元素扩展填充空白区域
   compactedLayout = horizontalSpaceOptimization(compactedLayout, cols);
   
   console.log('智能布局重排完成，最终布局:', compactedLayout.map(item => ({ i: item.i, x: item.x, y: item.y, w: item.w, h: item.h })));
@@ -247,60 +250,358 @@ const smartCompactLayout = (layout: Layout[], cols: number = 12): Layout[] => {
   return compactedLayout;
 };
 
+// 智能重排算法 - 解决占满宽度元素阻塞问题
+const intelligentRearrangement = (layout: Layout[], cols: number = 12): Layout[] => {
+  if (layout.length === 0) return layout;
+  
+  console.log('开始智能重排算法');
+  
+  // 复制布局数组
+  const workingLayout = [...layout];
+  
+  // 分析布局结构，识别问题区域
+  const layoutAnalysis = analyzeLayoutStructure(workingLayout, cols);
+  console.log('布局结构分析:', layoutAnalysis);
+  
+  // 如果存在阻塞问题，进行重排
+  if (layoutAnalysis.hasBlockingIssues) {
+    console.log('检测到布局阻塞问题，开始重排');
+    return performIntelligentRearrangement(workingLayout, layoutAnalysis, cols);
+  }
+  
+  return workingLayout;
+};
+
+// 分析布局结构，识别阻塞问题
+const analyzeLayoutStructure = (layout: Layout[], cols: number = 12) => {
+  const analysis = {
+    hasBlockingIssues: false,
+    fullWidthElements: [] as Layout[],
+    partialWidthElements: [] as Layout[],
+    emptyRows: [] as number[],
+    suboptimalPlacements: [] as Layout[]
+  };
+  
+  // 按行分组分析
+  const rowGroups = new Map<number, Layout[]>();
+  layout.forEach(item => {
+    for (let y = item.y; y < item.y + item.h; y++) {
+      if (!rowGroups.has(y)) {
+        rowGroups.set(y, []);
+      }
+      rowGroups.get(y)!.push(item);
+    }
+  });
+  
+  // 分析每一行
+  for (let y = 0; y <= Math.max(...layout.map(item => item.y + item.h)); y++) {
+    const rowItems = rowGroups.get(y) || [];
+    
+    if (rowItems.length === 0) {
+      analysis.emptyRows.push(y);
+    } else {
+      // 检查是否有占满宽度的元素
+      const fullWidthItems = rowItems.filter(item => item.w >= cols * 0.9); // 90%以上认为是占满
+      const partialWidthItems = rowItems.filter(item => item.w < cols * 0.9);
+      
+      analysis.fullWidthElements.push(...fullWidthItems);
+      analysis.partialWidthElements.push(...partialWidthItems);
+      
+      // 检查是否存在阻塞问题
+      if (fullWidthItems.length > 0 && analysis.emptyRows.length > 0) {
+        // 如果有占满宽度的元素，且上方有空行，可能存在阻塞
+        const emptyRowsAbove = analysis.emptyRows.filter(emptyY => emptyY < y);
+        if (emptyRowsAbove.length > 0) {
+          analysis.hasBlockingIssues = true;
+          console.log(`发现阻塞问题：行${y}有占满宽度元素，但上方有空行${emptyRowsAbove}`);
+        }
+      }
+    }
+  }
+  
+  // 检查局部元素是否可以得到更好的排列
+  analysis.partialWidthElements.forEach(item => {
+    const canImprove = canElementBePlacedBetter(item, layout, cols);
+    if (canImprove) {
+      analysis.suboptimalPlacements.push(item);
+      analysis.hasBlockingIssues = true;
+    }
+  });
+  
+  return analysis;
+};
+
+// 检查元素是否可以获得更好的位置
+const canElementBePlacedBetter = (element: Layout, layout: Layout[], cols: number = 12): boolean => {
+  // 创建网格状态（排除当前元素）
+  const maxY = Math.max(...layout.map(item => item.y + item.h), 10);
+  const grid: boolean[][] = Array(maxY + 5).fill(null).map(() => Array(cols).fill(false));
+  
+  // 标记其他元素占用的位置
+  layout.forEach(item => {
+    if (item.i !== element.i) {
+      markGridPosition(grid, item.x, item.y, item.w, item.h);
+    }
+  });
+  
+  // 检查是否有更好的位置（更靠上或更靠左）
+  for (let y = 0; y < element.y; y++) {
+    for (let x = 0; x <= cols - element.w; x++) {
+      if (canPlaceAtPosition(grid, x, y, element.w, element.h, cols, maxY + 5)) {
+        console.log(`元素 ${element.i} 可以从 (${element.x},${element.y}) 移动到更好位置 (${x},${y})`);
+        return true;
+      }
+    }
+  }
+  
+  return false;
+};
+
+// 执行智能重排
+const performIntelligentRearrangement = (layout: Layout[], analysis: any, cols: number = 12): Layout[] => {
+  console.log('执行智能重排');
+  
+  const rearrangedLayout = [...layout];
+  
+  // 策略1: 将局部宽度元素移动到更好的位置
+  const elementsToReposition = [...analysis.suboptimalPlacements];
+  
+  // 按优先级排序：优先移动较小的元素
+  elementsToReposition.sort((a, b) => {
+    const aSize = a.w * a.h;
+    const bSize = b.w * b.h;
+    return aSize - bSize;
+  });
+  
+  elementsToReposition.forEach(element => {
+    const betterPosition = findBetterPositionForElement(element, rearrangedLayout, cols);
+    if (betterPosition) {
+      const elementIndex = rearrangedLayout.findIndex(item => item.i === element.i);
+      if (elementIndex !== -1) {
+        rearrangedLayout[elementIndex] = {
+          ...rearrangedLayout[elementIndex],
+          x: betterPosition.x,
+          y: betterPosition.y
+        };
+        
+        console.log(`重新定位元素 ${element.i}:`, {
+          原位置: `(${element.x},${element.y})`,
+          新位置: `(${betterPosition.x},${betterPosition.y})`
+        });
+      }
+    }
+  });
+  
+  // 策略2: 优化占满宽度元素的位置
+  if (analysis.fullWidthElements.length > 0) {
+    console.log('优化占满宽度元素位置');
+    rearrangedLayout.sort((a, b) => {
+      // 占满宽度的元素往后排
+      const aIsFullWidth = a.w >= cols * 0.9;
+      const bIsFullWidth = b.w >= cols * 0.9;
+      
+      if (aIsFullWidth && !bIsFullWidth) return 1;
+      if (!aIsFullWidth && bIsFullWidth) return -1;
+      
+      // 同类型元素按y坐标排序
+      return a.y - b.y;
+    });
+    
+    // 重新计算y坐标
+    let currentY = 0;
+    const processedElements = new Set<string>();
+    
+    rearrangedLayout.forEach(item => {
+      if (!processedElements.has(item.i)) {
+        const elementIndex = rearrangedLayout.findIndex(el => el.i === item.i);
+        if (elementIndex !== -1) {
+          rearrangedLayout[elementIndex].y = currentY;
+          currentY += item.h;
+          processedElements.add(item.i);
+        }
+      }
+    });
+  }
+  
+  return rearrangedLayout;
+};
+
+// 为元素寻找更好的位置
+const findBetterPositionForElement = (element: Layout, layout: Layout[], cols: number = 12): { x: number, y: number } | null => {
+  // 创建网格状态（排除当前元素）
+  const maxY = Math.max(...layout.map(item => item.y + item.h), 10);
+  const grid: boolean[][] = Array(maxY + 5).fill(null).map(() => Array(cols).fill(false));
+  
+  // 标记其他元素占用的位置
+  layout.forEach(item => {
+    if (item.i !== element.i) {
+      markGridPosition(grid, item.x, item.y, item.w, item.h);
+    }
+  });
+  
+  // 寻找最优位置：优先考虑靠上靠左的位置
+  for (let y = 0; y < element.y; y++) {
+    for (let x = 0; x <= cols - element.w; x++) {
+      if (canPlaceAtPosition(grid, x, y, element.w, element.h, cols, maxY + 5)) {
+        return { x, y };
+      }
+    }
+  }
+  
+  // 如果没有找到更好的位置，尝试同一行的左侧位置
+  for (let x = 0; x < element.x; x++) {
+    if (canPlaceAtPosition(grid, x, element.y, element.w, element.h, cols, maxY + 5)) {
+      return { x, y: element.y };
+    }
+  }
+  
+  return null;
+};
+
 // 基础垂直紧缩 - 只处理垂直方向的空白移除
 const basicVerticalCompact = (layout: Layout[], cols: number = 12): Layout[] => {
   if (layout.length === 0) return layout;
   
+  console.log('开始基础垂直紧缩');
+  
   // 复制布局数组，避免修改原数组
   const newLayout = [...layout];
   
-  // 按y坐标升序排序，同一行内按x坐标排序
+  // 按优先级排序：小元素优先，占满宽度元素后置
   newLayout.sort((a, b) => {
+    const aIsFullWidth = a.w >= cols * 0.9;
+    const bIsFullWidth = b.w >= cols * 0.9;
+    
+    // 非满宽元素优先处理
+    if (!aIsFullWidth && bIsFullWidth) return -1;
+    if (aIsFullWidth && !bIsFullWidth) return 1;
+    
+    // 同类型元素按原有y坐标排序
     if (a.y !== b.y) return a.y - b.y;
     return a.x - b.x;
   });
   
   // 创建网格状态映射，用于跟踪哪些位置已被占用
-  const maxY = Math.max(...newLayout.map(item => item.y + item.h), 10);
+  const maxY = Math.max(...newLayout.map(item => item.y + item.h), 20);
   const grid: boolean[][] = Array(maxY + 10).fill(null).map(() => Array(cols).fill(false));
   
-  // 重新为每个元素分配位置，尽可能向上移动
-  const compactedLayout = newLayout.map(item => {
-    // 寻找这个元素能放置的最高位置，同时尽量保持原有的x坐标
-    let bestPosition = { x: item.x, y: item.y };
-    
-    // 从y=0开始向下寻找可以放置的位置
-    for (let y = 0; y <= item.y; y++) {
-      // 首先尝试保持原有的x坐标
-      if (canPlaceAtPosition(grid, item.x, y, item.w, item.h, cols, maxY + 10)) {
-        bestPosition = { x: item.x, y };
-        break;
-      }
-      
-      // 如果原x坐标无法放置，尝试同一行的其他x坐标
-      for (let x = 0; x <= cols - item.w; x++) {
-        if (x !== item.x && canPlaceAtPosition(grid, x, y, item.w, item.h, cols, maxY + 10)) {
-          bestPosition = { x, y };
-          break;
-        }
-      }
-      
-      // 如果找到了位置，退出y循环
-      if (bestPosition.y === y) break;
-    }
+  // 重新为每个元素分配位置，采用分层策略
+  const compactedLayout: Layout[] = [];
+  
+  // 第一阶段：处理非满宽元素
+  console.log('第一阶段：处理非满宽元素');
+  const nonFullWidthElements = newLayout.filter(item => item.w < cols * 0.9);
+  
+  nonFullWidthElements.forEach(item => {
+    const bestPosition = findOptimalPosition(item, grid, cols, maxY + 10, 'non-full-width');
     
     // 在网格中标记这个元素占用的位置
     markGridPosition(grid, bestPosition.x, bestPosition.y, item.w, item.h);
     
-    // 返回更新位置后的元素
-    return {
+    // 添加到紧缩后的布局
+    compactedLayout.push({
       ...item,
       x: bestPosition.x,
       y: bestPosition.y
-    };
+    });
+    
+    console.log(`非满宽元素 ${item.i} 重新定位:`, {
+      原位置: `(${item.x},${item.y})`,
+      新位置: `(${bestPosition.x},${bestPosition.y})`,
+      尺寸: `${item.w}x${item.h}`
+    });
   });
   
+  // 第二阶段：处理满宽元素
+  console.log('第二阶段：处理满宽元素');
+  const fullWidthElements = newLayout.filter(item => item.w >= cols * 0.9);
+  
+  fullWidthElements.forEach(item => {
+    const bestPosition = findOptimalPosition(item, grid, cols, maxY + 10, 'full-width');
+    
+    // 在网格中标记这个元素占用的位置
+    markGridPosition(grid, bestPosition.x, bestPosition.y, item.w, item.h);
+    
+    // 添加到紧缩后的布局
+    compactedLayout.push({
+      ...item,
+      x: bestPosition.x,
+      y: bestPosition.y
+    });
+    
+    console.log(`满宽元素 ${item.i} 重新定位:`, {
+      原位置: `(${item.x},${item.y})`,
+      新位置: `(${bestPosition.x},${bestPosition.y})`,
+      尺寸: `${item.w}x${item.h}`
+    });
+  });
+  
+  console.log('基础垂直紧缩完成');
   return compactedLayout;
+};
+
+// 寻找元素的最优位置
+const findOptimalPosition = (
+  element: Layout, 
+  grid: boolean[][], 
+  cols: number, 
+  maxY: number, 
+  elementType: 'full-width' | 'non-full-width'
+): { x: number, y: number } => {
+  
+  // 对于满宽元素，优先寻找整行空闲的位置
+  if (elementType === 'full-width') {
+    for (let y = 0; y < maxY - element.h + 1; y++) {
+      let rowIsFree = true;
+      
+      // 检查从y到y+h的所有行是否完全空闲
+      for (let checkY = y; checkY < y + element.h && rowIsFree; checkY++) {
+        for (let x = 0; x < cols; x++) {
+          if (grid[checkY] && grid[checkY][x]) {
+            rowIsFree = false;
+            break;
+          }
+        }
+      }
+      
+      if (rowIsFree) {
+        console.log(`满宽元素 ${element.i} 找到完全空闲行位置: (${element.x || 0}, ${y})`);
+        return { x: element.x || 0, y };
+      }
+    }
+  }
+  
+  // 对于非满宽元素或找不到完全空闲行的满宽元素，使用标准策略
+  // 优先尝试保持原有x坐标，寻找最高可用位置
+  for (let y = 0; y < maxY - element.h + 1; y++) {
+    if (canPlaceAtPosition(grid, element.x, y, element.w, element.h, cols, maxY)) {
+      return { x: element.x, y };
+    }
+  }
+  
+  // 如果原x坐标不可用，尝试其他x坐标
+  for (let y = 0; y < maxY - element.h + 1; y++) {
+    for (let x = 0; x <= cols - element.w; x++) {
+      if (x !== element.x && canPlaceAtPosition(grid, x, y, element.w, element.h, cols, maxY)) {
+        return { x, y };
+      }
+    }
+  }
+  
+  // 如果所有位置都不可用，放在最底部
+  const bottomY = findBottomPosition(grid, maxY);
+  return { x: element.x, y: bottomY };
+};
+
+// 寻找最底部可用位置
+const findBottomPosition = (grid: boolean[][], maxY: number): number => {
+  for (let y = maxY - 1; y >= 0; y--) {
+    const row = grid[y];
+    if (row && row.some(cell => cell)) {
+      return y + 1;
+    }
+  }
+  return 0;
 };
 
 // 辅助函数：检查是否可以在指定位置放置元素
