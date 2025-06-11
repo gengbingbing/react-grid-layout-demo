@@ -237,6 +237,14 @@ export default function GridLayout() {
   
   const handleRemovePlugin = (pluginId: string) => {
     removePlugin(pluginId);
+    
+    // 延迟触发布局保存，确保状态更新完成
+    setTimeout(() => {
+      const { saveCurrentLayout, currentLayoutId } = useLayoutStore.getState();
+      if (currentLayoutId) {
+        saveCurrentLayout();
+      }
+    }, 200);
   };
   
   // 处理从标签容器中移除插件 - 彻底删除插件，而不是拆分出来
@@ -246,6 +254,15 @@ export default function GridLayout() {
     
     // 然后从活动插件中完全删除它
     removePlugin(pluginId);
+    
+    // 延迟保存布局，确保TabContainer变空时的自动重排已完成
+    setTimeout(() => {
+      const { saveCurrentLayout, currentLayoutId } = useLayoutStore.getState();
+      if (currentLayoutId) {
+        saveCurrentLayout();
+        console.log('TabContainer变空后布局已自动保存');
+      }
+    }, 300);
   };
   
   // 处理拖动开始

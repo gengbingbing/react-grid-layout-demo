@@ -120,7 +120,7 @@ const DEFAULT_LAYOUT: Layout[] = [
     h: 16,
     minW: 3,
     minH: 4,
-    static: true // 设置为静态，不可拖动
+    // static: false // 设置为静态，不可拖动
   },
   // K线图插件
   {
@@ -220,6 +220,357 @@ const findEmptyPosition = (layout: Layout[], cols: number = 12) => {
   // 如果没有找到合适位置，则放在最底部
   const maxY = layout.length > 0 ? Math.max(...layout.map(item => item.y + item.h)) : 0;
   return { x: 0, y: maxY };
+};
+
+// 垂直紧缩布局，移除空白行并重新排列元素
+const compactLayoutVertically = (layout: Layout[], cols: number = 12): Layout[] => {
+  if (layout.length === 0) return layout;
+  
+  // 使用智能布局重排替代原有的简单垂直紧缩
+  return smartCompactLayout(layout, cols);
+};
+
+// 智能布局重排 - 综合处理垂直和水平空白填充
+const smartCompactLayout = (layout: Layout[], cols: number = 12): Layout[] => {
+  if (layout.length === 0) return layout;
+  
+  console.log('开始智能布局重排，原始布局:', layout.map(item => ({ i: item.i, x: item.x, y: item.y, w: item.w, h: item.h })));
+  
+  // 第一步：基础垂直紧缩，移除空白行
+  let compactedLayout = basicVerticalCompact(layout, cols);
+  
+  // 第二步：水平优化，让元素扩展填充空白区域
+  compactedLayout = horizontalSpaceOptimization(compactedLayout, cols);
+  
+  console.log('智能布局重排完成，最终布局:', compactedLayout.map(item => ({ i: item.i, x: item.x, y: item.y, w: item.w, h: item.h })));
+  
+  return compactedLayout;
+};
+
+// 基础垂直紧缩 - 只处理垂直方向的空白移除
+const basicVerticalCompact = (layout: Layout[], cols: number = 12): Layout[] => {
+  if (layout.length === 0) return layout;
+  
+  // 复制布局数组，避免修改原数组
+  const newLayout = [...layout];
+  
+  // 按y坐标升序排序，同一行内按x坐标排序
+  newLayout.sort((a, b) => {
+    if (a.y !== b.y) return a.y - b.y;
+    return a.x - b.x;
+  });
+  
+  // 创建网格状态映射，用于跟踪哪些位置已被占用
+  const maxY = Math.max(...newLayout.map(item => item.y + item.h), 10);
+  const grid: boolean[][] = Array(maxY + 10).fill(null).map(() => Array(cols).fill(false));
+  
+  // 重新为每个元素分配位置，尽可能向上移动
+  const compactedLayout = newLayout.map(item => {
+    // 寻找这个元素能放置的最高位置，同时尽量保持原有的x坐标
+    let bestPosition = { x: item.x, y: item.y };
+    
+    // 从y=0开始向下寻找可以放置的位置
+    for (let y = 0; y <= item.y; y++) {
+      // 首先尝试保持原有的x坐标
+      if (canPlaceAtPosition(grid, item.x, y, item.w, item.h, cols, maxY + 10)) {
+        bestPosition = { x: item.x, y };
+        break;
+      }
+      
+      // 如果原x坐标无法放置，尝试同一行的其他x坐标
+      for (let x = 0; x <= cols - item.w; x++) {
+        if (x !== item.x && canPlaceAtPosition(grid, x, y, item.w, item.h, cols, maxY + 10)) {
+          bestPosition = { x, y };
+          break;
+        }
+      }
+      
+      // 如果找到了位置，退出y循环
+      if (bestPosition.y === y) break;
+    }
+    
+    // 在网格中标记这个元素占用的位置
+    markGridPosition(grid, bestPosition.x, bestPosition.y, item.w, item.h);
+    
+    // 返回更新位置后的元素
+    return {
+      ...item,
+      x: bestPosition.x,
+      y: bestPosition.y
+    };
+  });
+  
+  return compactedLayout;
+};
+
+// 辅助函数：检查是否可以在指定位置放置元素
+const canPlaceAtPosition = (grid: boolean[][], x: number, y: number, w: number, h: number, cols: number, maxY: number): boolean => {
+  // 检查边界
+  if (x + w > cols || y + h > maxY || x < 0 || y < 0) {
+    return false;
+  }
+  
+  // 检查网格位置是否空闲
+  for (let dy = 0; dy < h; dy++) {
+    for (let dx = 0; dx < w; dx++) {
+      if (grid[y + dy] && grid[y + dy][x + dx]) {
+        return false;
+      }
+    }
+  }
+  
+  return true;
+};
+
+// 辅助函数：在网格中标记占用的位置
+const markGridPosition = (grid: boolean[][], x: number, y: number, w: number, h: number): void => {
+  for (let dy = 0; dy < h; dy++) {
+    for (let dx = 0; dx < w; dx++) {
+      if (y + dy < grid.length && x + dx < grid[0].length) {
+        grid[y + dy][x + dx] = true;
+      }
+    }
+  }
+};
+
+// 水平空间优化 - 让元素扩展填充水平空白
+const horizontalSpaceOptimization = (layout: Layout[], cols: number = 12): Layout[] => {
+  if (layout.length === 0) return layout;
+  
+  console.log('开始水平空间优化');
+  
+  const optimizedLayout = [...layout];
+  
+  // 按y坐标分组，找出每一行的元素
+  const levelGroups = new Map<number, Layout[]>();
+  layout.forEach(item => {
+    if (!levelGroups.has(item.y)) {
+      levelGroups.set(item.y, []);
+    }
+    levelGroups.get(item.y)!.push(item);
+  });
+  
+  // 对每个层级进行优化
+  levelGroups.forEach((items, y) => {
+    if (items.length === 0) return;
+    
+    // 按x坐标排序
+    items.sort((a, b) => a.x - b.x);
+    
+    // 计算总占用宽度和最右位置
+    let rightmostPosition = 0;
+    items.forEach(item => {
+      rightmostPosition = Math.max(rightmostPosition, item.x + item.w);
+    });
+    
+    // 计算可用的额外空间
+    const availableSpace = cols - rightmostPosition;
+    
+    console.log(`层级 ${y} 空间分析:`, {
+      元素数量: items.length,
+      最右位置: rightmostPosition,
+      可用额外空间: availableSpace,
+      元素详情: items.map(item => ({ i: item.i, x: item.x, w: item.w }))
+    });
+    
+    // 智能扩展策略
+    if (availableSpace > 0 && items.length > 0) {
+      
+      // 策略1: 如果只有一个元素，让它充分扩展填充整行
+      if (items.length === 1) {
+        const singleItem = items[0];
+        const itemIndex = optimizedLayout.findIndex(item => item.i === singleItem.i);
+        
+        if (itemIndex !== -1) {
+          // 计算可以扩展到的最大宽度（填充到行末）
+          const maxPossibleWidth = cols - singleItem.x;
+          const currentWidth = optimizedLayout[itemIndex].w;
+          
+          // 如果可以扩展，就扩展到最大可能宽度
+          if (maxPossibleWidth > currentWidth) {
+            optimizedLayout[itemIndex].w = maxPossibleWidth;
+            
+            console.log(`单元素行充分扩展 ${singleItem.i}:`, {
+              原宽度: currentWidth,
+              新宽度: optimizedLayout[itemIndex].w,
+              扩展量: maxPossibleWidth - currentWidth,
+              原始x位置: singleItem.x,
+              填充到: singleItem.x + maxPossibleWidth
+            });
+          }
+        }
+      }
+      // 策略2: 如果有多个元素，优先扩展最右侧的元素
+      else {
+        const lastItem = items[items.length - 1];
+        const lastItemIndex = optimizedLayout.findIndex(item => item.i === lastItem.i);
+        
+        if (lastItemIndex !== -1) {
+          // 计算最右元素可以扩展的最大空间
+          const maxExpansionForLastItem = cols - (lastItem.x + lastItem.w);
+          
+          // 根据可用空间确定扩展量
+          let expansionAmount;
+          if (availableSpace <= 6) {
+            // 如果空间较小，全部给最后一个元素
+            expansionAmount = availableSpace;
+          } else {
+            // 如果空间较大，给最后一个元素合理的扩展（最多8个单位），其余可以分配给其他元素
+            expansionAmount = Math.min(availableSpace, 8);
+          }
+          
+          const oldWidth = optimizedLayout[lastItemIndex].w;
+          optimizedLayout[lastItemIndex].w = oldWidth + expansionAmount;
+          
+          console.log(`多元素行扩展最右元素 ${lastItem.i}:`, {
+            原宽度: oldWidth,
+            新宽度: optimizedLayout[lastItemIndex].w,
+            扩展量: expansionAmount,
+            剩余可用空间: availableSpace - expansionAmount
+          });
+          
+          // 如果还有剩余空间，尝试扩展其他元素
+          const remainingSpace = availableSpace - expansionAmount;
+          if (remainingSpace > 0 && items.length > 1) {
+            // 从右到左依次扩展其他元素
+            for (let i = items.length - 2; i >= 0 && remainingSpace > 0; i--) {
+              const item = items[i];
+              const itemIndex = optimizedLayout.findIndex(opt => opt.i === item.i);
+              
+              if (itemIndex !== -1) {
+                // 计算这个元素可以扩展的空间（不能与右侧元素重叠）
+                const rightItem = items[i + 1];
+                const maxExpansion = Math.min(
+                  remainingSpace, 
+                  Math.max(0, rightItem.x - (item.x + item.w)), // 与右侧元素的间距
+                  4 // 限制单个元素的扩展量
+                );
+                
+                if (maxExpansion > 0) {
+                  const oldWidth = optimizedLayout[itemIndex].w;
+                  optimizedLayout[itemIndex].w = oldWidth + maxExpansion;
+                  
+                  console.log(`多元素行扩展其他元素 ${item.i}:`, {
+                    原宽度: oldWidth,
+                    新宽度: optimizedLayout[itemIndex].w,
+                    扩展量: maxExpansion
+                  });
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  });
+  
+  // 检查是否有可以向左移动的元素（填充左侧空白）
+  const leftShiftOptimized = optimizeLeftShift(optimizedLayout, cols);
+  
+  return leftShiftOptimized;
+};
+
+// 左移优化 - 让右侧元素向左移动填充左侧空白
+const optimizeLeftShift = (layout: Layout[], cols: number = 12): Layout[] => {
+  const optimizedLayout = [...layout];
+  
+  // 按行处理，检查每一行是否有左侧空白可以填充
+  const rowElements = new Map<number, Layout[]>();
+  
+  layout.forEach(item => {
+    if (!rowElements.has(item.y)) {
+      rowElements.set(item.y, []);
+    }
+    rowElements.get(item.y)!.push(item);
+  });
+  
+  rowElements.forEach((items, y) => {
+    if (items.length === 0) return;
+    
+    // 按x坐标排序
+    items.sort((a, b) => a.x - b.x);
+    
+    // 检查是否有左侧空白
+    let leftmostX = Math.min(...items.map(item => item.x));
+    
+    if (leftmostX > 0) {
+      // 有左侧空白，尝试左移所有元素
+      const shiftAmount = leftmostX;
+      
+      console.log(`层级 ${y} 检测到左侧空白，左移量: ${shiftAmount}`);
+      
+      items.forEach(item => {
+        const itemIndex = optimizedLayout.findIndex(opt => opt.i === item.i);
+        if (itemIndex !== -1) {
+          optimizedLayout[itemIndex].x = Math.max(0, optimizedLayout[itemIndex].x - shiftAmount);
+          console.log(`左移元素 ${item.i}:`, {
+            原x位置: item.x,
+            新x位置: optimizedLayout[itemIndex].x,
+            左移量: shiftAmount
+          });
+        }
+      });
+      
+      // 左移后，重新计算空间利用率，看是否可以进一步扩展
+      const shiftedItems = items.map(item => {
+        const itemIndex = optimizedLayout.findIndex(opt => opt.i === item.i);
+        return itemIndex !== -1 ? optimizedLayout[itemIndex] : item;
+      }).sort((a, b) => a.x - b.x);
+      
+      // 计算左移后的最右位置
+      let rightmostAfterShift = 0;
+      shiftedItems.forEach(item => {
+        rightmostAfterShift = Math.max(rightmostAfterShift, item.x + item.w);
+      });
+      
+      // 计算左移后的可用空间
+      const availableSpaceAfterShift = cols - rightmostAfterShift;
+      
+      if (availableSpaceAfterShift > 0) {
+        console.log(`层级 ${y} 左移后仍有可用空间: ${availableSpaceAfterShift}，进行进一步扩展`);
+        
+        // 如果只有一个元素，让它充分扩展
+        if (shiftedItems.length === 1) {
+          const singleItem = shiftedItems[0];
+          const itemIndex = optimizedLayout.findIndex(opt => opt.i === singleItem.i);
+          
+          if (itemIndex !== -1) {
+            const maxPossibleWidth = cols - singleItem.x;
+            const currentWidth = optimizedLayout[itemIndex].w;
+            
+            if (maxPossibleWidth > currentWidth) {
+              optimizedLayout[itemIndex].w = maxPossibleWidth;
+              
+              console.log(`左移后单元素充分扩展 ${singleItem.i}:`, {
+                原宽度: currentWidth,
+                新宽度: optimizedLayout[itemIndex].w,
+                扩展量: maxPossibleWidth - currentWidth
+              });
+            }
+          }
+        }
+        // 如果有多个元素，扩展最右侧的元素
+        else if (shiftedItems.length > 1) {
+          const lastItem = shiftedItems[shiftedItems.length - 1];
+          const lastItemIndex = optimizedLayout.findIndex(opt => opt.i === lastItem.i);
+          
+          if (lastItemIndex !== -1) {
+            const expansionAmount = Math.min(availableSpaceAfterShift, 6); // 适度扩展
+            const oldWidth = optimizedLayout[lastItemIndex].w;
+            optimizedLayout[lastItemIndex].w = oldWidth + expansionAmount;
+            
+            console.log(`左移后扩展最右元素 ${lastItem.i}:`, {
+              原宽度: oldWidth,
+              新宽度: optimizedLayout[lastItemIndex].w,
+              扩展量: expansionAmount
+            });
+          }
+        }
+      }
+    }
+  });
+  
+  return optimizedLayout;
 };
 
 // 布局直接存储在localStorage中的键名
@@ -906,7 +1257,7 @@ export const useLayoutStore = create<LayoutState>()(
             h: priceCardLayout.h,
             minW: 3,
             minH: 4,
-            static: true // 价格卡片是静态的
+            // static: true // 价格卡片是静态的
           });
         }
         
@@ -1238,7 +1589,18 @@ export const useLayoutStore = create<LayoutState>()(
         if (!updatedTabContainers.some(tab => tab && tab.id === tabId)) {
           console.log('原标签容器变为空，从布局中移除:', tabId);
           updatedLayout = updatedLayout.filter(item => item.i !== tabId);
+          
+          // 强制触发布局紧缩重排 - 移除空白区域，让其他元素向上填充
+          updatedLayout = compactLayoutVertically(updatedLayout);
         }
+        
+        // 设置一个延迟清理删除标记
+        setTimeout(() => {
+          if (window.__recentlyRemovedPlugins && window.__recentlyRemovedPlugins[pluginId] === deleteTimestamp) {
+            delete window.__recentlyRemovedPlugins[pluginId];
+            console.log('清除插件删除标记:', pluginId);
+          }
+        }, 2000);
         
         return {
           ...state,
@@ -1384,17 +1746,7 @@ export const useLayoutStore = create<LayoutState>()(
         
         // 检查插件是否在源标签容器中
         if (!sourceTab.plugins.includes(pluginId)) {
-          console.error('插件不在源标签容器中', { 
-            pluginId, 
-            sourceTabId, 
-            sourceTabPlugins: sourceTab.plugins 
-          });
-          return state;
-        }
-        
-        // 检查插件是否已经在目标标签容器中
-        if (targetTab.plugins.includes(pluginId)) {
-          console.log('插件已经在目标标签容器中，无需移动');
+          console.error('插件不在源标签容器中', pluginId, sourceTabId);
           return state;
         }
         
@@ -1413,6 +1765,7 @@ export const useLayoutStore = create<LayoutState>()(
         };
         
         let updatedTabContainers;
+        let updatedLayout = state.layout;
         
         // 根据源标签容器的插件数量决定处理方式
         if (sourceTab.plugins.length <= 1) {
@@ -1431,6 +1784,13 @@ export const useLayoutStore = create<LayoutState>()(
               }
               return tab;
             });
+            
+          // 从布局中移除空的源标签容器
+          console.log('从布局中移除空的源标签容器:', sourceTabId);
+          updatedLayout = state.layout.filter(item => item.i !== sourceTabId);
+          
+          // 强制触发布局紧缩重排 - 重新计算所有元素位置
+          updatedLayout = compactLayoutVertically(updatedLayout);
         } else {
           // 如果源标签容器有多个插件，同时更新源容器和目标容器
           console.log('源标签容器有多个插件，将更新源容器和目标容器');
@@ -1440,13 +1800,6 @@ export const useLayoutStore = create<LayoutState>()(
             if (tab.id === targetTabId) return updatedTargetTab;
             return tab;
           });
-        }
-        
-        // 更新布局，如果源标签容器为空，从布局中移除
-        let updatedLayout = state.layout;
-        if (sourceTab.plugins.length <= 1) {
-          console.log('从布局中移除空的源标签容器:', sourceTabId);
-          updatedLayout = state.layout.filter(item => item.i !== sourceTabId);
         }
         
         console.log('更新后的标签容器:', updatedTabContainers);

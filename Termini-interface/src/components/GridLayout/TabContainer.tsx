@@ -519,6 +519,18 @@ export default function TabContainer({
     if (index === activeTab) {
       setActiveTab(Math.max(0, localPlugins.length - 2)); // 因为本地状态已更新
     }
+    
+    // 5. 检查是否是容器中的最后一个插件
+    const remainingPlugins = localPlugins.filter(id => id !== pluginId);
+    if (remainingPlugins.length === 0) {
+      console.log('TabContainer中的最后一个插件已被移除，容器将变空');
+      
+      // 延迟一点时间，确保全局状态更新完成，然后让父组件处理空容器的清理
+      // 注意：不在这里直接处理容器移除，而是让store的逻辑自动处理
+      setTimeout(() => {
+        console.log('TabContainer已变空，等待自动清理和重排');
+      }, 100);
+    }
   };
 
   // 添加清除全局拖拽标志的效果
