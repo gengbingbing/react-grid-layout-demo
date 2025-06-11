@@ -52,12 +52,9 @@ const PluginContainer: React.FC<PluginContainerProps> = ({
         setIsLoading(true);
         setError(null);
 
-        // 加载插件
-        const pluginInstance = pluginRegistry.get(pluginId);
-        if (!pluginInstance) {
-          throw new Error(`插件 ${pluginId} 未找到`);
-        }
-
+        // 使用动态加载插件方法
+        const pluginInstance = await pluginRegistry.loadPlugin(pluginId);
+        
         setPlugin(pluginInstance);
 
         // 加载插件配置

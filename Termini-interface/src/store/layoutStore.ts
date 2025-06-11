@@ -1493,10 +1493,24 @@ export const useLayoutStore = create<LayoutState>()(
         };
       }),
       initDefaultLayout: () => set((state: LayoutState) => {
-        console.log('强制初始化默认布局...');
+        console.log('初始化默认布局...');
         
-        // 完全重置状态，忽略之前的初始化状态检查，强制初始化
-        localStorage.removeItem('termini-layout-storage');
+        // **重要修复：不再强制清除本地存储，保护已保存的布局**
+        // localStorage.removeItem('termini-layout-storage'); // 移除这行
+        
+        // 检查是否已经有布局数据，如果有则不执行初始化
+        const existingLayouts = localStorage.getItem('termini-layouts');
+        if (existingLayouts) {
+          try {
+            const parsedLayouts = JSON.parse(existingLayouts);
+            if (parsedLayouts.length > 0) {
+              console.log('检测到已存在的布局，跳过默认布局初始化');
+              return state; // 不执行初始化，保持现有状态
+            }
+          } catch (error) {
+            console.error('解析已存在布局失败，将继续初始化默认布局');
+          }
+        }
         
         // 使用默认插件数组并预初始化
         const priceCardPlugin = 'official-price-card';
@@ -2220,15 +2234,15 @@ export const useLayoutStore = create<LayoutState>()(
       name: 'termini-layout-storage',
       // 增加版本号以适应新的数据结构
       version: 3,
-      // 显式指定要持久化的状态字段 - 移除savedLayouts和currentLayoutId以避免冲突
+      // 显式指定要持久化的状态字段 - 重新启用savedLayouts和currentLayoutId的持久化
       partialize: (state) => ({
         layout: state.layout,
         activePlugins: state.activePlugins,
         tabContainers: state.tabContainers,
         hasInitializedDefault: state.hasInitializedDefault,
-        // 不再自动持久化这两个字段，由我们的直接localStorage操作来管理
-        // savedLayouts: state.savedLayouts, 
-        // currentLayoutId: state.currentLayoutId,
+        // **修复：重新启用这两个字段的持久化，与localStorage操作协同工作**
+        savedLayouts: state.savedLayouts, 
+        currentLayoutId: state.currentLayoutId,
       }),
       // 当从存储加载时的钩子
       onRehydrateStorage: () => (state) => {
@@ -2241,29 +2255,54 @@ export const useLayoutStore = create<LayoutState>()(
           const rawLayouts = localStorage.getItem(LAYOUTS_STORAGE_KEY);
           const currentId = localStorage.getItem(CURRENT_LAYOUT_ID_KEY);
           
-          if (rawLayouts) {
+          if (rawLayouts && state) {
             const savedLayouts = JSON.parse(rawLayouts);
             console.log(`从localStorage读取到${savedLayouts.length}个布局`);
             console.log('布局列表:', savedLayouts.map((l: any) => ({ id: l.id, name: l.name })));
             
             // 更新state - 重要修复：在store初始化时确保布局列表不为空
-            if (state) {
-              state.savedLayouts = savedLayouts;
-              state.currentLayoutId = currentId;
-              console.log('已将布局数据加载到store，布局数量:', savedLayouts.length);
+            state.savedLayouts = savedLayouts;
+            state.currentLayoutId = currentId;
+            console.log('已将布局数据加载到store，布局数量:', savedLayouts.length);
+            
+            // **新增：如果persist恢复的状态为空但localStorage中有布局，自动加载最后使用的布局**
+            if (currentId && savedLayouts.length > 0 && (!state.layout || state.layout.length === 0)) {
+              console.log('检测到persist状态为空但有保存的布局，将加载最后使用的布局:', currentId);
               
-              // 实现额外安全保障：定期检查store中的布局列表是否正确
-              setTimeout(() => {
-                const storeState = useLayoutStore.getState();
-                if (storeState.savedLayouts.length === 0 && savedLayouts.length > 0) {
-                  console.warn('检测到store中的布局列表为空，但localStorage中有布局，尝试修复...');
-                  useLayoutStore.setState({
-                    savedLayouts: savedLayouts,
-                    currentLayoutId: currentId
-                  });
-                }
-              }, 1000);
+              const layoutToLoad = savedLayouts.find((layout: any) => layout.id === currentId);
+              if (layoutToLoad) {
+                console.log('恢复布局:', layoutToLoad.name);
+                state.layout = layoutToLoad.layout;
+                state.activePlugins = layoutToLoad.activePlugins;
+                state.tabContainers = layoutToLoad.tabContainers;
+                state.hasInitializedDefault = true;
+              } else {
+                console.log('未找到指定布局，加载最新布局');
+                const latestLayout = savedLayouts.reduce((latest: any, current: any) => 
+                  current.updatedAt > latest.updatedAt ? current : latest
+                );
+                state.layout = latestLayout.layout;
+                state.activePlugins = latestLayout.activePlugins;
+                state.tabContainers = latestLayout.tabContainers;
+                state.currentLayoutId = latestLayout.id;
+                state.hasInitializedDefault = true;
+                
+                // 更新当前布局ID
+                localStorage.setItem(CURRENT_LAYOUT_ID_KEY, latestLayout.id);
+              }
             }
+            
+            // 实现额外安全保障：定期检查store中的布局列表是否正确
+            setTimeout(() => {
+              const storeState = useLayoutStore.getState();
+              if (storeState.savedLayouts.length === 0 && savedLayouts.length > 0) {
+                console.warn('检测到store中的布局列表为空，但localStorage中有布局，尝试修复...');
+                useLayoutStore.setState({
+                  savedLayouts: savedLayouts,
+                  currentLayoutId: currentId
+                });
+              }
+            }, 1000);
           }
         } catch (error) {
           console.error('手动加载布局数据失败:', error);

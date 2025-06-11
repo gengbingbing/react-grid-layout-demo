@@ -381,6 +381,7 @@ const TabContainer: React.FC<TabContainerProps> = ({
     if (plugin) {
       return plugin.metadata.name;
     }
+    // 如果插件未加载，返回格式化后的名称作为后备方案
     return pluginId.replace('official-', '').split('-').map(word =>
       word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
   };
@@ -429,12 +430,41 @@ const TabContainer: React.FC<TabContainerProps> = ({
     locale: string = 'zh-CN',
     onTokenChange?: (token: any) => void
   ) => {
-    const plugin = pluginRegistry.get(pluginId);
-    
-    if (!plugin) {
+    const [plugin, setPlugin] = React.useState<any>(null);
+    const [loading, setLoading] = React.useState(true);
+    const [error, setError] = React.useState<string | null>(null);
+
+    React.useEffect(() => {
+      const loadPluginAsync = async () => {
+        try {
+          setLoading(true);
+          setError(null);
+          const pluginInstance = await pluginRegistry.loadPlugin(pluginId);
+          setPlugin(pluginInstance);
+        } catch (err) {
+          console.error(`加载插件失败: ${pluginId}`, err);
+          setError(err instanceof Error ? err.message : String(err));
+        } finally {
+          setLoading(false);
+        }
+      };
+      
+      loadPluginAsync();
+    }, [pluginId]);
+
+    if (loading) {
+      return (
+        <div className="h-full flex items-center justify-center">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-500 dark:border-gray-400"></div>
+        </div>
+      );
+    }
+
+    if (error || !plugin) {
       return (
         <div className="h-full flex items-center justify-center text-red-500 dark:text-red-400">
-          插件未找到: {pluginId}
+          插件加载失败: {pluginId}
+          {error && <div className="text-xs mt-1">{error}</div>}
         </div>
       );
     }

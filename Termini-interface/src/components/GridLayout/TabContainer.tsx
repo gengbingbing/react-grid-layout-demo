@@ -1332,6 +1332,7 @@ export default function TabContainer({
     if (plugin) {
       return plugin.metadata.name;
     }
+    // 如果插件未加载，返回格式化后的名称作为后备方案
     return pluginId.replace('official-', '').split('-').map(word =>
       word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
   };

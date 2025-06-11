@@ -56,7 +56,10 @@ export default function GridLayout() {
     removeTabContainer,
     addPluginToTab,
     convertToTab,
-    movePluginBetweenTabs
+    movePluginBetweenTabs,
+    loadLayout,
+    savedLayouts,
+    currentLayoutId
   } = useLayoutStore();
   
   const [isInitialized, setIsInitialized] = useState(false);
@@ -88,7 +91,7 @@ export default function GridLayout() {
   // 添加状态来跟踪插件拖拽预览
   const [previewPosition, setPreviewPosition] = useState<{x: number, y: number, w: number, h: number} | null>(null);
   
-  // 首次加载时强制重置并初始化默认插件
+  // 首次加载时智能初始化 - 优先恢复已保存的布局
   useEffect(() => {
     const initializeApp = async () => {
       try {
@@ -97,15 +100,101 @@ export default function GridLayout() {
         if (!isInitialized) {
           // 确保插件已加载
           await ensurePluginsLoaded();
-          // 先重置存储，清除可能的旧缓存状态
-          resetStore();
-          // 然后初始化默认布局
-          initDefaultLayout();
+          
+          // **重要修复：检查是否有已保存的布局**
+          const { loadLayout, savedLayouts, currentLayoutId } = useLayoutStore.getState();
+          
+          console.log('初始化检查 - 布局状态:', {
+            已保存布局数量: savedLayouts.length,
+            当前布局ID: currentLayoutId,
+            localStorage中的布局数量: localStorage.getItem('termini-layouts') ? JSON.parse(localStorage.getItem('termini-layouts') || '[]').length : 0
+          });
+          
+          // 检查localStorage中是否有直接保存的布局数据
+          const rawLayouts = localStorage.getItem('termini-layouts');
+          const currentIdFromStorage = localStorage.getItem('termini-current-layout-id');
+          
+          let hasValidLayout = false;
+          
+          // 如果localStorage中有布局数据
+          if (rawLayouts) {
+            try {
+              const layoutsFromStorage = JSON.parse(rawLayouts);
+              if (layoutsFromStorage.length > 0) {
+                console.log('发现localStorage中的布局数据，尝试恢复...');
+                
+                // 先更新store中的布局列表
+                useLayoutStore.setState({
+                  savedLayouts: layoutsFromStorage,
+                  currentLayoutId: currentIdFromStorage
+                });
+                
+                // 如果有当前布局ID且布局存在，加载它
+                if (currentIdFromStorage && layoutsFromStorage.some((layout: any) => layout.id === currentIdFromStorage)) {
+                  console.log('恢复当前布局:', currentIdFromStorage);
+                  loadLayout(currentIdFromStorage);
+                  hasValidLayout = true;
+                } else if (layoutsFromStorage.length > 0) {
+                  // 如果没有有效的当前布局ID，加载最新的布局
+                  const latestLayout = layoutsFromStorage.reduce((latest: any, current: any) => 
+                    current.updatedAt > latest.updatedAt ? current : latest
+                  );
+                  console.log('恢复最新布局:', latestLayout.name);
+                  loadLayout(latestLayout.id);
+                  hasValidLayout = true;
+                }
+              }
+            } catch (error) {
+              console.error('解析localStorage布局数据失败:', error);
+            }
+          }
+          
+          // 如果store中有布局但没有加载成功，尝试从store恢复
+          if (!hasValidLayout && savedLayouts.length > 0) {
+            console.log('从store中恢复布局...');
+            if (currentLayoutId && savedLayouts.some(layout => layout.id === currentLayoutId)) {
+              loadLayout(currentLayoutId);
+              hasValidLayout = true;
+            } else {
+              // 加载最新的布局
+              const latestLayout = savedLayouts.reduce((latest, current) => 
+                current.updatedAt > latest.updatedAt ? current : latest
+              );
+              loadLayout(latestLayout.id);
+              hasValidLayout = true;
+            }
+          }
+          
+          // 只有在没有任何已保存布局的情况下才初始化默认布局
+          if (!hasValidLayout) {
+            console.log('没有发现已保存的布局，初始化默认布局...');
+            // 注意：不再调用resetStore()，避免清除可能的persist数据
+            initDefaultLayout();
+            
+            // 初始化完成后，保存默认布局到本地存储
+            setTimeout(() => {
+              try {
+                const { saveCurrentLayout, currentLayoutId } = useLayoutStore.getState();
+                if (!currentLayoutId) {
+                  saveCurrentLayout('默认布局');
+                  console.log('默认布局已保存到本地存储');
+                }
+              } catch (error) {
+                console.error('保存默认布局失败:', error);
+              }
+            }, 1000);
+          } else {
+            console.log('已成功恢复保存的布局');
+          }
           
           setIsInitialized(true);
         }
       } catch (error) {
         console.error('初始化失败:', error);
+        // 出错时才重置并初始化默认布局
+        console.log('初始化出错，将重置并加载默认布局');
+        resetStore();
+        initDefaultLayout();
       } finally {
         setIsLoading(false);
       }
@@ -227,12 +316,26 @@ export default function GridLayout() {
   const onLayoutChange = (newLayout: Layout[]) => {
     updateLayout(newLayout);
     
-    // 确保布局变更后自动保存到当前布局
+    // 确保布局变更后自动保存到本地存储
     const { saveCurrentLayout, currentLayoutId } = useLayoutStore.getState();
-    if (currentLayoutId) {
-      // 如果有当前布局，则自动更新
-      setTimeout(() => saveCurrentLayout(), 100);
-    }
+    
+    // 延迟保存，确保状态更新完成
+    setTimeout(() => {
+      try {
+        if (currentLayoutId) {
+          // 如果有当前布局ID，保存到对应布局
+          saveCurrentLayout();
+          console.log('布局已更新并保存到现有布局:', currentLayoutId);
+        } else {
+          // 如果没有布局ID，创建新布局并保存
+          saveCurrentLayout('自动保存布局');
+          console.log('布局已保存为新布局');
+        }
+        console.log('布局已成功保存到本地存储');
+      } catch (error) {
+        console.error('保存布局失败:', error);
+      }
+    }, 150);
   };
   
   const handleRemovePlugin = (pluginId: string) => {
@@ -240,9 +343,18 @@ export default function GridLayout() {
     
     // 延迟触发布局保存，确保状态更新完成
     setTimeout(() => {
-      const { saveCurrentLayout, currentLayoutId } = useLayoutStore.getState();
-      if (currentLayoutId) {
-        saveCurrentLayout();
+      try {
+        const { saveCurrentLayout, currentLayoutId } = useLayoutStore.getState();
+        if (currentLayoutId) {
+          saveCurrentLayout();
+          console.log('插件移除后 - 布局已保存到现有布局:', currentLayoutId);
+        } else {
+          saveCurrentLayout('移除插件保存');
+          console.log('插件移除后 - 布局已保存为新布局');
+        }
+        console.log('插件移除后布局已成功保存到本地存储');
+      } catch (error) {
+        console.error('插件移除后保存布局失败:', error);
       }
     }, 200);
   };
@@ -257,10 +369,18 @@ export default function GridLayout() {
     
     // 延迟保存布局，确保TabContainer变空时的自动重排已完成
     setTimeout(() => {
-      const { saveCurrentLayout, currentLayoutId } = useLayoutStore.getState();
-      if (currentLayoutId) {
-        saveCurrentLayout();
-        console.log('TabContainer变空后布局已自动保存');
+      try {
+        const { saveCurrentLayout, currentLayoutId } = useLayoutStore.getState();
+        if (currentLayoutId) {
+          saveCurrentLayout();
+          console.log('标签插件移除后 - 布局已保存到现有布局:', currentLayoutId);
+        } else {
+          saveCurrentLayout('标签插件移除保存');
+          console.log('标签插件移除后 - 布局已保存为新布局');
+        }
+        console.log('标签插件移除后布局已成功保存到本地存储');
+      } catch (error) {
+        console.error('标签插件移除后保存布局失败:', error);
       }
     }, 300);
   };
@@ -322,11 +442,23 @@ export default function GridLayout() {
       
       document.body.classList.remove('dragging');
       
-      // 只有在非自定义拖拽的情况下才调用 saveCurrentLayout
-      // 自定义拖拽的保存会在 handleDragRelease 中处理
-      if (!isCustomDrag) {
-        const { saveCurrentLayout } = useLayoutStore.getState();
-        saveCurrentLayout();
+      // 确保拖拽结束后总是保存布局
+      try {
+        if (!isCustomDrag) {
+          const { saveCurrentLayout, currentLayoutId } = useLayoutStore.getState();
+          if (currentLayoutId) {
+            saveCurrentLayout();
+            console.log('拖拽结束 - 布局已保存到现有布局:', currentLayoutId);
+          } else {
+            saveCurrentLayout('拖拽布局保存');
+            console.log('拖拽结束 - 布局已保存为新布局');
+          }
+          console.log('拖拽结束后布局已成功保存到本地存储');
+        } else {
+          console.log('自定义拖拽结束，布局保存将在其他地方处理');
+        }
+      } catch (error) {
+        console.error('拖拽结束后保存布局失败:', error);
       }
     }, 50);
   };
@@ -962,8 +1094,19 @@ export default function GridLayout() {
               
               // 延迟保存布局，确保状态更新完成
               setTimeout(() => {
-                const { saveCurrentLayout } = useLayoutStore.getState();
-                saveCurrentLayout();
+                try {
+                  const { saveCurrentLayout, currentLayoutId } = useLayoutStore.getState();
+                  if (currentLayoutId) {
+                    saveCurrentLayout();
+                    console.log('标签拖拽结束 - 布局已保存到现有布局:', currentLayoutId);
+                  } else {
+                    saveCurrentLayout('标签拖拽保存');
+                    console.log('标签拖拽结束 - 布局已保存为新布局');
+                  }
+                  console.log('标签拖拽结束后布局已成功保存到本地存储');
+                } catch (error) {
+                  console.error('标签拖拽后保存布局失败:', error);
+                }
               }, 200);
             } catch (error) {
               // 显示错误提示
@@ -1082,8 +1225,19 @@ export default function GridLayout() {
         
         // 延迟保存布局，确保状态完全更新
         setTimeout(() => {
-          const { saveCurrentLayout } = useLayoutStore.getState();
-          saveCurrentLayout();
+          try {
+            const { saveCurrentLayout, currentLayoutId } = useLayoutStore.getState();
+            if (currentLayoutId) {
+              saveCurrentLayout();
+              console.log('标签拆分结束 - 布局已保存到现有布局:', currentLayoutId);
+            } else {
+              saveCurrentLayout('标签拆分保存');
+              console.log('标签拆分结束 - 布局已保存为新布局');
+            }
+            console.log('标签拆分结束后布局已成功保存到本地存储');
+          } catch (error) {
+            console.error('标签拆分后保存布局失败:', error);
+          }
         }, 200);
         
       } else {
