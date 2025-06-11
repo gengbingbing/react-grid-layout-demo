@@ -467,6 +467,10 @@ export default function GridLayout() {
   
   // 从Tab中拖出插件
   const handleTabPluginDragStart = (tabId: string, pluginId: string) => {
+    console.log('=== GridLayout 收到拖拽回调 ===');
+    console.log('TabID:', tabId);
+    console.log('插件ID:', pluginId);
+    console.log('当前布局项数量:', layout.length);
     console.log('标签插件拖拽开始:', pluginId, '从标签容器:', tabId);
     
     // **强制清理任何残留的拖拽状态**
@@ -710,6 +714,10 @@ export default function GridLayout() {
       if (!window.__draggedPluginInfo || !window.__draggedPluginPosition) {
         return;
       }
+      
+      // **重要**：实时更新全局拖拽位置为当前鼠标位置
+      window.__draggedPluginPosition.x = e.clientX;
+      window.__draggedPluginPosition.y = e.clientY;
       
       // 更新预览元素位置
       const preview = document.getElementById('plugin-drag-preview');
@@ -1059,18 +1067,34 @@ export default function GridLayout() {
     
     // 如果没有找到目标，检查是否拖放到了空白区域 (创建新的标签容器)
     if (!targetFound) {
+      console.log('=== 检查空白区域释放 ===');
+      console.log('鼠标位置:', { x: e.clientX, y: e.clientY });
+      
       // 获取网格参数
       const gridParams = window.__gridParams;
-      if (gridParams && draggedTabPluginId && draggedTabId) {
+      console.log('网格参数:', gridParams);
+      console.log('拖拽信息:', dragInfo);
+      
+      // 使用全局拖拽信息而不是局部状态变量
+      if (gridParams && dragInfo && dragInfo.pluginId && dragInfo.tabId) {
         const { rect, rowHeight, margin, colWidth } = gridParams;
         
+        console.log('网格区域:', {
+          left: rect.left,
+          right: rect.right,
+          top: rect.top,
+          bottom: rect.bottom
+        });
+        
         // 检查是否在网格区域内
-        if (
-          e.clientX >= rect.left &&
+        const isInGrid = e.clientX >= rect.left &&
           e.clientX <= rect.right &&
           e.clientY >= rect.top &&
-          e.clientY <= rect.bottom
-        ) {
+          e.clientY <= rect.bottom;
+        
+        console.log('是否在网格区域内:', isInGrid);
+        
+        if (isInGrid) {
           // 计算网格位置
           const gridX = Math.floor((e.clientX - rect.left) / (colWidth + margin));
           const gridY = Math.floor((e.clientY - rect.top) / (rowHeight + margin));
@@ -1079,12 +1103,25 @@ export default function GridLayout() {
           const x = Math.max(0, Math.min(gridX, 11)); // 限制在0-11列内
           const y = Math.max(0, Math.min(gridY, 20)); // 限制在0-20行内
           
-          console.log('在空白区域释放，创建新容器:', { x, y, pluginId: draggedTabPluginId });
+          console.log('计算的网格位置:', { gridX, gridY, x, y });
+          console.log('准备调用handleTabSplit');
+          console.log('参数:', { tabId: dragInfo.tabId, pluginId: dragInfo.pluginId });
           
           // 调用拆分标签函数
-          handleTabSplit(draggedTabId, draggedTabPluginId);
+          handleTabSplit(dragInfo.tabId, dragInfo.pluginId);
           targetFound = true;
+        } else {
+          console.log('鼠标释放位置不在网格区域内:', {
+            鼠标位置: { x: e.clientX, y: e.clientY },
+            网格区域: { left: rect.left, top: rect.top, right: rect.right, bottom: rect.bottom }
+          });
         }
+      } else {
+        console.log('缺少拖拽信息或网格参数:', {
+          hasGridParams: !!gridParams,
+          hasDragInfo: !!dragInfo,
+          dragInfo: dragInfo
+        });
       }
     }
     

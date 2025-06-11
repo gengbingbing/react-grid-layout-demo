@@ -693,6 +693,10 @@ export default function TabContainer({
         offsetX: e.clientX - tabRect.left,
         offsetY: e.clientY - tabRect.top
       };
+      console.log('=== TabContainer 拖拽开始 ===');
+      console.log('插件ID:', pluginId);
+      console.log('TabID:', tabId);
+      console.log('拖拽位置:', window.__draggedPluginPosition);
       console.log('调用onDragTab回调，插件ID:', pluginId);
 
       // 设置全局标志，防止其他拖拽操作干扰
@@ -702,8 +706,11 @@ export default function TabContainer({
       (window as any).__draggedPluginInfo = {
         pluginId,
         sourceTabId: tabId,
-        sourceIndex: index
+        sourceIndex: index,
+        startTime: Date.now()
       };
+      
+      console.log('全局拖拽信息设置完成:', window.__draggedPluginInfo);
 
       // 禁用文本选择
       document.body.classList.add('dragging');
@@ -787,49 +794,26 @@ export default function TabContainer({
 
       // 处理鼠标释放
       const handleMouseUp = (upEvent: MouseEvent) => {
-        console.log('鼠标释放，清理拖拽状态');
+        console.log('TabContainer鼠标释放事件');
 
-        // 阻止事件传播
+        // 阻止默认行为，但不阻止事件传播，让GridLayout也能处理事件
         upEvent.preventDefault();
-        upEvent.stopPropagation();
 
-        // 获取拖拽结束位置的元素
-        const elementsAtPoint = document.elementsFromPoint(upEvent.clientX, upEvent.clientY);
-        const isOverContainer = elementsAtPoint.some(el =>
-          el.classList.contains('grid-item') ||
-          el.classList.contains('plugin-container')
-        );
+        // **重要**：不在TabContainer中处理空白区域释放
+        // 让GridLayout的handleDragRelease统一处理所有释放逻辑
+        console.log('TabContainer释放鼠标，交由GridLayout处理空白区域逻辑');
 
-        // 如果在空白区域释放，创建新容器
-        if (!isOverContainer && hasDragged && draggingTabId) {
-          console.log('在空白区域释放，准备创建新容器');
+        // 延迟清理拖拽状态，给GridLayout时间处理事件
+        setTimeout(() => {
+          // 清理全局拖拽状态
+          cleanupGlobalDragState();
 
-          // 获取拖拽位置信息
-          const dragInfo = (window as any).__draggedPluginPosition;
-          if (dragInfo) {
-            try {
-              // 调用拆分函数，传递插件ID和位置信息
-              onSplitTab(draggingTabId, {
-                x: Math.max(0, Math.floor((upEvent.clientX - 50) / 100)),
-                y: Math.max(0, Math.floor((upEvent.clientY - 50) / 100)),
-                w: 6, // 默认宽度
-                h: 6  // 默认高度
-              });
-              console.log('已调用onSplitTab，创建新容器');
-            } catch (err) {
-              console.error('创建新容器失败:', err);
-            }
-          }
-        }
-
-        // 清理所有拖拽相关状态和提示
-        cleanupDragState();
-
-        // 清除拖拽状态
-        (window as any).__isDraggingTab = false;
-        setIsDraggingTab(false);
-        setDraggingTabId(null);
-        document.body.classList.remove('dragging');
+          // 清除拖拽状态
+          (window as any).__isDraggingTab = false;
+          setIsDraggingTab(false);
+          setDraggingTabId(null);
+          document.body.classList.remove('dragging');
+        }, 100); // 延迟100ms
 
         // 移除事件监听
         document.removeEventListener('mousemove', handleMouseMove);
@@ -927,7 +911,14 @@ export default function TabContainer({
           }
         });
 
-        // 清空所有全局拖拽状态 - 这是关键修复
+        // 注意：这里不清理全局拖拽状态，让GridLayout有机会处理空白区域释放
+        // 只在延迟清理时才真正清除全局状态
+        console.log('TabContainer: 清理拖拽视觉元素完成');
+      };
+      
+      // 专门用于延迟清理全局状态的函数
+      const cleanupGlobalDragState = () => {
+        // 清空所有全局拖拽状态
         (window as any).__isDraggingTab = false;
         (window as any).__isPotentialDrag = false;
         
@@ -947,7 +938,7 @@ export default function TabContainer({
         // 移除拖拽样式
         document.body.classList.remove('dragging');
         
-        console.log('拖拽状态已完全清理');
+        console.log('TabContainer: 全局拖拽状态已完全清理');
       };
 
       // 注册事件处理器
