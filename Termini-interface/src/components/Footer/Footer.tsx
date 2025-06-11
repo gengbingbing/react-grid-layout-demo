@@ -18,8 +18,8 @@ export default function Footer({ showRedirectModal, redirectPopupTimestamp, isMo
   const chainData = getChainData(chainId);
   return (
     <>
-      <div className={cx(
-        "absolute bottom-0 left-0 w-full px-32 pt-22",
+      {/* <div className={cx(
+        "fixed bottom-0 left-0 w-full px-32 pt-22",
         isMobileTradePage ? "pb-40" : "pb-12",
         {
           "flex flex-col gap-20": isMobile,
@@ -39,11 +39,8 @@ export default function Footer({ showRedirectModal, redirectPopupTimestamp, isMo
               <img src={discord} alt="discord" />
             </ExternalLink>
           </div>
-          {/* <ExternalLink className="ml-[10px] text-[#D9D9D9]" newTab={true} href={listTokenFromUrl?.ListToken}>
-            List Your Token
-          </ExternalLink> */}
         </div>
-      </div>
+      </div> */}
     </>
   );
 }
