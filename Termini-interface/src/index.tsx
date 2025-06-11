@@ -9,10 +9,6 @@ import { BrowserRouter as Router } from "react-router-dom";
 import WalletProvider from "lib/wallets/WalletProvider";
 import App from "./App/App";
 import reportWebVitals from "./reportWebVitals";
-import microApp from "@micro-zoe/micro-app";
-
-// 初始化 micro-app
-microApp.start();
 
 createRoot(document.getElementById("root")!).render(
   <React.StrictMode>

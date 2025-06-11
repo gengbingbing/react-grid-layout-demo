@@ -91,8 +91,6 @@ export default defineConfig({
           'data-vendor': ['@tanstack/react-query', 'swr', '@apollo/client', 'graphql', 'immer', 'reselect', '@taskworld.com/rereselect'],
           // utils
           'utils-vendor': ['lodash', 'date-fns', 'query-string', 'classnames', 'shallowequal'],
-          // micro
-          'micro-vendor': ['@micro-zoe/micro-app']
         },
       },
       onwarn(warning, warn) {
@@ -106,7 +104,6 @@ export default defineConfig({
   },
   optimizeDeps: {
     include: [
-      '@micro-zoe/micro-app',
       'ethers',
       'viem',
       'framer-motion',

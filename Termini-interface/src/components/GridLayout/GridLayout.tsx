@@ -25,6 +25,9 @@ declare global {
     __handleDragMouseUp?: (e: MouseEvent) => void;
     __isPotentialDrag?: boolean;
     __currentDragTargetTabId?: string | null; // 新增：存储当前悬浮的TabContainer ID
+    __recentlyRemovedPlugins?: {
+      [pluginId: string]: number;
+    };
   }
 }
 
@@ -71,6 +74,12 @@ export default function GridLayout() {
 
   // 新增状态，用于在拖拽过程中显示合并提示
   const [hoveredTabContainerId, setHoveredTabContainerId] = useState<string | null>(null);
+
+  // 在状态声明部分添加sourceTabId状态
+  const [sourceTabId, setSourceTabId] = useState<string | null>(null);
+
+  // 添加一个变量来跟踪源标签容器ID，而不是使用状态
+  let dragSourceTabId: string | null = null;
 
   useEffect(() => {
     ensurePluginsLoaded();
@@ -255,126 +264,88 @@ export default function GridLayout() {
   };
   
   // 处理拖动开始
-  const onDragStart = (
-    layout: Layout[],
-    oldItem: Layout,
-    newItem: Layout,
-    placeholder: Layout,
-    e: MouseEvent,
-    element: HTMLElement
-  ) => {
-    // 判断是否是拖拽整个容器（PluginContainer或TabContainer）
-    const isDraggingContainer = element.classList.contains('react-grid-item');
+  const onDragStart = (layout: Layout[], oldItem: Layout, newItem: Layout, placeholder: Layout, e: MouseEvent, element: HTMLElement) => {
+    // 判断是否是拖拽整个标签容器（而非其中的插件）
+    const isDraggingContainer = oldItem.i.startsWith('tab-container-');
+  
     window.__draggedPluginInfo = {
       pluginId: oldItem.i,
-      tabId: '', // 插件可能不在TabContainer中，此处留空
+      tabId: isDraggingContainer ? oldItem.i : '', // 如果拖拽的是容器，tabId就是容器ID
       startTime: Date.now(),
-      isDraggingContainer: isDraggingContainer, // 标记为拖拽容器
+      isDraggingContainer,
     };
     window.__isPotentialDrag = true;
-    setHoveredTabContainerId(null); // 开始拖拽时清空悬浮状态
+  
+    // 强制清理悬浮提示
+    setHoveredTabContainerId(null);
+    setDraggedPluginId(oldItem.i);
+    
+    console.log('拖拽开始:', {
+      itemId: oldItem.i,
+      isDraggingContainer,
+      dragInfo: window.__draggedPluginInfo
+    });
   };
 
-  const onDrag = (
-    layout: Layout[],
-    oldItem: Layout,
-    newItem: Layout,
-    placeholder: Layout,
-    e: MouseEvent,
-    element: HTMLElement
-  ) => {
-    // 只有当拖拽的是插件容器且不是TabContainer本身时才判断合并
+  const onDrag = (layout: Layout[], oldItem: Layout, newItem: Layout, placeholder: Layout, e: MouseEvent, element: HTMLElement) => {
+    const mouseX = e.clientX;
+    const mouseY = e.clientY;
+  
+    let currentHoveredId: string | null = null;
+  
     if (window.__draggedPluginInfo?.isDraggingContainer && !newItem.i.startsWith('tab-container-')) {
-      const mouseX = e.clientX;
-      const mouseY = e.clientY;
-
-      let currentHoveredId: string | null = null;
-
-      // 遍历所有的TabContainer来判断是否悬浮在它们上方
       Object.entries(tabContainerRefs.current).forEach(([tabId, ref]) => {
-        if (ref) {
+        if (ref && tabId !== newItem.i) {
           const rect = ref.getBoundingClientRect();
-          // 排除正在拖拽的TabContainer自身
-          if (tabId !== newItem.i &&
-              mouseX >= rect.left && mouseX <= rect.right &&
-              mouseY >= rect.top && mouseY <= rect.bottom) {
+          if (mouseX >= rect.left && mouseX <= rect.right && mouseY >= rect.top && mouseY <= rect.bottom) {
             currentHoveredId = tabId;
           }
         }
       });
-      setHoveredTabContainerId(currentHoveredId);
-      window.__currentDragTargetTabId = currentHoveredId; // 存储到全局，供onDragStop使用
-    } else {
-      setHoveredTabContainerId(null); // 如果不是拖拽容器，或者拖拽的是TabContainer自身，则不显示合并提示
-      window.__currentDragTargetTabId = null;
     }
+  
+    setHoveredTabContainerId(currentHoveredId);
+    window.__currentDragTargetTabId = currentHoveredId;
   };
   
   // 处理拖动结束
   const onDragStop = (layout: Layout[], oldItem: Layout, newItem: Layout) => {
-    console.log('拖动结束:', newItem.i, '拖拽状态:', {
-      draggedPluginId,
-      dragOverPluginId,
-      isDragOver
-    });
+    // 检查是否是自定义拖拽（标签间拖拽）
+    const isCustomDrag = window.__draggedPluginInfo?.tabId;
     
-    // 防止操作过快，给一点延迟确保状态已更新
     setTimeout(() => {
-      // 处理拖拽情况
-      if (draggedPluginId && dragOverPluginId && isDragOver) {
-        // 清除可能的延时
-        if (dragOverTimeout) {
-          clearTimeout(dragOverTimeout);
-          setDragOverTimeout(null);
-        }
-        
-        // 删除提示元素
-        const dragIndicator = document.querySelector('.tab-drag-indicator');
-        if (dragIndicator && dragIndicator.parentNode) {
-          dragIndicator.parentNode.removeChild(dragIndicator);
-        }
-        
-        // 检查是否是将一个普通插件拖到另一个普通插件上
-        if (!draggedPluginId.startsWith('tab-container-') && !dragOverPluginId.startsWith('tab-container-')) {
-          console.log('创建新的标签容器:', draggedPluginId, dragOverPluginId);
-          createTabContainer(draggedPluginId, dragOverPluginId);
-        }
-        // 检查是否是将插件拖到标签容器中
-        else if (!draggedPluginId.startsWith('tab-container-') && dragOverPluginId.startsWith('tab-container-')) {
-          console.log('添加插件到标签容器:', draggedPluginId, '到', dragOverPluginId);
-          addPluginToTab(dragOverPluginId, draggedPluginId);
-        }
-        // 检查是否是将标签容器拖到插件上
-        else if (draggedPluginId.startsWith('tab-container-') && !dragOverPluginId.startsWith('tab-container-')) {
-          console.log('将插件添加到标签容器:', dragOverPluginId, '到', draggedPluginId);
-          addPluginToTab(draggedPluginId, dragOverPluginId);
-        }
-        
-        // 重置状态
-        setDraggedPluginId(null);
-        setDragOverPluginId(null);
-        setIsDragOver(false);
-      }
+      setDraggedPluginId(null);
+      setHoveredTabContainerId(null);
+      setIsDragOver(false);
+      setDragOverPluginId(null);
+      window.__draggedPluginInfo = undefined;
+      window.__currentDragTargetTabId = null;
+  
+      document.querySelectorAll('.plugin-drag-over, .tab-container-hover, .tab-drag-indicator').forEach(el => el.classList.remove('plugin-drag-over', 'tab-container-hover'));
+      document.querySelectorAll('.tab-drag-indicator').forEach(el => el.remove());
       
-      // 移除所有拖拽相关的样式
-      const gridItems = document.querySelectorAll('.react-grid-item');
-      gridItems.forEach(item => {
-        if (item instanceof HTMLElement) {
-          item.classList.remove('plugin-drag-over');
-          item.classList.remove('tab-container-droppable');
-          item.style.outline = '';
-        }
-      });
-      
-      // 恢复文档正常状态
       document.body.classList.remove('dragging');
       
-      // 自动保存当前布局
-      const { saveCurrentLayout } = useLayoutStore.getState();
-      saveCurrentLayout();
-      console.log('布局已自动保存');
+      // 只有在非自定义拖拽的情况下才调用 saveCurrentLayout
+      // 自定义拖拽的保存会在 handleDragRelease 中处理
+      if (!isCustomDrag) {
+        const { saveCurrentLayout } = useLayoutStore.getState();
+        saveCurrentLayout();
+      }
     }, 50);
   };
+
+  useEffect(() => {
+    const handleMouseUpGlobal = () => {
+      setHoveredTabContainerId(null);
+      setDraggedPluginId(null);
+      window.__isPotentialDrag = false;
+      document.body.classList.remove('dragging');
+    };
+  
+    window.addEventListener('mouseup', handleMouseUpGlobal);
+    return () => window.removeEventListener('mouseup', handleMouseUpGlobal);
+  }, []);
   
   // 检测是否拖动到另一个插件上方
   const checkDragOverPlugin = (e: MouseEvent) => {
@@ -498,11 +469,29 @@ export default function GridLayout() {
   const handleTabPluginDragStart = (tabId: string, pluginId: string) => {
     console.log('标签插件拖拽开始:', pluginId, '从标签容器:', tabId);
     
+    // **强制清理任何残留的拖拽状态**
+    console.log('开始拖拽前，强制清理残留状态');
+    (window as any).__isDraggingTab = false;
+    (window as any).__isPotentialDrag = false;
+    
+    // 清理残留的DOM元素
+    document.querySelectorAll('.drop-out-indicator, .tab-drag-indicator, .drop-indicator, .plugin-drag-preview').forEach(el => {
+      if (el.parentNode) el.parentNode.removeChild(el);
+    });
+    
+    // 移除拖拽样式
+    document.body.classList.remove('dragging');
+    
+    // 清理全局状态
+    delete window.__draggedPluginInfo;
+    delete window.__draggedPluginPosition;
+    delete window.__gridParams;
+    
+    // 设置源标签容器ID
+    dragSourceTabId = tabId;
+    
     // 清除可能存在的旧状态和元素
     cleanupDragElements();
-    
-    // 强制重置任何可能存在的全局拖拽标志
-    (window as any).__isDraggingTab = false;
     
     // 记录拖拽的标签和插件
     setDraggedTabId(tabId);
@@ -652,35 +641,44 @@ export default function GridLayout() {
       }
     });
     
-    // 先移除可能存在的旧事件监听器
-    if (window.__handleDragMouseMove) {
-      document.removeEventListener('mousemove', window.__handleDragMouseMove);
-    }
+    // 添加鼠标移动事件监听器，跟踪拖拽位置
+    const handleMouseMove = (e: MouseEvent) => {
+      // 阻止默认事件和冒泡
+      e.preventDefault();
+      e.stopPropagation();
+      
+      // 更新拖拽位置
+      updatePositionAndPreview(e);
+      
+      // 检查是否悬停在其他标签容器上
+      checkDragOverPlugin(e);
+    };
     
-    if (window.__handleDragMouseUp) {
-      document.removeEventListener('mouseup', window.__handleDragMouseUp);
-    }
+    // 添加鼠标释放事件监听器，处理拖拽结束
+    const handleMouseUp = (e: MouseEvent) => {
+      // 阻止默认事件和冒泡
+      e.preventDefault();
+      e.stopPropagation();
+      
+      // 处理拖拽释放
+      handleDragRelease(e);
+      
+      // 移除事件监听器
+      document.removeEventListener('mousemove', handleMouseMove);
+      document.removeEventListener('mouseup', handleMouseUp);
+      
+      // 清除全局引用
+      delete window.__handleDragMouseMove;
+      delete window.__handleDragMouseUp;
+    };
     
-    // 添加鼠标移动和释放事件处理器
-    window.__handleDragMouseMove = updatePositionAndPreview;
+    // 保存事件处理函数的引用，以便后续清理
+    window.__handleDragMouseMove = handleMouseMove;
     window.__handleDragMouseUp = handleMouseUp;
     
-    document.addEventListener('mousemove', updatePositionAndPreview);
-    document.addEventListener('mouseup', handleMouseUp);
-    
-    // 添加超时保护，确保即使没有鼠标释放事件也会清理拖拽状态
-    setTimeout(() => {
-      if (window.__draggedPluginInfo) {
-        const now = Date.now();
-        const dragStartTime = window.__draggedPluginInfo.startTime;
-        
-        // 如果拖拽时间超过10秒，强制清理
-        if (now - dragStartTime > 10000) {
-          console.log('拖拽超时，强制清理');
-          cleanupDragElements();
-        }
-      }
-    }, 10000);
+    // 添加事件监听器
+    document.addEventListener('mousemove', handleMouseMove, { passive: false });
+    document.addEventListener('mouseup', handleMouseUp, { passive: false });
   };
   
   // 移动鼠标时更新预览位置
@@ -935,38 +933,9 @@ export default function GridLayout() {
     document.body.appendChild(vLine);
   };
   
-  // 处理鼠标释放，确定拖拽目标
-  const handleMouseUp = (e: MouseEvent) => {
-    // 获取必要的信息
-    const draggedInfo = window.__draggedPluginInfo;
-    const currentTime = Date.now();
-    
-    // 检查是否是点击而非拖拽
-    if (draggedInfo) {
-      const startTime = draggedInfo.startTime;
-      const confirmedDragTime = draggedInfo.confirmedDragTime;
-      
-      // 如果点击和释放间隔小于200ms，且没有确认过拖拽，则视为点击而非拖拽
-      if (currentTime - startTime < 200 && !confirmedDragTime) {
-        console.log('检测到快速点击而非拖拽操作，忽略拖拽处理');
-        // 清理拖拽状态和元素，但不执行移除或添加操作
-        cleanupDragElements();
-        return;
-      }
-    }
-    
-    // 恢复文本选择
-    document.body.classList.remove('dragging');
-    
-    console.log('鼠标释放，拖拽结束');
-    
-    // 移除事件监听
-    document.removeEventListener('mousemove', updatePositionAndPreview);
-    document.removeEventListener('mouseup', handleMouseUp);
-    
-    // 清除全局引用
-    window.__handleDragMouseMove = undefined;
-    window.__handleDragMouseUp = undefined;
+  // 处理拖拽释放
+  const handleDragRelease = (e: MouseEvent) => {
+    console.log('处理拖拽释放');
     
     // 获取拖拽信息
     const dragInfo = window.__draggedPluginInfo;
@@ -975,28 +944,7 @@ export default function GridLayout() {
       return;
     }
     
-    const { pluginId, tabId, startTime } = dragInfo;
-    
-    // 检查是否是点击而非拖拽 - 如果从点击到释放时间太短（小于200ms），认为是点击而非拖拽
-    const dragDuration = Date.now() - startTime;
-    if (dragDuration < 200) {
-      console.log('检测到点击而非拖拽，不执行拖拽操作');
-      cleanupDragElements();
-      return;
-    }
-    
-    // 检查是否有实际的移动 - 这里可以通过比较初始位置和当前位置
-    const initialPosition = window.__draggedPluginPosition;
-    const mouseMoved = initialPosition && (
-      Math.abs(e.clientX - (initialPosition.x + initialPosition.w / 2)) > 20 ||
-      Math.abs(e.clientY - (initialPosition.y + initialPosition.h / 2)) > 20
-    );
-    
-    if (!mouseMoved) {
-      console.log('检测到鼠标未明显移动，不执行拖拽操作');
-      cleanupDragElements();
-      return;
-    }
+    const { pluginId, tabId } = dragInfo;
     
     // 检查是否拖放到了其他标签容器上
     let targetFound = false;
@@ -1021,8 +969,13 @@ export default function GridLayout() {
             });
             
             try {
-              // 调用移动插件的函数
-              movePluginBetweenTabs(tabId, targetTabId, pluginId);
+              // 获取store实例
+              const store = useLayoutStore.getState();
+              
+              // 使用movePluginBetweenTabs函数，正确处理插件移动
+              store.movePluginBetweenTabs(tabId, targetTabId, pluginId);
+              console.log('成功移动插件:', pluginId, '从', tabId, '到', targetTabId);
+              
               targetFound = true;
               
               // 添加成功动画效果
@@ -1051,10 +1004,6 @@ export default function GridLayout() {
               successIndicator.style.opacity = '1';
               successIndicator.style.transition = 'opacity 0.3s, transform 0.3s';
               
-              // 删除可能存在的旧指示器
-              const oldIndicators = document.querySelectorAll('.drop-success-indicator');
-              oldIndicators.forEach(ind => ind.remove());
-              
               container.appendChild(successIndicator);
               
               // 添加消失动画
@@ -1067,6 +1016,13 @@ export default function GridLayout() {
                   }
                 }, 300);
               }, 1500);
+              
+              // 延迟保存布局，确保状态更新完成
+              setTimeout(() => {
+                const { saveCurrentLayout } = useLayoutStore.getState();
+                saveCurrentLayout();
+                console.log('拖拽移动完成，已保存布局');
+              }, 200);
             } catch (error) {
               console.error('移动插件失败:', error);
               
@@ -1105,8 +1061,8 @@ export default function GridLayout() {
     if (!targetFound) {
       // 获取网格参数
       const gridParams = window.__gridParams;
-      if (gridParams) {
-        const { rect, rowHeight, margin, cols, colWidth } = gridParams;
+      if (gridParams && draggedTabPluginId && draggedTabId) {
+        const { rect, rowHeight, margin, colWidth } = gridParams;
         
         // 检查是否在网格区域内
         if (
@@ -1120,131 +1076,184 @@ export default function GridLayout() {
           const gridY = Math.floor((e.clientY - rect.top) / (rowHeight + margin));
           
           // 限制在有效范围内
-          const x = Math.max(0, Math.min(gridX, cols - 1));
-          const y = Math.max(0, gridY);
+          const x = Math.max(0, Math.min(gridX, 11)); // 限制在0-11列内
+          const y = Math.max(0, Math.min(gridY, 20)); // 限制在0-20行内
           
-          console.log('将插件拖放到空白区域，位置:', { x, y, pluginId, tabId });
+          console.log('在空白区域释放，创建新容器:', { x, y, pluginId: draggedTabPluginId });
           
-          // 如果标签容器内只有这一个插件，则移动整个标签容器
-          const sourceTabContainer = tabContainers.find(tab => tab.id === tabId);
-          if (sourceTabContainer && sourceTabContainer.plugins.length <= 1) {
-            console.log('标签容器内只有一个插件，移动整个标签容器');
-            // 更新标签容器位置
-            const newLayout = layout.map(item => {
-              if (item.i === tabId) {
-                return { ...item, x, y };
-              }
-              return item;
-            });
-            updateLayout(newLayout);
-            
-            // 显示成功提示
-            const successIndicator = document.createElement('div');
-            successIndicator.className = 'drop-success-indicator';
-            successIndicator.textContent = '✓ 移动标签组成功';
-            successIndicator.style.position = 'fixed';
-            successIndicator.style.top = `${e.clientY}px`;
-            successIndicator.style.left = `${e.clientX}px`;
-            successIndicator.style.transform = 'translate(-50%, -50%)';
-            successIndicator.style.backgroundColor = 'rgba(39, 174, 96, 0.9)';
-            successIndicator.style.color = 'white';
-            successIndicator.style.padding = '12px 20px';
-            successIndicator.style.borderRadius = '5px';
-            successIndicator.style.fontSize = '16px';
-            successIndicator.style.fontWeight = 'bold';
-            successIndicator.style.zIndex = '1001';
-            successIndicator.style.pointerEvents = 'none';
-            successIndicator.style.boxShadow = '0 2px 10px rgba(0, 0, 0, 0.3)';
-            successIndicator.style.opacity = '1';
-            successIndicator.style.transition = 'opacity 0.3s, transform 0.3s';
-            
-            document.body.appendChild(successIndicator);
-            
-            setTimeout(() => {
-              successIndicator.style.opacity = '0';
-              successIndicator.style.transform = 'translate(-50%, -70%)';
-              setTimeout(() => {
-                if (successIndicator.parentNode) {
-                  successIndicator.parentNode.removeChild(successIndicator);
-                }
-              }, 300);
-            }, 1500);
-          } else {
-            // 否则，从原标签容器中移除并创建新的标签容器
-            console.log('从标签容器中移除插件并创建新的标签容器');
-            // 自定义位置
-            const customPosition = { x, y, w: 6, h: 6 };
-            removePluginFromTab(tabId, pluginId, customPosition);
-            
-            // 显示成功提示
-            const successIndicator = document.createElement('div');
-            successIndicator.className = 'drop-success-indicator';
-            successIndicator.textContent = '✓ 创建新标签组成功';
-            successIndicator.style.position = 'fixed';
-            successIndicator.style.top = `${e.clientY}px`;
-            successIndicator.style.left = `${e.clientX}px`;
-            successIndicator.style.transform = 'translate(-50%, -50%)';
-            successIndicator.style.backgroundColor = 'rgba(39, 174, 96, 0.9)';
-            successIndicator.style.color = 'white';
-            successIndicator.style.padding = '12px 20px';
-            successIndicator.style.borderRadius = '5px';
-            successIndicator.style.fontSize = '16px';
-            successIndicator.style.fontWeight = 'bold';
-            successIndicator.style.zIndex = '1001';
-            successIndicator.style.pointerEvents = 'none';
-            successIndicator.style.boxShadow = '0 2px 10px rgba(0, 0, 0, 0.3)';
-            successIndicator.style.opacity = '1';
-            successIndicator.style.transition = 'opacity 0.3s, transform 0.3s';
-            
-            document.body.appendChild(successIndicator);
-            
-            setTimeout(() => {
-              successIndicator.style.opacity = '0';
-              successIndicator.style.transform = 'translate(-50%, -70%)';
-              setTimeout(() => {
-                if (successIndicator.parentNode) {
-                  successIndicator.parentNode.removeChild(successIndicator);
-                }
-              }, 300);
-            }, 1500);
-          }
-        } else {
-          console.log('拖放位置不在网格内，取消操作');
-          
-          // 添加取消操作的视觉反馈
-          const cancelIndicator = document.createElement('div');
-          cancelIndicator.className = 'drop-cancel-indicator';
-          cancelIndicator.textContent = '操作已取消';
-          cancelIndicator.style.position = 'fixed';
-          cancelIndicator.style.top = `${e.clientY}px`;
-          cancelIndicator.style.left = `${e.clientX}px`;
-          cancelIndicator.style.transform = 'translate(-50%, -50%)';
-          cancelIndicator.style.backgroundColor = 'rgba(149, 165, 166, 0.9)';
-          cancelIndicator.style.color = 'white';
-          cancelIndicator.style.padding = '10px 15px';
-          cancelIndicator.style.borderRadius = '5px';
-          cancelIndicator.style.fontSize = '14px';
-          cancelIndicator.style.zIndex = '1001';
-          cancelIndicator.style.pointerEvents = 'none';
-          
-          document.body.appendChild(cancelIndicator);
-          
-          setTimeout(() => {
-            if (cancelIndicator.parentNode) {
-              cancelIndicator.parentNode.removeChild(cancelIndicator);
-            }
-          }, 1500);
+          // 调用拆分标签函数
+          handleTabSplit(draggedTabId, draggedTabPluginId);
+          targetFound = true;
         }
       }
     }
     
-    // 清理拖拽元素和状态
+    // 清理拖拽状态和元素
     cleanupDragElements();
+  };
+  
+  // 处理拖拽时拆分标签内容
+  const handleTabSplit = (tabId: string, pluginId: string) => {
+    console.log('GridLayout: 从标签中拆分插件', pluginId, '从', tabId);
     
-    // 自动保存当前布局
-    const { saveCurrentLayout } = useLayoutStore.getState();
-    saveCurrentLayout();
-    console.log('布局已自动保存');
+    try {
+      // 获取当前鼠标位置，用于放置新容器
+      const mousePosition = { x: 0, y: 0 };
+      if (window.__draggedPluginPosition) {
+        mousePosition.x = window.__draggedPluginPosition.x;
+        mousePosition.y = window.__draggedPluginPosition.y;
+      }
+      
+      // 获取网格参数
+      const gridParams = window.__gridParams;
+      if (gridParams) {
+        const { rect, rowHeight, margin, colWidth } = gridParams;
+        
+        // 计算网格位置
+        const gridX = Math.floor((mousePosition.x - rect.left) / (colWidth + margin));
+        const gridY = Math.floor((mousePosition.y - rect.top) / (rowHeight + margin));
+        
+        // 限制在有效范围内
+        const x = Math.max(0, Math.min(gridX, 11)); // 限制在0-11列内
+        const y = Math.max(0, Math.min(gridY, 20)); // 限制在0-20行内
+        
+        console.log('计算的网格位置:', { x, y, mouseX: mousePosition.x, mouseY: mousePosition.y });
+        
+        // 调用store方法，将插件从原容器移除并创建新容器
+        const store = useLayoutStore.getState();
+        
+        // 从原容器中移除插件，并自动创建新的独立布局
+        store.removePluginFromTab(tabId, pluginId, {
+          x: x,
+          y: y,
+          w: 6, // 默认宽度
+          h: 6  // 默认高度
+        });
+        
+        // 显示成功提示
+        showSuccessIndicator(mousePosition.x, mousePosition.y);
+        
+        console.log('成功拆分插件并创建新布局:', pluginId);
+        
+        // 延迟保存布局，确保状态完全更新
+        setTimeout(() => {
+          const { saveCurrentLayout } = useLayoutStore.getState();
+          saveCurrentLayout();
+          console.log('拆分操作完成，已保存布局');
+        }, 200);
+        
+      } else {
+        console.error('无法获取网格参数，无法创建新容器');
+        showErrorIndicator(mousePosition.x, mousePosition.y);
+      }
+    } catch (err) {
+      console.error('从标签拆分插件失败:', err);
+      
+      // 显示错误提示
+      if (window.__draggedPluginPosition) {
+        showErrorIndicator(window.__draggedPluginPosition.x, window.__draggedPluginPosition.y);
+      }
+    } finally {
+      // 清理拖拽状态
+      cleanupDragElements();
+    }
+  };
+
+  // 显示成功指示器
+  const showSuccessIndicator = (x: number, y: number) => {
+    const indicator = document.createElement('div');
+    indicator.className = 'drop-success-indicator';
+    indicator.style.position = 'fixed';
+    indicator.style.left = `${x - 15}px`;
+    indicator.style.top = `${y - 15}px`;
+    indicator.style.width = '30px';
+    indicator.style.height = '30px';
+    indicator.style.borderRadius = '50%';
+    indicator.style.backgroundColor = 'rgba(34, 197, 94, 0.2)';
+    indicator.style.border = '2px solid rgb(34, 197, 94)';
+    indicator.style.display = 'flex';
+    indicator.style.alignItems = 'center';
+    indicator.style.justifyContent = 'center';
+    indicator.style.zIndex = '10000';
+    indicator.style.animation = 'success-indicator 1s forwards';
+    
+    // 添加动画样式
+    const style = document.createElement('style');
+    style.textContent = `
+      @keyframes success-indicator {
+        0% { transform: scale(0.5); opacity: 1; }
+        100% { transform: scale(1.5); opacity: 0; }
+      }
+    `;
+    document.head.appendChild(style);
+    
+    // 添加成功图标
+    indicator.innerHTML = `
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="rgb(34, 197, 94)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="20 6 9 17 4 12"></polyline>
+      </svg>
+    `;
+    
+    document.body.appendChild(indicator);
+    
+    // 1秒后移除
+    setTimeout(() => {
+      if (indicator.parentNode) {
+        indicator.parentNode.removeChild(indicator);
+      }
+      if (style.parentNode) {
+        style.parentNode.removeChild(style);
+      }
+    }, 1000);
+  };
+
+  // 显示错误指示器
+  const showErrorIndicator = (x: number, y: number) => {
+    const indicator = document.createElement('div');
+    indicator.className = 'drop-error-indicator';
+    indicator.style.position = 'fixed';
+    indicator.style.left = `${x - 15}px`;
+    indicator.style.top = `${y - 15}px`;
+    indicator.style.width = '30px';
+    indicator.style.height = '30px';
+    indicator.style.borderRadius = '50%';
+    indicator.style.backgroundColor = 'rgba(239, 68, 68, 0.2)';
+    indicator.style.border = '2px solid rgb(239, 68, 68)';
+    indicator.style.display = 'flex';
+    indicator.style.alignItems = 'center';
+    indicator.style.justifyContent = 'center';
+    indicator.style.zIndex = '10000';
+    indicator.style.animation = 'error-indicator 1s forwards';
+    
+    // 添加动画样式
+    const style = document.createElement('style');
+    style.textContent = `
+      @keyframes error-indicator {
+        0% { transform: scale(0.5); opacity: 1; }
+        100% { transform: scale(1.5); opacity: 0; }
+      }
+    `;
+    document.head.appendChild(style);
+    
+    // 添加错误图标
+    indicator.innerHTML = `
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="rgb(239, 68, 68)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="18" y1="6" x2="6" y2="18"></line>
+        <line x1="6" y1="6" x2="18" y2="18"></line>
+      </svg>
+    `;
+    
+    document.body.appendChild(indicator);
+    
+    // 1秒后移除
+    setTimeout(() => {
+      if (indicator.parentNode) {
+        indicator.parentNode.removeChild(indicator);
+      }
+      if (style.parentNode) {
+        style.parentNode.removeChild(style);
+      }
+    }, 1000);
   };
   
   // 清理拖拽相关的元素和状态
@@ -1316,6 +1325,11 @@ export default function GridLayout() {
       delete window.__draggedPluginPosition;
       delete window.__gridParams;
       
+      // 清理最近删除的插件标记，允许后续操作
+      setTimeout(() => {
+        window.__recentlyRemovedPlugins = {};
+      }, 500);
+      
       // 移除事件监听器
       if (window.__handleDragMouseMove) {
         document.removeEventListener('mousemove', window.__handleDragMouseMove);
@@ -1344,32 +1358,20 @@ export default function GridLayout() {
       document.removeEventListener('mousemove', handleMouseMove);
     };
   }, [draggedPluginId, dragOverPluginId, isDragOver]);
-  
-  // 在父组件或布局Store中
-  const handleSplitTab = (pluginId: string, position?: { x: number; y: number; h: number; w: number }) => {
-    const store = useLayoutStore.getState();
-    
-    // 1. 从原容器中移除插件
-    store.removePluginFromTab(sourceTabId, pluginId);
-    
-    // 2. 创建新独立容器
-    const newTabId = `tab-container-${Date.now()}`;
-    store.addPluginToTab(newTabId, pluginId);
-    
-    // 3. 添加新容器的布局
-    store.updateLayout([
-      ...store.layout,
-      {
-        i: newTabId,
-        x: position?.x || 0,
-        y: position?.y || 0,
-        w: position?.w || 6,
-        h: position?.h || 6,
-        minW: 4,
-        minH: 4
+
+  useEffect(() => {
+    if (hoveredTabContainerId && draggedPluginId && window.__draggedPluginInfo?.isDraggingContainer) {
+      const tabElement = document.querySelector(`[data-item-id="${hoveredTabContainerId}"]`);
+      if (tabElement && !tabElement.querySelector('.tab-drag-indicator')) {
+        const indicator = document.createElement('div');
+        indicator.className = 'tab-drag-indicator';
+        indicator.textContent = '拖放这里添加到标签页';
+        tabElement.appendChild(indicator);
       }
-    ]);
-  };
+    } else {
+      document.querySelectorAll('.tab-drag-indicator').forEach(el => el.remove());
+    }
+  }, [hoveredTabContainerId, draggedPluginId]);
   
   // 如果正在加载，显示加载提示
   if (isLoading) {
@@ -1439,7 +1441,19 @@ export default function GridLayout() {
             {item.i.startsWith('tab-container-') ? (
               <TabContainer 
                 plugins={
-                  tabContainers.find(tab => tab.id === item.i)?.plugins || []
+                  (() => {
+                    const tabContainer = tabContainers.find(tab => tab.id === item.i);
+                    const plugins = tabContainer?.plugins || [];
+                    
+                    // 添加调试日志
+                    console.log(`TabContainer渲染 - ${item.i}:`, {
+                      找到的标签容器: tabContainer,
+                      插件列表: plugins,
+                      全部标签容器: tabContainers
+                    });
+                    
+                    return plugins;
+                  })()
                 }
                 onRemovePlugin={(pluginId) => handleTabPluginRemove(item.i, pluginId)}
                 onSplitTab={(pluginId) => handleTabSplit(item.i, pluginId)}

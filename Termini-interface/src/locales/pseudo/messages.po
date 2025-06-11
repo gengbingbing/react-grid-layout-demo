@@ -25,31 +25,12 @@ msgstr ""
 msgid "Agree"
 msgstr ""
 
-#: src/pages/Aggregator/components/orders/DcaOrderHistory.tsx
-#: src/pages/Aggregator/components/orders/OpenDcaOrder.tsx
-#: src/pages/Aggregator/components/orders/OpenOrder.tsx
-#: src/pages/Aggregator/components/orders/OrderHistory.tsx
-#: src/pages/Aggregator/components/SwapBox.tsx
-#: src/pages/Aggregator/components/TokenListTable.tsx/index.tsx
-#: src/pages/Aggregator/components/Trending/index.tsx
-msgid "loading..."
-msgstr ""
-
 #: src/components/ToastifyDebug/ToastifyDebug.tsx
 msgid "Show error"
 msgstr ""
 
-#: src/pages/Aggregator/components/SwapBox.tsx
-msgid "To"
-msgstr ""
-
 #: src/lib/contracts/callContract.tsx
 msgid "View status."
-msgstr ""
-
-#: src/pages/Aggregator/components/orders/DcaOverView.tsx
-#: src/pages/Aggregator/components/SwapBox.tsx
-msgid "Orders"
 msgstr ""
 
 #: src/components/SettingsModal/SettingsModal.tsx
@@ -66,11 +47,6 @@ msgstr ""
 
 #: src/components/SettingsModal/SettingsModal.tsx
 msgid "Max Network Fee buffer below {0}% may result in failed orders."
-msgstr ""
-
-#: src/pages/Aggregator/components/orders/DcaOrderHistory.tsx
-#: src/pages/Aggregator/components/orders/OpenDcaOrder.tsx
-msgid "Total Deposited"
 msgstr ""
 
 #: src/lib/wallets/connecters/binanceW3W/binanceWallet.ts
@@ -96,7 +72,6 @@ msgstr ""
 #: src/components/BuyInputSection/BuyInputSection.tsx
 #: src/components/BuyInputSection/BuyInputSection.tsx
 #: src/components/InputSection/InputSection.jsx
-#: src/pages/Aggregator/components/SwapBox.tsx
 msgid "MAX"
 msgstr ""
 
@@ -112,43 +87,6 @@ msgstr ""
 msgid "Slippage should be less than -5%"
 msgstr ""
 
-#: src/pages/Aggregator/components/orders/DcaTransactions.tsx
-msgid "Scheduled"
-msgstr ""
-
-#: src/pages/Aggregator/components/SwapBox.tsx
-msgid "Pay"
-msgstr ""
-
-#: src/pages/Aggregator/components/SwapBox.tsx
-msgid "Swap {0} to {1} failed."
-msgstr ""
-
-#: src/pages/Aggregator/components/orders/DcaOrderHistory.tsx
-#: src/pages/Aggregator/components/orders/OpenDcaOrder.tsx
-msgid "Transactions"
-msgstr ""
-
-#: src/pages/Aggregator/components/SwapBox.tsx
-msgid "Created limit order successful."
-msgstr ""
-
-#: src/pages/Aggregator/components/SwapBox.tsx
-msgid "Order Execution Interval"
-msgstr ""
-
-#: src/pages/Aggregator/components/orders/DcaOrderHistory.tsx
-#: src/pages/Aggregator/components/orders/DcaTransactions.tsx
-#: src/pages/Aggregator/components/orders/OpenDcaOrder.tsx
-#: src/pages/Aggregator/components/orders/OpenOrder.tsx
-#: src/pages/Aggregator/components/orders/OrderHistory.tsx
-msgid "From/To"
-msgstr ""
-
-#: src/pages/Aggregator/components/SwapBox.tsx
-msgid "Create Limit Order..."
-msgstr ""
-
 #: src/components/ToastifyDebug/ToastifyDebug.tsx
 msgid "Copied"
 msgstr ""
@@ -157,25 +95,8 @@ msgstr ""
 msgid "Invalid network fee buffer value"
 msgstr ""
 
-#: src/pages/Aggregator/components/SwapBox.tsx
-msgid "Create Limit Order"
-msgstr ""
-
-#: src/pages/Aggregator/components/SwapBox.tsx
-#: src/pages/Aggregator/components/SwapMarketInfo.tsx
-msgid "Best Price"
-msgstr ""
-
-#: src/pages/Aggregator/components/SwapLimitInfo.tsx
-msgid "Sell Order"
-msgstr ""
-
 #: src/components/ToastifyDebug/ToastifyDebug.tsx
 msgid "Hide error"
-msgstr ""
-
-#: src/pages/Aggregator/components/orders/DcaOverView.tsx
-msgid "Created At"
 msgstr ""
 
 #: src/pages/PageNotFound/PageNotFound.jsx
@@ -187,36 +108,12 @@ msgstr ""
 msgid "The website is a community deployed and maintained instance of the open source Termini front end, hosted and served on the distributed, peer-to-peer <0>IPFS network</0>."
 msgstr ""
 
-#: src/pages/Aggregator/components/SwapLimitInfo.tsx
-msgid "Execution fee covers the gas cost for our keeper to execute your order. It ensures your transaction is processed reliably and on time."
-msgstr ""
-
-#: src/pages/Aggregator/components/TokenSelectModal.tsx
-msgid "Search"
-msgstr ""
-
-#: src/pages/Aggregator/components/Trending/TrendCard.tsx
-msgid "Market Price"
-msgstr ""
-
-#: src/pages/Aggregator/components/SwapBox.tsx
-msgid "Increase your payment to at least 0.0001 tokens per order."
-msgstr ""
-
 #: src/components/Header/AppHeaderLinks.tsx
 msgid "Audit"
 msgstr ""
 
-#: src/pages/Aggregator/components/SwapTab.tsx
-msgid "Bots"
-msgstr ""
-
 #: src/components/Header/AppHeaderLinks.tsx
 msgid "Points"
-msgstr ""
-
-#: src/pages/Aggregator/components/orders/DcaOverView.tsx
-msgid "Every"
 msgstr ""
 
 #: src/lib/legacy.ts
@@ -228,16 +125,11 @@ msgid "Allowed Slippage below {defaultSippageDisplay}% may result in failed orde
 msgstr ""
 
 #: src/components/Header/AppHeaderUser.tsx
-#: src/pages/Aggregator/components/SwapBox.tsx
 msgid "Connect Wallet"
 msgstr ""
 
 #: src/components/Header/AppHeaderLinks.tsx
 msgid "Launching"
-msgstr ""
-
-#: src/pages/Aggregator/components/SwapBox.tsx
-msgid "Approving {0}..."
 msgstr ""
 
 #: src/components/StatsTooltip/ChainsStatsTooltipRow.tsx
@@ -256,58 +148,18 @@ msgstr ""
 msgid "Allow {0} to be spent"
 msgstr ""
 
-#: src/pages/Aggregator/components/orders/OpenDcaOrder.tsx
-msgid "Order stop failed!"
-msgstr ""
-
 #: src/lib/contracts/transactionErrors.tsx
 msgid "The mark price has changed, consider increasing your Allowed Slippage by clicking on the \"...\" icon next to your address."
-msgstr ""
-
-#: src/pages/Aggregator/components/orders/DcaOverView.tsx
-msgid "Orders Remaining"
 msgstr ""
 
 #: src/components/ModalViews/RedirectModal.tsx
 msgid "Launch App"
 msgstr ""
 
-#: src/pages/Aggregator/components/SwapMarketInfo.tsx
-msgid "Slippage tolerance"
-msgstr ""
-
 #: src/lib/contracts/callContract.tsx
 #: src/lib/contracts/callContract.tsx
 #: src/lib/contracts/callContract.tsx
 msgid "Transaction sent."
-msgstr ""
-
-#: src/pages/Aggregator/components/SwapMarketInfo.tsx
-msgid "Minimum received"
-msgstr ""
-
-#: src/pages/Aggregator/components/SwapBox.tsx
-msgid "Number of Orders cannot be lower than 2."
-msgstr ""
-
-#: src/pages/Aggregator/components/SwapBox.tsx
-msgid "into"
-msgstr ""
-
-#: src/pages/Aggregator/components/SwapBox.tsx
-msgid "Split"
-msgstr ""
-
-#: src/pages/Aggregator/components/orders/DcaTransactions.tsx
-msgid "No transaction data"
-msgstr ""
-
-#: src/pages/Aggregator/components/SwapBox.tsx
-msgid "To minimise the predictability of your DCA strategy, orders are filled within a randomised padding of +/- 30 seconds."
-msgstr ""
-
-#: src/pages/Aggregator/components/orders/DcaTransactions.tsx
-msgid "Refund"
 msgstr ""
 
 #: src/components/Header/AppHeaderLinks.tsx
@@ -318,65 +170,14 @@ msgstr ""
 msgid "Trade"
 msgstr ""
 
-#: src/pages/Aggregator/components/orders/DcaOrderHistory.tsx
-#: src/pages/Aggregator/components/orders/OpenDcaOrder.tsx
-msgid "OverView"
-msgstr ""
-
-#: src/pages/Aggregator/components/orders/DcaOverView.tsx
-msgid "Each Order Size"
-msgstr ""
-
-#: src/pages/Aggregator/components/orders/OrderEditor.tsx
-msgid "Update Order"
-msgstr ""
-
-#: src/pages/Aggregator/components/SwapBox.tsx
-msgid "This is the time period during which the order wilbe active. Please note that orders may becompleted earlier than this time, or remainunfilled based on the specified parameters."
-msgstr ""
-
-#: src/pages/Aggregator/components/SwapBox.tsx
-msgid "Trigger price is higher than market price"
-msgstr ""
-
-#: src/pages/Aggregator/components/SwapMarketInfo.tsx
-msgid "Network Fee"
-msgstr ""
-
-#: src/pages/Aggregator/components/SwapBox.tsx
-msgid "Swap {0} to {1} successful."
-msgstr ""
-
-#: src/pages/Aggregator/components/SwapBox.tsx
-msgid "Swap {0} to {1} submitted!"
-msgstr ""
-
 #: src/components/NetworkDropdown/LanguagePopupHome.tsx
 #: src/components/NetworkDropdown/NetworkDropdown.tsx
 #: src/hooks/useLanguageModal.tsx
 msgid "Select Language"
 msgstr ""
 
-#: src/pages/Aggregator/components/TokenListTable.tsx/index.tsx
-#: src/pages/Aggregator/components/Trending/index.tsx
-msgid "No data here."
-msgstr ""
-
 #: src/lib/legacy.ts
 msgid "Order cannot be executed as the remaining position would be smaller than $5.00"
-msgstr ""
-
-#: src/pages/Aggregator/components/orders/DcaOrderHistory.tsx
-#: src/pages/Aggregator/components/orders/OpenDcaOrder.tsx
-msgid "Empty"
-msgstr ""
-
-#: src/pages/Aggregator/index.tsx
-msgid "All"
-msgstr ""
-
-#: src/pages/Aggregator/components/orders/OrderEditor.tsx
-msgid "Updating Order..."
 msgstr ""
 
 #: src/components/NotifyModal/NotifyModal.tsx
@@ -387,29 +188,8 @@ msgstr ""
 msgid "Allowed Slippage"
 msgstr ""
 
-#: src/pages/Aggregator/components/orders/OrderEditor.tsx
-msgid "Order update failed."
-msgstr ""
-
-#: src/pages/Aggregator/components/orders/DcaOrderHistory.tsx
-#: src/pages/Aggregator/components/orders/OpenDcaOrder.tsx
-msgid "Stopped"
-msgstr ""
-
-#: src/pages/Aggregator/components/SwapBox.tsx
-msgid "Waiting for Approval"
-msgstr ""
-
-#: src/pages/Aggregator/components/SwapLimitInfo.tsx
-msgid "Platform Fee"
-msgstr ""
-
 #: src/components/NetworkDropdown/NetworkDropdown.tsx
 msgid "More Options"
-msgstr ""
-
-#: src/pages/Aggregator/components/orders/OpenOrder.tsx
-msgid "Your order will only execute if the price reaches a level where your desired token amount can be fully swapped. This may differ from the displayed market price due to liquidity conditions."
 msgstr ""
 
 #: src/components/AddressDropdown/AddressDropdown.tsx
@@ -420,36 +200,16 @@ msgstr ""
 msgid "After you scan, a connection prompt will appear for you to connect your wallet."
 msgstr ""
 
-#: src/pages/Aggregator/components/SwapMarketInfo.tsx
-msgid "Fee"
-msgstr ""
-
 #: src/domain/tokens/approveTokens.tsx
 msgid "Approval failed"
-msgstr ""
-
-#: src/pages/Aggregator/components/orders/OpenOrder.tsx
-msgid "Order cancel submitted!"
-msgstr ""
-
-#: src/pages/Aggregator/components/SwapLimitInfo.tsx
-msgid "To Buy"
 msgstr ""
 
 #: src/components/Header/AppHeaderLinks.tsx
 msgid "Earn"
 msgstr ""
 
-#: src/pages/Aggregator/components/SwapBox.tsx
-msgid "Unwrap"
-msgstr ""
-
 #: src/context/PendingTxnsContext/PendingTxnsContext.tsx
 msgid "Txn failed. <0>View</0>."
-msgstr ""
-
-#: src/pages/Aggregator/components/TokenSelectModal.tsx
-msgid "Select a token"
 msgstr ""
 
 #: src/components/SettingsModal/AggregatorSettingsModal.tsx
@@ -459,10 +219,6 @@ msgstr ""
 
 #: src/lib/wallets/connecters/binanceW3W/binanceWallet.ts
 msgid "Log in to your Binance app and tap [Wallets]. Go to [Web3]."
-msgstr ""
-
-#: src/pages/Aggregator/index.tsx
-msgid "Open Orders {0}"
 msgstr ""
 
 #: src/components/Header/AppHeaderLinks.tsx
@@ -480,17 +236,9 @@ msgstr ""
 msgid "Settings"
 msgstr ""
 
-#: src/pages/Aggregator/components/SwapTab.tsx
-msgid "Coming Soon"
-msgstr ""
-
 #: src/components/NetworkDropdown/NetworkDropdown.tsx
 #: src/components/NetworkDropdown/NetworkDropdown.tsx
 msgid "Networks"
-msgstr ""
-
-#: src/pages/Aggregator/components/orders/OpenOrder.tsx
-msgid "Order cancel successfully!"
 msgstr ""
 
 #: src/lib/legacy.ts
@@ -502,29 +250,8 @@ msgstr ""
 msgid "Max slippage precision is -0.01%"
 msgstr ""
 
-#: src/pages/Aggregator/index.tsx
-msgid "Favorites"
-msgstr ""
-
-#: src/pages/Aggregator/components/orders/OpenDcaOrder.tsx
-msgid "Stop and Withdraw"
-msgstr ""
-
-#: src/pages/Aggregator/components/orders/DcaOverView.tsx
-msgid "Average Price"
-msgstr ""
-
-#: src/pages/Aggregator/components/SwapTab.tsx
-#: src/pages/Aggregator/components/SwapTab.tsx
-msgid "Beta"
-msgstr "Beta"
-
 #: src/components/SettingsModal/SettingsModal.tsx
 msgid "Max Network Fee Buffer"
-msgstr ""
-
-#: src/pages/Aggregator/components/orders/OrderEditor.tsx
-msgid "Order updated!"
 msgstr ""
 
 #: src/lib/contracts/callContract.tsx
@@ -539,12 +266,7 @@ msgstr ""
 msgid "Referrals"
 msgstr ""
 
-#: src/pages/Aggregator/components/SwapBox.tsx
-msgid "Create DCA Order..."
-msgstr ""
-
 #: src/App/MainRoutes.tsx
-#: src/pages/Aggregator/components/DexscreenerFrameKline.tsx
 msgid "Loading..."
 msgstr ""
 
@@ -552,57 +274,12 @@ msgstr ""
 msgid "Trades"
 msgstr ""
 
-#: src/pages/Aggregator/components/SwapBox.tsx
-msgid "Please enter an interval above 0."
-msgstr ""
-
-#: src/pages/Aggregator/components/TokenListTable.tsx/index.tsx
-msgid "Price"
-msgstr ""
-
-#: src/pages/Aggregator/components/SwapBox.tsx
-msgid "Incorrect Network"
-msgstr ""
-
-#: src/pages/Aggregator/components/SwapBox.tsx
-msgid "Unwrap {0}..."
-msgstr ""
-
-#: src/pages/Aggregator/components/orders/OpenOrder.tsx
-#: src/pages/Aggregator/components/SwapLimitInfo.tsx
-msgid "Expiry"
-msgstr ""
-
-#: src/pages/Aggregator/components/orders/OpenDcaOrder.tsx
-msgid "Order stop submitted!"
-msgstr ""
-
 #: src/domain/tokens/approveTokens.tsx
 msgid "Approval submitted! <0>View status.</0>"
 msgstr ""
 
-#: src/pages/Aggregator/components/orders/DcaOverView.tsx
-msgid "Next Order At"
-msgstr ""
-
-#: src/pages/Aggregator/components/SwapBox.tsx
-msgid "orders to buy"
-msgstr ""
-
 #: src/components/RatingToast/RatingToast.tsx
 msgid "How likely are you to recommend our service to a friend or colleague?"
-msgstr ""
-
-#: src/pages/Aggregator/components/orders/OpenOrder.tsx
-msgid "Cancel"
-msgstr ""
-
-#: src/pages/Aggregator/components/SwapBox.tsx
-msgid "Insufficient liquidity"
-msgstr ""
-
-#: src/pages/Aggregator/components/SwapBox.tsx
-msgid "order"
 msgstr ""
 
 #: src/components/Header/AppHeaderLinks.tsx
@@ -613,50 +290,12 @@ msgstr ""
 msgid "Open Binance app"
 msgstr ""
 
-#: src/pages/Aggregator/components/orders/OpenOrder.tsx
-#: src/pages/Aggregator/components/orders/OpenOrder.tsx
-msgid "Edit"
-msgstr ""
-
-#: src/pages/Aggregator/components/SwapBox.tsx
-msgid "From"
-msgstr ""
-
-#: src/pages/Aggregator/components/SwapBox.tsx
-msgid "Wrap {0}..."
-msgstr ""
-
 #: src/components/Header/AppHeaderLinks.tsx
 msgid "Perp Pools"
 msgstr ""
 
-#: src/pages/Aggregator/components/SwapLimitInfo.tsx
-msgid "Maximum available Orders:"
-msgstr ""
-
-#: src/pages/Aggregator/components/SwapBox.tsx
-msgid "Approve {0}"
-msgstr ""
-
-#: src/pages/Aggregator/components/orders/OrderEditor.tsx
-msgid "Limit price is higher than market price"
-msgstr ""
-
-#: src/pages/Aggregator/components/SwapBox.tsx
-#: src/pages/Aggregator/components/TokenSelectModal.tsx
-msgid "Balance"
-msgstr ""
-
 #: src/components/Header/AppHeaderLinks.tsx
 msgid "Swap Pools"
-msgstr ""
-
-#: src/pages/Aggregator/components/SwapBox.tsx
-msgid "Limit order submitted!"
-msgstr ""
-
-#: src/pages/Aggregator/components/SwapBox.tsx
-msgid "Wrap"
 msgstr ""
 
 #: src/components/Header/AppHeaderUser.tsx
@@ -675,18 +314,6 @@ msgstr ""
 msgid "Show leverage slider"
 msgstr ""
 
-#: src/pages/Aggregator/components/orders/OrderEditor.tsx
-msgid "Order update submitted!"
-msgstr ""
-
-#: src/pages/Aggregator/index.tsx
-msgid "My Transactions"
-msgstr ""
-
-#: src/pages/Aggregator/components/TokenSelectModal.tsx
-msgid "Token Name"
-msgstr ""
-
 #: src/context/PendingTxnsContext/PendingTxnsContext.tsx
 #: src/lib/contracts/notifications.tsx
 #: src/lib/contracts/notifications.tsx
@@ -701,20 +328,11 @@ msgstr ""
 msgid "You"
 msgstr ""
 
-#: src/pages/Aggregator/components/SwapBox.tsx
-msgid "Receive"
-msgstr ""
-
-#: src/pages/Aggregator/components/SwapLimitInfo.tsx
-msgid "Execution Fee"
-msgstr ""
-
 #: src/components/Header/AppHeaderLinks.tsx
 msgid "Pools"
 msgstr ""
 
 #: src/components/Header/AppHeaderLinks.tsx
-#: src/pages/Aggregator/index.tsx
 msgid "Meme"
 msgstr ""
 
@@ -726,76 +344,8 @@ msgstr ""
 msgid "Copy error"
 msgstr ""
 
-#: src/pages/Aggregator/components/SwapBox.tsx
-msgid "Insufficient {0} balance"
-msgstr ""
-
-#: src/pages/Aggregator/components/SwapBox.tsx
-msgid "every"
-msgstr ""
-
 #: src/components/Common/SEO.tsx
 msgid "Termini | Native One-stop trading Platform build on Soneium"
-msgstr ""
-
-#: src/pages/Aggregator/components/orders/OrderEditor.tsx
-msgid "Edit order"
-msgstr ""
-
-#: src/pages/Aggregator/components/orders/DcaTransactions.tsx
-msgid "Date"
-msgstr ""
-
-#: src/pages/Aggregator/components/orders/OpenOrder.tsx
-#: src/pages/Aggregator/components/orders/OrderHistory.tsx
-msgid "Trigger Price"
-msgstr ""
-
-#: src/pages/Aggregator/components/orders/DcaOrderHistory.tsx
-#: src/pages/Aggregator/components/orders/OpenDcaOrder.tsx
-#: src/pages/Aggregator/components/orders/OpenOrder.tsx
-#: src/pages/Aggregator/components/orders/OrderHistory.tsx
-msgid "Total Filled"
-msgstr ""
-
-#: src/pages/Aggregator/components/orders/DcaOverView.tsx
-msgid "Estimated End Date"
-msgstr ""
-
-#: src/pages/Aggregator/index.tsx
-msgid "Trends"
-msgstr ""
-
-#: src/pages/Aggregator/components/Trending/TrendCard.tsx
-msgid "The best route offers the maximum theoretical save."
-msgstr ""
-
-#: src/pages/Aggregator/components/SwapLimitInfo.tsx
-msgid "Current Orders:"
-msgstr ""
-
-#: src/pages/Aggregator/components/SwapBox.tsx
-msgid "Created DCA order successful."
-msgstr ""
-
-#: src/pages/Aggregator/components/orders/DcaOverView.tsx
-msgid "{0} Withdrawn"
-msgstr ""
-
-#: src/pages/Aggregator/components/SwapBox.tsx
-msgid "Smart Route"
-msgstr ""
-
-#: src/pages/Aggregator/components/SwapBox.tsx
-msgid "Create DCA Order"
-msgstr ""
-
-#: src/pages/Aggregator/components/SwapBox.tsx
-msgid "Swap {0}..."
-msgstr ""
-
-#: src/pages/Aggregator/components/SwapBox.tsx
-msgid "Number of Orders cannot be higher than {0}."
 msgstr ""
 
 #: src/lib/contracts/transactionErrors.tsx
@@ -806,77 +356,25 @@ msgstr ""
 msgid "Transaction was cancelled."
 msgstr ""
 
-#: src/pages/Aggregator/components/orders/OpenOrder.tsx
-msgid "Order cancel failed!"
-msgstr ""
-
 #: src/lib/legacy.ts
 msgid "Order size is bigger than position, will only be executable if position increases"
-msgstr ""
-
-#: src/pages/Aggregator/components/orders/DcaOrderHistory.tsx
-#: src/pages/Aggregator/components/orders/DcaTransactions.tsx
-#: src/pages/Aggregator/components/orders/OpenDcaOrder.tsx
-#: src/pages/Aggregator/components/orders/OrderHistory.tsx
-msgid "Completed"
-msgstr ""
-
-#: src/pages/Aggregator/components/SwapBox.tsx
-#: src/pages/Aggregator/components/SwapBox.tsx
-msgid "Orders Full"
-msgstr ""
-
-#: src/pages/Aggregator/components/SwapMarketInfo.tsx
-msgid "Route"
-msgstr ""
-
-#: src/pages/Aggregator/components/orders/OrderEditor.tsx
-#: src/pages/Aggregator/components/orders/OrderEditor.tsx
-msgid "Enter new Price"
 msgstr ""
 
 #: src/components/Common/SEO.tsx
 msgid "One-stop trading Platform on @soneium, offering AMM, Perp, AI Agent launch, and Meme Launch."
 msgstr ""
 
-#: src/pages/Aggregator/components/orders/DcaOrderHistory.tsx
-#: src/pages/Aggregator/components/orders/OpenDcaOrder.tsx
-#: src/pages/Aggregator/components/orders/OpenOrder.tsx
-#: src/pages/Aggregator/components/orders/OrderHistory.tsx
-msgid "No order data here."
-msgstr ""
-
-#: src/pages/Aggregator/components/TokenListTable.tsx/index.tsx
-msgid "Total Liquidity"
-msgstr ""
-
 #: src/components/NotifyModal/NotifyModal.tsx
 msgid "Discover Termini Alerts"
-msgstr ""
-
-#: src/pages/Aggregator/components/SwapBox.tsx
-msgid "DCA order submitted!"
 msgstr ""
 
 #: src/components/Header/AppHeaderLinks.tsx
 msgid "Leaderboard"
 msgstr ""
 
-#: src/pages/Aggregator/components/SwapBox.tsx
-msgid "Create limit order failed."
-msgstr ""
-
-#: src/pages/Aggregator/components/SwapBox.tsx
-msgid "Enter the amount"
-msgstr ""
-
 #: src/components/SettingsModal/AggregatorSettingsModal.tsx
 #: src/components/SettingsModal/SettingsModal.tsx
 msgid "Save"
-msgstr ""
-
-#: src/pages/Aggregator/components/SwapBox.tsx
-msgid "Create DCA order failed."
 msgstr ""
 
 #: src/pages/PageNotFound/PageNotFound.jsx
@@ -887,29 +385,12 @@ msgstr ""
 msgid "Aggregator Settings"
 msgstr ""
 
-#: src/pages/Aggregator/components/SwapLimitInfo.tsx
-msgid "Available Orders"
-msgstr ""
-
-#: src/pages/Aggregator/components/Trending/TrendCard.tsx
-msgid "Max Save"
-msgstr ""
-
 #: src/lib/contracts/transactionErrors.tsx
 msgid "Transaction failed"
 msgstr ""
 
-#: src/pages/Aggregator/components/SwapLimitInfo.tsx
-msgid "Buy {0} at Rate"
-msgstr ""
-
 #: src/components/SettingsModal/SettingsModal.tsx
 msgid "Display PNL after fees"
-msgstr ""
-
-#: src/pages/Aggregator/components/orders/DcaTransactions.tsx
-#: src/pages/Aggregator/components/orders/OrderHistory.tsx
-msgid "Status"
 msgstr ""
 
 #: src/components/SettingsModal/SettingsModal.tsx
@@ -920,43 +401,9 @@ msgstr ""
 msgid "Transaction failed due to RPC error.<0/><1/>Please try changing the RPC url in your wallet settings with the help of <2>chainlist.org</2>."
 msgstr ""
 
-#: src/pages/Aggregator/components/orders/index.tsx
-#: src/pages/Aggregator/components/SwapTab.tsx
-msgid "DCA"
-msgstr ""
-
-#: src/pages/Aggregator/components/orders/OrderHistory.tsx
-msgid "Created/Executed"
-msgstr ""
-
-#: src/pages/Aggregator/components/orders/DcaTransactions.tsx
-msgid "Execution Price"
-msgstr ""
-
-#: src/pages/Aggregator/components/orders/DcaOverView.tsx
-msgid "DCA {0} Balance"
-msgstr ""
-
-#: src/pages/Aggregator/components/SwapBox.tsx
-#: src/pages/Aggregator/components/SwapTab.tsx
-msgid "Swap"
-msgstr ""
-
 #: src/components/Header/AppHeaderLinks.tsx
 #: src/components/NetworkDropdown/NetworkDropdown.tsx
 msgid "Language"
-msgstr ""
-
-#: src/pages/Aggregator/components/orders/OpenDcaOrder.tsx
-msgid "Order stop successfully!"
-msgstr ""
-
-#: src/pages/Aggregator/index.tsx
-msgid "Order History"
-msgstr ""
-
-#: src/pages/Aggregator/components/SwapBox.tsx
-msgid "execute"
 msgstr ""
 
 #: src/components/RatingToast/RatingToast.tsx
@@ -965,11 +412,6 @@ msgstr ""
 
 #: src/components/ModalViews/RedirectModal.tsx
 msgid "You are leaving SONEFI.xyz and will be redirected to a third party, independent website."
-msgstr ""
-
-#: src/pages/Aggregator/components/orders/index.tsx
-#: src/pages/Aggregator/components/SwapTab.tsx
-msgid "Limit"
 msgstr ""
 
 #: src/lib/contracts/transactionErrors.tsx

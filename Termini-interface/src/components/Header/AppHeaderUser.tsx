@@ -1,9 +1,6 @@
 import { Trans, t } from "@lingui/macro";
 import { useConnectModal } from "@rainbow-me/rainbowkit";
-import { Menu } from "@headlessui/react";
-import { useLingui } from "@lingui/react";
 import { useState, useCallback } from "react";
-import { FaChevronDown } from "react-icons/fa";
 import { GrLanguage } from "react-icons/gr";
 import { MINATO_MAINNET, MINATO_TESTNET, getChainName } from "config/chains";
 import { isDevelopment } from "config/env";
@@ -17,19 +14,10 @@ import AddressDropdown from "../AddressDropdown/AddressDropdown";
 import ConnectWalletButton from "../Common/ConnectWalletButton";
 import LanguagePopupHome from "../NetworkDropdown/LanguagePopupHome";
 import NetworkDropdown from "./NetworkDropdown";
-import { NotifyButton } from "../NotifyButton/NotifyButton";
-import { DownSvg } from "../AppSvg";
 import { RiSettings4Fill } from "react-icons/ri";
-import twitter from "img/media/ic_x.svg";
-import discord from "img/media/ic_discord.svg";
 
 import "./Header.scss";
 import { getChainData } from "config/constants";
-import { SUPPORTED_CHAIN_IDS } from "config/chains";
-import { switchNetwork } from "lib/wallets";
-import ModalWithPortal from "../Modal/ModalWithPortal";
-import LanguageModalContent from "../NetworkDropdown/LanguageModalContent";
-import type { ModalProps } from "components/Modal/Modal";
 import { MdDarkMode, MdLightMode } from "react-icons/md";
 import { useTheme } from 'context/ThemeContext';
 import { useLanguageModal } from "hooks/useLanguageModal";
@@ -198,21 +186,6 @@ export function AppHeaderUser({
               account={account}
               accountUrl={accountUrl}
               disconnectAccountAndCloseSettings={disconnectAccountAndCloseSettings}
-            />
-          </div>
-          <div
-            className="settingBox cursor-pointer"
-            onClick={openSettings}
-            onMouseEnter={() => setIsSettingsHovered(true)}
-            onMouseLeave={() => setIsSettingsHovered(false)}
-          >
-            <RiSettings4Fill
-              size={23}
-              style={{
-                color: isSettingsHovered
-                  ? 'var(--color-text-primary)'
-                  : 'var(--color-text-tertiary)'
-              }}
             />
           </div>
           <div className="settingBox !w-[66px] cursor-pointer flexRow itemsCenter">
