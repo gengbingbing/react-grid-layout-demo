@@ -108,15 +108,14 @@ export function AppRoutes() {
     <>
       <div className="App">
         <div className="App-content">
-          {/* <div className="fixed top-0 w-full z-[9998]">
+          <div className="fixed top-0 w-full z-[9998]">
             <Header
               disconnectAccountAndCloseSettings={disconnectAccountAndCloseSettings}
               openSettings={openSettings}
               showRedirectModal={showRedirectModal}
             />
-          </div> */}
-          {/* <div className="mt-[6.2rem]"> */}
-          <div>
+          </div>
+          <div className="mt-[6.2rem]">
             <MainRoutes openSettings={openSettings} />
           </div>
           <div>

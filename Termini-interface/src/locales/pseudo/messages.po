@@ -267,6 +267,7 @@ msgid "Referrals"
 msgstr ""
 
 #: src/App/MainRoutes.tsx
+#: src/App/MainRoutes.tsx
 msgid "Loading..."
 msgstr ""
 

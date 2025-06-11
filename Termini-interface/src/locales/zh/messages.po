@@ -267,6 +267,7 @@ msgid "Referrals"
 msgstr "推荐"
 
 #: src/App/MainRoutes.tsx
+#: src/App/MainRoutes.tsx
 msgid "Loading..."
 msgstr "加载中..."
 
