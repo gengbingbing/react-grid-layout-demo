@@ -38,7 +38,6 @@ const LayoutManager: React.FC = () => {
       const layoutsJson = localStorage.getItem(LAYOUTS_STORAGE_KEY);
       if (layoutsJson) {
         const parsedLayouts = JSON.parse(layoutsJson);
-        console.log(`从localStorage读取了 ${parsedLayouts.length} 个布局`);
         return Array.isArray(parsedLayouts) ? parsedLayouts : [];
       }
     } catch (error) {
@@ -51,7 +50,6 @@ const LayoutManager: React.FC = () => {
   const saveLayoutsToStorage = (layouts: LayoutConfig[]): void => {
     try {
       localStorage.setItem(LAYOUTS_STORAGE_KEY, JSON.stringify(layouts));
-      console.log(`已保存 ${layouts.length} 个布局到localStorage`);
     } catch (error) {
       console.error('保存布局失败:', error);
     }
@@ -82,17 +80,9 @@ const LayoutManager: React.FC = () => {
   
   // 初始化: 加载布局和当前布局ID - 添加强制刷新逻辑
   useEffect(() => {
-    console.log('LayoutManager组件初始化');
-    
     const refreshAll = () => {
       const storedLayouts = loadLayoutsFromStorage();
-      console.log('LayoutManager初始化，从localStorage读取到布局数:', storedLayouts.length);
-      
       // 如果从localStorage读取到布局，显示它们
-      if (storedLayouts.length > 0) {
-        console.log('布局列表:', storedLayouts.map(l => ({ id: l.id, name: l.name })));
-      }
-      
       setLayouts(storedLayouts);
       setLocalLayouts(storedLayouts);
       
@@ -122,7 +112,6 @@ const LayoutManager: React.FC = () => {
       const refreshTimes = [100, 500, 1000, 2000];
       refreshTimes.forEach(delay => {
         setTimeout(() => {
-          console.log(`延时${delay}ms刷新布局列表`);
           const currentLayouts = loadLayoutsFromStorage();
           setLayouts(currentLayouts);
           setLocalLayouts(currentLayouts);
@@ -147,7 +136,6 @@ const LayoutManager: React.FC = () => {
     
     // 监听layoutsChanged自定义事件
     const handleLayoutsChanged = () => {
-      console.log('接收到layoutsChanged事件，刷新布局列表');
       refreshAll();
     };
     
@@ -222,7 +210,6 @@ const LayoutManager: React.FC = () => {
   // 强制更新机制：布局列表计数器发生变化时
   useEffect(() => {
     if (forceUpdate > 0) {
-      console.log('强制更新布局列表, 次数:', forceUpdate);
       const storedLayouts = loadLayoutsFromStorage();
       setLayouts(storedLayouts);
       setLocalLayouts(storedLayouts);
@@ -238,12 +225,10 @@ const LayoutManager: React.FC = () => {
       
       // 创建新布局或更新现有布局的信息
       const layoutName = newLayoutName.trim() || `布局 ${layouts.length + 1}`;
-      console.log('开始保存布局:', layoutName);
       
       // 直接从localStorage获取最新数据，确保我们有完整的布局列表
       const rawLayouts = localStorage.getItem(LAYOUTS_STORAGE_KEY);
       let currentLayouts = rawLayouts ? JSON.parse(rawLayouts) : [];
-      console.log('从localStorage读取到布局数:', currentLayouts.length);
       
       let newLayoutId = currentLayoutId;
       
@@ -253,7 +238,6 @@ const LayoutManager: React.FC = () => {
         
         if (existingIndex >= 0) {
           // 更新现有布局
-          console.log('更新现有布局:', currentLayouts[existingIndex].name);
           currentLayouts[existingIndex] = {
             ...currentLayouts[existingIndex],
             name: layoutName, // 使用新名称
@@ -265,7 +249,6 @@ const LayoutManager: React.FC = () => {
         } else {
           // 当前ID不存在，创建新布局
           const newId = `layout_${now}`;
-          console.log('当前布局ID不存在，创建新布局:', newId);
           const newLayout: LayoutConfig = {
             id: newId,
             name: layoutName,
@@ -282,7 +265,6 @@ const LayoutManager: React.FC = () => {
       } else {
         // 没有当前布局ID，创建新布局
         const newId = `layout_${now}`;
-        console.log('创建新布局:', newId);
         const newLayout: LayoutConfig = {
           id: newId,
           name: layoutName,
@@ -299,7 +281,6 @@ const LayoutManager: React.FC = () => {
       
       // 直接保存到localStorage
       localStorage.setItem(LAYOUTS_STORAGE_KEY, JSON.stringify(currentLayouts));
-      console.log('保存到localStorage成功, 共有布局:', currentLayouts.length);
       
       // 更新本地状态
       setLayouts(currentLayouts);
@@ -332,9 +313,7 @@ const LayoutManager: React.FC = () => {
   
   // 刷新布局列表，手动触发
   const refreshLayouts = () => {
-    console.log('手动刷新布局列表');
     const storedLayouts = loadLayoutsFromStorage();
-    console.log(`读取到 ${storedLayouts.length} 个布局`);
     
     // 同时更新两个状态
     setLayouts(storedLayouts);
@@ -400,7 +379,6 @@ const LayoutManager: React.FC = () => {
       // 调用store的loadLayout函数
       loadLayout(layoutId);
       
-      console.log(`成功加载布局: ${layoutToLoad.name}`);
       setIsOpen(false);
       showFeedback(`已加载布局: ${layoutToLoad.name}`, 'success');
     } catch (error) {
@@ -553,11 +531,9 @@ const LayoutManager: React.FC = () => {
     setIsOpen(newIsOpen);
     
     if (newIsOpen) {
-      console.log('打开布局管理器，刷新布局列表');
       // 打开时立即刷新布局列表
       setTimeout(() => {
         const layouts = refreshLayouts();
-        console.log(`已刷新布局列表，找到 ${layouts.length} 个布局`);
       }, 0);
     }
   };

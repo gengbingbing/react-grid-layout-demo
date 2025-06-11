@@ -95,19 +95,12 @@ export default function GridLayout() {
         setIsLoading(true);
         
         if (!isInitialized) {
-          console.log('正在初始化布局...');
-          
           // 确保插件已加载
           await ensurePluginsLoaded();
-          console.log('插件已加载完成');
-          
           // 先重置存储，清除可能的旧缓存状态
           resetStore();
-          console.log('存储已重置');
-          
           // 然后初始化默认布局
           initDefaultLayout();
-          console.log('默认布局已初始化');
           
           setIsInitialized(true);
         }
@@ -226,10 +219,6 @@ export default function GridLayout() {
     document.head.appendChild(style);
     
     // 调试日志
-    console.log('当前布局:', layout);
-    console.log('布局元素数量:', layout.length);
-    console.log('标签容器:', tabContainers);
-    
     return () => {
       document.head.removeChild(style);
     };
@@ -242,20 +231,16 @@ export default function GridLayout() {
     const { saveCurrentLayout, currentLayoutId } = useLayoutStore.getState();
     if (currentLayoutId) {
       // 如果有当前布局，则自动更新
-      console.log('布局变更，自动更新当前布局:', currentLayoutId);
       setTimeout(() => saveCurrentLayout(), 100);
     }
   };
   
   const handleRemovePlugin = (pluginId: string) => {
-    console.log('GridLayout: 移除插件', pluginId);
     removePlugin(pluginId);
   };
   
   // 处理从标签容器中移除插件 - 彻底删除插件，而不是拆分出来
   const handleTabPluginRemove = (tabId: string, pluginId: string) => {
-    console.log('GridLayout: 从标签中移除并删除插件', pluginId, '从', tabId);
-    
     // 从Tab中移除插件
     removePluginFromTab(tabId, pluginId);
     
@@ -279,12 +264,6 @@ export default function GridLayout() {
     // 强制清理悬浮提示
     setHoveredTabContainerId(null);
     setDraggedPluginId(oldItem.i);
-    
-    console.log('拖拽开始:', {
-      itemId: oldItem.i,
-      isDraggingContainer,
-      dragInfo: window.__draggedPluginInfo
-    });
   };
 
   const onDrag = (layout: Layout[], oldItem: Layout, newItem: Layout, placeholder: Layout, e: MouseEvent, element: HTMLElement) => {
@@ -369,7 +348,6 @@ export default function GridLayout() {
           
           // 处理拖动到标签容器的情况
           if (itemId.startsWith('tab-container-')) {
-            console.log('拖拽悬停在标签容器上:', itemId);
             setDragOverPluginId(itemId);
             setIsDragOver(true);
             
@@ -406,7 +384,6 @@ export default function GridLayout() {
           // 拖动到普通插件 - 创建新的标签容器
           else if (!itemId.startsWith('tab-container-')) {
             // 如果是新的目标插件
-            console.log('拖拽悬停在普通插件上:', itemId);
             setDragOverPluginId(itemId);
             setIsDragOver(true);
             
@@ -467,14 +444,7 @@ export default function GridLayout() {
   
   // 从Tab中拖出插件
   const handleTabPluginDragStart = (tabId: string, pluginId: string) => {
-    console.log('=== GridLayout 收到拖拽回调 ===');
-    console.log('TabID:', tabId);
-    console.log('插件ID:', pluginId);
-    console.log('当前布局项数量:', layout.length);
-    console.log('标签插件拖拽开始:', pluginId, '从标签容器:', tabId);
-    
     // **强制清理任何残留的拖拽状态**
-    console.log('开始拖拽前，强制清理残留状态');
     (window as any).__isDraggingTab = false;
     (window as any).__isPotentialDrag = false;
     
@@ -533,7 +503,6 @@ export default function GridLayout() {
         colWidth
       };
       
-      console.log('网格参数:', window.__gridParams);
     }
     
     // 获取标签容器的布局信息，用于确定尺寸
@@ -549,7 +518,6 @@ export default function GridLayout() {
         w: tabRect.width,
         h: tabRect.height
       };
-      console.log('标签容器位置:', tabPos);
       
       // 先移除可能存在的旧预览元素
       const oldPreview = document.querySelector('.plugin-drag-preview');
@@ -571,7 +539,6 @@ export default function GridLayout() {
         // 使用布局项的尺寸来计算网格单位尺寸
         previewWidth = containerLayout.w * colWidth + (containerLayout.w - 1) * margin;
         previewHeight = containerLayout.h * rowHeight + (containerLayout.h - 1) * margin;
-        console.log('网格尺寸预览:', { previewWidth, previewHeight, containerLayout });
       }
       
       // 创建拖拽预览元素
@@ -590,6 +557,7 @@ export default function GridLayout() {
       preview.style.borderRadius = '6px'; // 增加圆角
       preview.style.boxShadow = '0 4px 15px rgba(0,0,0,0.3)'; // 更明显的阴影
       preview.style.transition = 'all 0.1s ease'; // 轻微过渡效果但保持响应迅速
+      preview.style.maxHeight = '300px';
       
       // 添加插件图标和名称，增强视觉效果
       preview.innerHTML = `
@@ -843,6 +811,7 @@ export default function GridLayout() {
           preview.style.backgroundColor = 'rgba(230, 126, 34, 0.7)';
           preview.style.transform = 'scale(1)';
           preview.style.boxShadow = '0 0 0 3px rgba(230, 126, 34, 0.3), 0 4px 15px rgba(0,0,0,0.3)';
+          preview.style.maxHeight = '300px';
           
           // 可以添加一个文本提示
           if (!preview.querySelector('.preview-label')) {
@@ -866,9 +835,6 @@ export default function GridLayout() {
               label.textContent = '拖放到此处创建新标签组';
             }
           }
-          
-          // 绘制网格辅助线
-          drawGridHelper(gridX, gridY, colWidth, rowHeight, margin, rect);
         } else {
           // 鼠标在网格外，恢复默认样式
           preview.style.border = '2px solid #3498db';
@@ -902,49 +868,8 @@ export default function GridLayout() {
     }
   };
   
-  // 绘制网格辅助线
-  const drawGridHelper = (gridX: number, gridY: number, colWidth: number, rowHeight: number, margin: number, rect: DOMRect) => {
-    // 删除可能存在的旧辅助线
-    const oldHelpers = document.querySelectorAll('.grid-helper-line');
-    oldHelpers.forEach(helper => {
-      if (helper.parentNode) {
-        helper.parentNode.removeChild(helper);
-      }
-    });
-    
-    // 绘制水平辅助线
-    const hLine = document.createElement('div');
-    hLine.className = 'grid-helper-line';
-    hLine.style.position = 'absolute';
-    hLine.style.left = `${rect.left}px`;
-    hLine.style.top = `${rect.top + gridY * (rowHeight + margin)}px`;
-    hLine.style.width = `${rect.width}px`;
-    hLine.style.height = `${rowHeight}px`;
-    hLine.style.backgroundColor = 'rgba(230, 126, 34, 0.2)';
-    hLine.style.border = '1px dashed rgba(230, 126, 34, 0.5)';
-    hLine.style.zIndex = '990';
-    hLine.style.pointerEvents = 'none';
-    document.body.appendChild(hLine);
-    
-    // 绘制垂直辅助线
-    const vLine = document.createElement('div');
-    vLine.className = 'grid-helper-line';
-    vLine.style.position = 'absolute';
-    vLine.style.left = `${rect.left + gridX * (colWidth + margin)}px`;
-    vLine.style.top = `${rect.top}px`;
-    vLine.style.width = `${colWidth}px`;
-    vLine.style.height = `${rect.height}px`;
-    vLine.style.backgroundColor = 'rgba(230, 126, 34, 0.2)';
-    vLine.style.border = '1px dashed rgba(230, 126, 34, 0.5)';
-    vLine.style.zIndex = '990';
-    vLine.style.pointerEvents = 'none';
-    document.body.appendChild(vLine);
-  };
-  
   // 处理拖拽释放
   const handleDragRelease = (e: MouseEvent) => {
-    console.log('处理拖拽释放');
-    
     // 获取拖拽信息
     const dragInfo = window.__draggedPluginInfo;
     if (!dragInfo) {
@@ -970,19 +895,12 @@ export default function GridLayout() {
             e.clientY >= rect.top && 
             e.clientY <= rect.bottom
           ) {
-            console.log('将插件从标签容器拖放到另一个标签容器:', {
-              sourceTabId: tabId,
-              targetTabId,
-              pluginId
-            });
-            
             try {
               // 获取store实例
               const store = useLayoutStore.getState();
               
               // 使用movePluginBetweenTabs函数，正确处理插件移动
               store.movePluginBetweenTabs(tabId, targetTabId, pluginId);
-              console.log('成功移动插件:', pluginId, '从', tabId, '到', targetTabId);
               
               targetFound = true;
               
@@ -1029,11 +947,8 @@ export default function GridLayout() {
               setTimeout(() => {
                 const { saveCurrentLayout } = useLayoutStore.getState();
                 saveCurrentLayout();
-                console.log('拖拽移动完成，已保存布局');
               }, 200);
             } catch (error) {
-              console.error('移动插件失败:', error);
-              
               // 显示错误提示
               const errorIndicator = document.createElement('div');
               errorIndicator.className = 'drop-error-indicator';
@@ -1067,32 +982,18 @@ export default function GridLayout() {
     
     // 如果没有找到目标，检查是否拖放到了空白区域 (创建新的标签容器)
     if (!targetFound) {
-      console.log('=== 检查空白区域释放 ===');
-      console.log('鼠标位置:', { x: e.clientX, y: e.clientY });
-      
       // 获取网格参数
       const gridParams = window.__gridParams;
-      console.log('网格参数:', gridParams);
-      console.log('拖拽信息:', dragInfo);
       
       // 使用全局拖拽信息而不是局部状态变量
       if (gridParams && dragInfo && dragInfo.pluginId && dragInfo.tabId) {
         const { rect, rowHeight, margin, colWidth } = gridParams;
-        
-        console.log('网格区域:', {
-          left: rect.left,
-          right: rect.right,
-          top: rect.top,
-          bottom: rect.bottom
-        });
         
         // 检查是否在网格区域内
         const isInGrid = e.clientX >= rect.left &&
           e.clientX <= rect.right &&
           e.clientY >= rect.top &&
           e.clientY <= rect.bottom;
-        
-        console.log('是否在网格区域内:', isInGrid);
         
         if (isInGrid) {
           // 计算网格位置
@@ -1102,10 +1003,6 @@ export default function GridLayout() {
           // 限制在有效范围内
           const x = Math.max(0, Math.min(gridX, 11)); // 限制在0-11列内
           const y = Math.max(0, Math.min(gridY, 20)); // 限制在0-20行内
-          
-          console.log('计算的网格位置:', { gridX, gridY, x, y });
-          console.log('准备调用handleTabSplit');
-          console.log('参数:', { tabId: dragInfo.tabId, pluginId: dragInfo.pluginId });
           
           // 调用拆分标签函数
           handleTabSplit(dragInfo.tabId, dragInfo.pluginId);
@@ -1131,8 +1028,6 @@ export default function GridLayout() {
   
   // 处理拖拽时拆分标签内容
   const handleTabSplit = (tabId: string, pluginId: string) => {
-    console.log('GridLayout: 从标签中拆分插件', pluginId, '从', tabId);
-    
     try {
       // 获取当前鼠标位置，用于放置新容器
       const mousePosition = { x: 0, y: 0 };
@@ -1154,8 +1049,6 @@ export default function GridLayout() {
         const x = Math.max(0, Math.min(gridX, 11)); // 限制在0-11列内
         const y = Math.max(0, Math.min(gridY, 20)); // 限制在0-20行内
         
-        console.log('计算的网格位置:', { x, y, mouseX: mousePosition.x, mouseY: mousePosition.y });
-        
         // 调用store方法，将插件从原容器移除并创建新容器
         const store = useLayoutStore.getState();
         
@@ -1170,13 +1063,10 @@ export default function GridLayout() {
         // 显示成功提示
         showSuccessIndicator(mousePosition.x, mousePosition.y);
         
-        console.log('成功拆分插件并创建新布局:', pluginId);
-        
         // 延迟保存布局，确保状态完全更新
         setTimeout(() => {
           const { saveCurrentLayout } = useLayoutStore.getState();
           saveCurrentLayout();
-          console.log('拆分操作完成，已保存布局');
         }, 200);
         
       } else {
@@ -1481,13 +1371,6 @@ export default function GridLayout() {
                   (() => {
                     const tabContainer = tabContainers.find(tab => tab.id === item.i);
                     const plugins = tabContainer?.plugins || [];
-                    
-                    // 添加调试日志
-                    console.log(`TabContainer渲染 - ${item.i}:`, {
-                      找到的标签容器: tabContainer,
-                      插件列表: plugins,
-                      全部标签容器: tabContainers
-                    });
                     
                     return plugins;
                   })()

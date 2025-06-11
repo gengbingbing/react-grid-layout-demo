@@ -68,7 +68,6 @@ export default function PluginContainer({ pluginId, onRemove, hideHeader = false
     const newContentHeight = containerHeight - headerHeight - 2;
     
     if (newContentHeight > 0 && newContentHeight !== contentHeight) {
-      console.log(`[${pluginId}] 更新内容区高度:`, newContentHeight);
       setContentHeight(newContentHeight);
     }
   };
@@ -145,7 +144,6 @@ export default function PluginContainer({ pluginId, onRemove, hideHeader = false
   // 当有token更新时，触发刷新
   useEffect(() => {
     if (lastTokenUpdate && plugin) {
-      console.log(`[${pluginId}] Token更新触发刷新，时间:`, new Date(lastTokenUpdate).toLocaleTimeString());
       const defaultConfig = plugin.metadata.defaultConfig || {};
       setConfig({...defaultConfig});
     }

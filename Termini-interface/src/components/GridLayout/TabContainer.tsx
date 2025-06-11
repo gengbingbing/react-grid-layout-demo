@@ -41,19 +41,12 @@ export default function TabContainer({
 
   // 同步外部 plugins 属性变化到本地状态
   useEffect(() => {
-    console.log('TabContainer: plugins属性变化，同步到本地状态', {
-      tabId,
-      oldLocalPlugins: localPlugins,
-      newPlugins: plugins
-    });
-    
     // 只有当外部plugins和本地localPlugins不同步时才更新
     const isDifferent = plugins.length !== localPlugins.length || 
       plugins.some(plugin => !localPlugins.includes(plugin)) ||
       localPlugins.some(plugin => !plugins.includes(plugin));
     
     if (isDifferent) {
-      console.log('TabContainer: 检测到插件列表变化，更新本地状态');
       setLocalPlugins([...plugins]);
       
       // 确保activeTab在有效范围内
@@ -93,13 +86,6 @@ export default function TabContainer({
       // 只有当实际滚动宽度大于可见宽度时才显示按钮
       const hasOverflow = container.scrollWidth > container.clientWidth + 5; // 添加5px的容错
 
-      console.log('检查滚动状态:', {
-        scrollWidth: container.scrollWidth,
-        clientWidth: container.clientWidth,
-        hasOverflow: hasOverflow,
-        scrollLeft: container.scrollLeft
-      });
-
       setShowScrollButtons(hasOverflow);
       setCanScrollLeft(container.scrollLeft > 0);
       setCanScrollRight(container.scrollLeft < container.scrollWidth - container.clientWidth - 5);
@@ -124,7 +110,6 @@ export default function TabContainer({
     const newContentHeight = containerHeight - tabsBarHeight - 10; // 10px为边距
 
     if (newContentHeight > 0 && newContentHeight !== contentHeight) {
-      console.log('更新内容区高度:', newContentHeight);
       setContentHeight(newContentHeight);
     }
   };
@@ -478,7 +463,6 @@ export default function TabContainer({
   // 监听localPlugins变化，更新可用插件列表
   useEffect(() => {
     // 更新可用插件列表
-    console.log('localPlugins变化，自动更新可用插件列表');
     updateAvailablePlugins();
   }, [localPlugins]);
 
@@ -512,14 +496,11 @@ export default function TabContainer({
       // 选择新的有效索引，通常是前一个
       const newActiveIndex = Math.max(0, plugins.length - 1);
       setActiveTab(newActiveIndex);
-      console.log('标签已移除，自动选择新标签:', newActiveIndex);
     }
   }, [plugins, activeTab]);
 
   // 在用户手动移除标签时调整活动标签
   const handleRemoveTab = (pluginId: string, index: number) => {
-    console.log('TabContainer: 移除标签', pluginId, index);
-
     // 1. 立即从本地状态中移除插件
     setLocalPlugins(prev => prev.filter(id => id !== pluginId));
 
@@ -646,7 +627,6 @@ export default function TabContainer({
     }
 
     // **强制清理任何残留的拖拽状态**
-    console.log('开始拖拽前，强制清理残留状态');
     (window as any).__isDraggingTab = false;
     (window as any).__isPotentialDrag = false;
     setIsDraggingTab(false);
@@ -663,8 +643,6 @@ export default function TabContainer({
       console.warn('已有标签正在拖动中，忽略此次操作');
       return;
     }
-
-    console.log('开始拖动标签:', pluginId, '标签ID:', tabId);
 
     // 立即激活当前标签，确保拖拽的是可见内容
     setActiveTab(index);
@@ -693,12 +671,6 @@ export default function TabContainer({
         offsetX: e.clientX - tabRect.left,
         offsetY: e.clientY - tabRect.top
       };
-      console.log('=== TabContainer 拖拽开始 ===');
-      console.log('插件ID:', pluginId);
-      console.log('TabID:', tabId);
-      console.log('拖拽位置:', window.__draggedPluginPosition);
-      console.log('调用onDragTab回调，插件ID:', pluginId);
-
       // 设置全局标志，防止其他拖拽操作干扰
       (window as any).__isDraggingTab = true;
 
@@ -710,7 +682,6 @@ export default function TabContainer({
         startTime: Date.now()
       };
       
-      console.log('全局拖拽信息设置完成:', window.__draggedPluginInfo);
 
       // 禁用文本选择
       document.body.classList.add('dragging');
@@ -736,7 +707,6 @@ export default function TabContainer({
         // 只有在移动了至少5px的距离后才触发拖拽
         if (!hasDragged && distance > 5) {
           hasDragged = true;
-          console.log('确认拖拽，触发拖拽回调');
 
           // 添加拖拽样式
           tabElement.style.opacity = '0.7';
@@ -794,15 +764,11 @@ export default function TabContainer({
 
       // 处理鼠标释放
       const handleMouseUp = (upEvent: MouseEvent) => {
-        console.log('TabContainer鼠标释放事件');
-
         // 阻止默认行为，但不阻止事件传播，让GridLayout也能处理事件
         upEvent.preventDefault();
 
         // **重要**：不在TabContainer中处理空白区域释放
         // 让GridLayout的handleDragRelease统一处理所有释放逻辑
-        console.log('TabContainer释放鼠标，交由GridLayout处理空白区域逻辑');
-
         // 延迟清理拖拽状态，给GridLayout时间处理事件
         setTimeout(() => {
           // 清理全局拖拽状态
@@ -953,21 +919,17 @@ export default function TabContainer({
 
   // 修改添加按钮点击处理函数，修复点击事件不触发问题
   const handleAddButtonClick = (e: React.MouseEvent) => {
-    console.log('添加按钮被点击，即将打开菜单');
-
     // 立即阻止事件冒泡和默认行为，防止触发拖拽
     e.stopPropagation();
     e.preventDefault();
 
     // 记录当前的菜单状态
-    console.log('当前菜单状态:', showAddMenu ? '显示' : '隐藏');
 
     // 清除任何可能存在的拖拽状态
     document.body.classList.remove('dragging');
 
     // 直接切换菜单状态，不使用setTimeout
     setShowAddMenu(!showAddMenu);
-    console.log('已切换菜单状态:', !showAddMenu ? '显示' : '隐藏');
 
     // 如果要打开菜单，确保页面上没有残留的拖拽状态
     if (!showAddMenu) {
@@ -995,8 +957,6 @@ export default function TabContainer({
   // 修改添加菜单的显示状态变化监听
   useEffect(() => {
     if (showAddMenu) {
-      console.log('菜单已显示，添加全局点击监听');
-
       // 延迟一帧，确保DOM更新
       setTimeout(() => {
         if (addMenuRef.current) {
@@ -1020,15 +980,6 @@ export default function TabContainer({
           const spaceBelow = viewportHeight - buttonRect.bottom;
           const spaceAbove = buttonRect.top;
 
-          console.log('菜单定位信息:', {
-            buttonTop: buttonRect.top,
-            buttonBottom: buttonRect.bottom,
-            menuHeight: menuRect.height,
-            viewportHeight,
-            spaceBelow,
-            spaceAbove
-          });
-
           // 重置之前可能应用的样式
           menuElement.style.top = '';
           menuElement.style.bottom = '';
@@ -1044,7 +995,6 @@ export default function TabContainer({
           // 检查下方空间是否足够显示菜单
           if (spaceBelow < Math.min(menuRect.height, 300) && spaceAbove > spaceBelow) {
             // 下方空间不足且上方空间更大，显示在上方
-            console.log('菜单将显示在按钮上方');
             menuElement.classList.add('menu-position-top');
 
             // 限制最大高度以适应上方可用空间
@@ -1052,7 +1002,6 @@ export default function TabContainer({
             menuElement.style.maxHeight = `${maxHeightAbove}px`;
           } else {
             // 显示在下方
-            console.log('菜单将显示在按钮下方');
             menuElement.classList.add('menu-position-bottom');
 
             // 限制最大高度以适应下方可用空间
@@ -1095,7 +1044,6 @@ export default function TabContainer({
 
           // 确保所有菜单项可点击
           const menuItems = menuElement.querySelectorAll('button');
-          console.log(`找到 ${menuItems.length} 个菜单项`);
 
           menuItems.forEach(item => {
             item.style.pointerEvents = 'auto';
@@ -1108,7 +1056,6 @@ export default function TabContainer({
             // 确保点击事件可以正常触发
             const oldClickHandler = item.onclick;
             item.onclick = (e) => {
-              console.log('菜单项被点击:', item.textContent);
               e.stopPropagation();
 
               // 延迟调用原始点击处理函数，确保事件不被干扰
@@ -1125,7 +1072,6 @@ export default function TabContainer({
       // 修复：点击外部关闭添加菜单
       const handleClickOutside = (event: MouseEvent) => {
         if (addMenuRef.current && !addMenuRef.current.contains(event.target as Node)) {
-          console.log('点击外部区域，关闭菜单');
           setShowAddMenu(false);
         }
       };
@@ -1290,8 +1236,6 @@ export default function TabContainer({
                                 e.preventDefault();
                                 e.stopPropagation();
 
-                                console.log('添加插件菜单项点击:', plugin.id);
-
                                 if (!tabId) {
                                   console.error('没有tabId，无法添加插件');
                                   return;
@@ -1320,8 +1264,6 @@ export default function TabContainer({
                                   // 调用store方法
                                   const layoutStore = useLayoutStore.getState();
                                   layoutStore.addPluginToTab(tabId, plugin.id);
-
-                                  console.log('插件添加成功:', plugin.id);
 
                                   // 立即更新可用插件列表，确保新添加的插件不再显示
                                   setTimeout(() => updateAvailablePlugins(), 0);
@@ -1522,8 +1464,6 @@ export default function TabContainer({
                               e.preventDefault();
                               e.stopPropagation();
 
-                              console.log('添加插件菜单项点击:', plugin.id);
-
                               if (!tabId) {
                                 console.error('没有tabId，无法添加插件');
                                 return;
@@ -1552,8 +1492,6 @@ export default function TabContainer({
                                 // 调用store方法
                                 const layoutStore = useLayoutStore.getState();
                                 layoutStore.addPluginToTab(tabId, plugin.id);
-
-                                console.log('插件添加成功:', plugin.id);
 
                                 // 立即更新可用插件列表，确保新添加的插件不再显示
                                 setTimeout(() => updateAvailablePlugins(), 0);
