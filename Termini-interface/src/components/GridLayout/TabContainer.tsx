@@ -461,14 +461,52 @@ export default function TabContainer({
     updateAvailablePlugins();
   }, [localPlugins]);
 
-  // 单独的函数用于更新可用插件列表
+  // 🔧 修复：全局检查插件是否已存在（包括所有标签容器和布局项）
+  const isPluginGloballyActive = (pluginId: string): boolean => {
+    const state = useLayoutStore.getState();
+    
+    // 检查是否在活跃插件列表中（直接作为布局项存在）
+    if (state.activePlugins.includes(pluginId)) {
+      return true;
+    }
+    
+    // 检查是否在任何标签容器中（包括当前容器）
+    for (const tabContainer of state.tabContainers) {
+      if (tabContainer.plugins.includes(pluginId)) {
+        return true;
+      }
+    }
+    
+    // 检查是否作为独立布局项存在
+    if (state.layout.some(item => item.i === pluginId)) {
+      return true;
+    }
+    
+    return false;
+  };
+
+  // 🔧 修复：更新可用插件列表 - 排除所有已添加的插件
   const updateAvailablePlugins = () => {
     const allPlugins = pluginRegistry.getAll();
-    setAvailablePlugins(
-      allPlugins
-        .filter(plugin => !localPlugins.includes(plugin.metadata.id))
-        .map(plugin => ({ id: plugin.metadata.id, name: plugin.metadata.name }))
-    );
+    
+    // 过滤出真正未被使用的插件
+    const availablePluginList = allPlugins.filter(plugin => {
+      const pluginId = plugin.metadata.id;
+      
+      // 使用全局检查函数，确保插件在整个系统中都不存在
+      return !isPluginGloballyActive(pluginId);
+    }).map(plugin => ({ 
+      id: plugin.metadata.id, 
+      name: plugin.metadata.name 
+    }));
+    
+    console.log('🔍 更新可用插件列表:', {
+      全部插件数量: allPlugins.length,
+      可用插件数量: availablePluginList.length,
+      可用插件: availablePluginList.map(p => p.name)
+    });
+    
+    setAvailablePlugins(availablePluginList);
   };
 
   useEffect(() => {
@@ -494,38 +532,103 @@ export default function TabContainer({
     }
   }, [plugins, activeTab]);
 
-  // 在用户手动移除标签时调整活动标签
+  // 🔧 修复：插件移除处理函数
   const handleRemoveTab = (pluginId: string, index: number) => {
+    console.log(`🗑️ 开始移除插件 ${pluginId}，索引: ${index}`);
+    
+    // 删除前记录状态
+    debugPluginStatus(`删除插件 ${pluginId} 前`);
+
     // 1. 立即从本地状态中移除插件
-    setLocalPlugins(prev => prev.filter(id => id !== pluginId));
+    const newLocalPlugins = localPlugins.filter(id => id !== pluginId);
+    setLocalPlugins(newLocalPlugins);
 
     // 2. 调用外部回调更新全局状态
-    onRemovePlugin(pluginId);
+    try {
+      onRemovePlugin(pluginId);
+      console.log(`✅ 插件 ${pluginId} 已从全局状态移除`);
+    } catch (error) {
+      console.error(`❌ 移除插件 ${pluginId} 时发生错误:`, error);
+    }
 
-    // 3. 手动更新可用插件列表（不再依赖 useEffect）
-    const allPlugins = pluginRegistry.getAll();
-    setAvailablePlugins(
-      allPlugins
-        .filter(plugin => !localPlugins.includes(plugin.metadata.id) && plugin.metadata.id !== pluginId)
-        .map(plugin => ({ id: plugin.metadata.id, name: plugin.metadata.name }))
-    );
+    // 3. 🔧 修复：确保插件完全从全局状态中移除
+    setTimeout(() => {
+      // 强制从全局状态中移除插件（防漏）
+      const store = useLayoutStore.getState();
+      
+      // 手动确保插件从所有位置移除
+      const updatedActivePlugins = store.activePlugins.filter(id => id !== pluginId);
+      const updatedTabContainers = store.tabContainers.map(tab => ({
+        ...tab,
+        plugins: tab.plugins.filter(id => id !== pluginId)
+      })).filter(tab => tab.plugins.length > 0);
+      const updatedLayout = store.layout.filter(item => item.i !== pluginId);
+      
+      // 使用store的setState强制更新
+      useLayoutStore.setState({
+        activePlugins: updatedActivePlugins,
+        tabContainers: updatedTabContainers,
+        layout: updatedLayout
+      });
+      
+      console.log(`🔧 强制清理插件 ${pluginId} 完成`);
+      
+      // 再次延迟更新可用插件列表
+      setTimeout(() => {
+        console.log(`🔄 最终更新可用插件列表 (删除插件: ${pluginId})`);
+        updateAvailablePlugins();
+        
+        // 验证插件是否真的被移除
+        const finalCheck = isPluginGloballyActive(pluginId);
+        console.log(`🔍 插件 ${pluginId} 最终状态检查: ${finalCheck ? '仍在系统中' : '已完全移除'}`);
+        
+        if (finalCheck) {
+          console.warn(`⚠️ 插件 ${pluginId} 删除后仍在系统中，需要手动清理`);
+          // 最后的强制清理
+          setTimeout(() => {
+            const finalState = useLayoutStore.getState();
+            useLayoutStore.setState({
+              activePlugins: finalState.activePlugins.filter(id => id !== pluginId),
+              tabContainers: finalState.tabContainers.map(tab => ({
+                ...tab,
+                plugins: tab.plugins.filter(id => id !== pluginId)
+              })).filter(tab => tab.plugins.length > 0),
+              layout: finalState.layout.filter(item => item.i !== pluginId)
+            });
+            
+            setTimeout(() => {
+              updateAvailablePlugins();
+              console.log(`🔄 手动清理后最终更新完成`);
+            }, 100);
+          }, 200);
+        }
+      }, 300);
+    }, 200);
 
     // 4. 调整活动标签索引
     if (index === activeTab) {
-      setActiveTab(Math.max(0, localPlugins.length - 2)); // 因为本地状态已更新
+      // 如果移除的是当前活动标签，选择相邻标签
+      const newActiveIndex = Math.max(0, Math.min(index, newLocalPlugins.length - 1));
+      setActiveTab(newActiveIndex);
+      console.log(`📝 活动标签索引调整为: ${newActiveIndex}`);
+    } else if (index < activeTab) {
+      // 如果移除的标签在当前活动标签之前，需要调整索引
+      setActiveTab(activeTab - 1);
+      console.log(`📝 活动标签索引调整为: ${activeTab - 1}`);
     }
     
     // 5. 检查是否是容器中的最后一个插件
-    const remainingPlugins = localPlugins.filter(id => id !== pluginId);
-    if (remainingPlugins.length === 0) {
-      console.log('TabContainer中的最后一个插件已被移除，容器将变空');
+    if (newLocalPlugins.length === 0) {
+      console.log('🔚 TabContainer中的最后一个插件已被移除，容器将变空');
       
       // 延迟一点时间，确保全局状态更新完成，然后让父组件处理空容器的清理
-      // 注意：不在这里直接处理容器移除，而是让store的逻辑自动处理
       setTimeout(() => {
-        console.log('TabContainer已变空，等待自动清理和重排');
+        console.log('🧹 TabContainer已变空，等待自动清理和重排');
+        debugPluginStatus(`容器清理后最终状态`);
       }, 100);
     }
+
+    console.log(`✅ 插件 ${pluginId} 移除完成，剩余插件数量: ${newLocalPlugins.length}`);
   };
 
   // 添加清除全局拖拽标志的效果
@@ -931,15 +1034,30 @@ export default function TabContainer({
     e.preventDefault();
 
     // 记录当前的菜单状态
+    const willOpen = !showAddMenu;
 
     // 清除任何可能存在的拖拽状态
     document.body.classList.remove('dragging');
 
+    // 🔧 如果即将打开菜单，强制刷新可用插件列表
+    if (willOpen) {
+      console.log('🔄 即将打开菜单，强制刷新可用插件列表');
+      
+      // 立即更新一次
+      updateAvailablePlugins();
+      
+      // 短暂延迟后再次更新，确保获取最新状态
+      setTimeout(() => {
+        console.log('🔄 延迟再次检查全局状态');
+        updateAvailablePlugins();
+      }, 50);
+    }
+
     // 直接切换菜单状态，不使用setTimeout
-    setShowAddMenu(!showAddMenu);
+    setShowAddMenu(willOpen);
 
     // 如果要打开菜单，确保页面上没有残留的拖拽状态
-    if (!showAddMenu) {
+    if (willOpen) {
       // 清除所有可能的拖拽提示和样式
       document.querySelectorAll('.tab-drag-indicator, .drop-indicator').forEach(el => {
         if (el.parentNode) el.parentNode.removeChild(el);
@@ -1126,30 +1244,52 @@ export default function TabContainer({
     }
   }, [showAddMenu]);
 
-  // 彻底重写添加插件函数，使用最直接的方式
+  // 🔧 修复：使用全局检查的插件添加函数
   const handleAddPlugin = (pluginId: string) => {
-    if (!tabId) return;
-
-    // 使用最新的 localPlugins 检查是否已存在
-    if (localPlugins.includes(pluginId)) {
-      console.log('插件已存在，不重复添加');
+    if (!tabId) {
+      console.error('❌ 没有tabId，无法添加插件');
       return;
     }
 
+    // 🔧 使用全局检查，确保插件在整个系统中都不存在
+    if (isPluginGloballyActive(pluginId)) {
+      console.log(`⚠️ 插件 ${pluginId} 已在系统中存在，不重复添加`);
+      return;
+    }
+
+    // 检查是否已在当前容器的本地状态中
+    if (localPlugins.includes(pluginId)) {
+      console.log(`⚠️ 插件 ${pluginId} 已在当前容器中，不重复添加`);
+      return;
+    }
+
+    console.log(`✅ 开始添加插件 ${pluginId} 到容器 ${tabId}`);
+
     // 更新本地状态
-    setLocalPlugins([...localPlugins, pluginId]);
+    const newLocalPlugins = [...localPlugins, pluginId];
+    setLocalPlugins(newLocalPlugins);
 
     // 调用全局状态更新
-    const store = useLayoutStore.getState();
-    store.addPluginToTab(tabId, pluginId);
+    try {
+      const store = useLayoutStore.getState();
+      store.addPluginToTab(tabId, pluginId);
+      console.log(`✅ 插件 ${pluginId} 已成功添加到全局状态`);
+    } catch (error) {
+      console.error(`❌ 添加插件到全局状态失败:`, error);
+      // 如果全局添加失败，回滚本地状态
+      setLocalPlugins(localPlugins);
+      return;
+    }
 
-    // 更新可用插件列表
-    setAvailablePlugins(prev =>
-      prev.filter(plugin => plugin.id !== pluginId)
-    );
+    // 立即更新可用插件列表
+    setTimeout(() => {
+      updateAvailablePlugins();
+    }, 0);
 
-    // 激活新标签
-    setActiveTab(localPlugins.length); // 注意：localPlugins 还未更新，所以用 length 而不是 length+1
+    // 激活新添加的标签
+    setActiveTab(newLocalPlugins.length - 1);
+    
+    console.log(`✅ 插件 ${pluginId} 添加完成，当前标签数量: ${newLocalPlugins.length}`);
   };
 
   // 添加一个辅助函数，用于获取store中的实际插件状态
@@ -1160,6 +1300,108 @@ export default function TabContainer({
     const tabContainer = store.tabContainers.find(t => t.id === tabContainerId);
     return tabContainer?.plugins || [];
   };
+
+  // 🔧 调试函数：验证插件状态
+  const debugPluginStatus = (context: string) => {
+    const currentState = useLayoutStore.getState();
+    const allPlugins = pluginRegistry.getAll();
+    
+    console.group(`🔍 [${context}] 插件状态检查`);
+    console.log('全局状态:');
+    console.log('- activePlugins:', currentState.activePlugins);
+    console.log('- tabContainers:', currentState.tabContainers.map(t => ({ id: t.id, plugins: t.plugins })));
+    console.log('- layout items:', currentState.layout.map(l => l.i));
+    console.log('本地状态:');
+    console.log('- localPlugins:', localPlugins);
+    console.log('- availablePlugins:', availablePlugins.map(p => p.name));
+    
+    console.log('插件检查结果:');
+    allPlugins.forEach(plugin => {
+      const pluginId = plugin.metadata.id;
+      const isActive = isPluginGloballyActive(pluginId);
+      const isAvailable = availablePlugins.some(p => p.id === pluginId);
+      console.log(`- ${plugin.metadata.name}: ${isActive ? '已激活' : '未激活'}, ${isAvailable ? '在可用列表中' : '不在可用列表中'}`);
+    });
+    console.groupEnd();
+  };
+
+  // 🔧 监听全局状态变化，确保可用插件列表实时更新
+  useEffect(() => {
+    // 当showAddMenu打开时，强制重新检查全局状态
+    if (showAddMenu) {
+      console.log('🔄 showAddMenu打开，强制检查全局状态');
+      
+      // 立即更新一次
+      updateAvailablePlugins();
+      
+      // 短暂延迟后再次更新，确保获取最新状态
+      setTimeout(() => {
+        console.log('🔄 延迟再次检查全局状态');
+        updateAvailablePlugins();
+      }, 50);
+    }
+
+    // 监听全局插件状态变化
+    const unsubscribe = useLayoutStore.subscribe((newState, prevState) => {
+      // 检测到状态变化时总是更新可用插件列表
+      const hasActivePluginsChange = newState.activePlugins.length !== (prevState?.activePlugins?.length || 0) ||
+        newState.activePlugins.some(id => !prevState?.activePlugins?.includes(id)) ||
+        (prevState?.activePlugins || []).some(id => !newState.activePlugins.includes(id));
+      
+      const hasTabContainersChange = newState.tabContainers.length !== (prevState?.tabContainers?.length || 0) ||
+        JSON.stringify(newState.tabContainers) !== JSON.stringify(prevState?.tabContainers || []);
+      
+      const hasLayoutChange = newState.layout.length !== (prevState?.layout?.length || 0) ||
+        JSON.stringify(newState.layout.map(l => l.i)) !== JSON.stringify((prevState?.layout || []).map(l => l.i));
+      
+      if (hasActivePluginsChange || hasTabContainersChange || hasLayoutChange) {
+        console.log('🔄 检测到全局状态变化，更新可用插件列表', {
+          activePlugins: hasActivePluginsChange,
+          tabContainers: hasTabContainersChange,
+          layout: hasLayoutChange
+        });
+        
+        // 延迟更新，确保状态完全同步
+        setTimeout(() => {
+          updateAvailablePlugins();
+        }, 100);
+      }
+    });
+
+    return () => unsubscribe();
+  }, [showAddMenu, plugins, localPlugins]);
+
+  // 🔧 监听layoutStore的变化，当其他地方添加/移除插件时同步更新
+  useEffect(() => {
+    // 监听全局插件状态变化
+    const unsubscribe = useLayoutStore.subscribe((newState, prevState) => {
+      // 检测到状态变化时总是更新可用插件列表
+      const hasActivePluginsChange = newState.activePlugins.length !== prevState?.activePlugins?.length ||
+        newState.activePlugins.some(id => !prevState?.activePlugins?.includes(id)) ||
+        prevState?.activePlugins?.some(id => !newState.activePlugins.includes(id));
+      
+      const hasTabContainersChange = newState.tabContainers.length !== prevState?.tabContainers?.length ||
+        JSON.stringify(newState.tabContainers) !== JSON.stringify(prevState?.tabContainers);
+      
+      const hasLayoutChange = newState.layout.length !== prevState?.layout?.length ||
+        JSON.stringify(newState.layout.map(l => l.i)) !== JSON.stringify(prevState?.layout?.map(l => l.i));
+      
+      if (hasActivePluginsChange || hasTabContainersChange || hasLayoutChange) {
+        console.log('🔄 检测到全局状态变化，更新可用插件列表', {
+          activePlugins: hasActivePluginsChange,
+          tabContainers: hasTabContainersChange,
+          layout: hasLayoutChange
+        });
+        
+        // 延迟更新，确保状态完全同步
+        setTimeout(() => {
+          updateAvailablePlugins();
+        }, 100);
+      }
+    });
+
+    return () => unsubscribe();
+  }, []);
 
   if (!plugins || plugins.length === 0) {
     return (
@@ -1239,44 +1481,17 @@ export default function TabContainer({
                               className="w-full text-left px-3 py-2 rounded hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-800 dark:text-gray-200 cursor-pointer"
                               data-no-drag="true"
                               onClick={(e) => {
-                                // 直接实现添加插件的逻辑，不调用handleAddPlugin
+                                // 🔧 统一使用handleAddPlugin函数，确保全局检查
                                 e.preventDefault();
                                 e.stopPropagation();
 
-                                if (!tabId) {
-                                  console.error('没有tabId，无法添加插件');
-                                  return;
-                                }
+                                console.log(`🎯 点击添加插件: ${plugin.name} (${plugin.id})`);
 
                                 // 关闭菜单
                                 setShowAddMenu(false);
 
-                                try {
-                                  // 获取store中当前的插件列表
-                                  const currentStorePlugins = getStorePlugins(tabId);
-
-                                  // 检查插件是否已存在于store或本地状态中，不重复添加
-                                  if (currentStorePlugins.includes(plugin.id) || localPlugins.includes(plugin.id)) {
-                                    console.log('插件已存在，不重复添加:', plugin.id);
-                                    return;
-                                  }
-
-                                  // 向本地状态添加
-                                  const newPlugins = [...localPlugins, plugin.id];
-                                  setLocalPlugins(newPlugins);
-
-                                  // 选中新标签
-                                  setActiveTab(newPlugins.length - 1);
-
-                                  // 调用store方法
-                                  const layoutStore = useLayoutStore.getState();
-                                  layoutStore.addPluginToTab(tabId, plugin.id);
-
-                                  // 立即更新可用插件列表，确保新添加的插件不再显示
-                                  setTimeout(() => updateAvailablePlugins(), 0);
-                                } catch (err) {
-                                  console.error('添加插件失败:', err);
-                                }
+                                // 使用统一的添加插件函数
+                                handleAddPlugin(plugin.id);
                               }}
                               style={{
                                 display: 'block',
@@ -1479,44 +1694,17 @@ export default function TabContainer({
                             className="w-full text-left px-3 py-2 rounded hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-800 dark:text-gray-200 cursor-pointer"
                             data-no-drag="true"
                             onClick={(e) => {
-                              // 直接实现添加插件的逻辑，不调用handleAddPlugin
+                              // 🔧 统一使用handleAddPlugin函数，确保全局检查
                               e.preventDefault();
                               e.stopPropagation();
 
-                              if (!tabId) {
-                                console.error('没有tabId，无法添加插件');
-                                return;
-                              }
+                              console.log(`🎯 点击添加插件: ${plugin.name} (${plugin.id})`);
 
                               // 关闭菜单
                               setShowAddMenu(false);
 
-                              try {
-                                // 获取store中当前的插件列表
-                                const currentStorePlugins = getStorePlugins(tabId);
-
-                                // 检查插件是否已存在于store或本地状态中，不重复添加
-                                if (currentStorePlugins.includes(plugin.id) || localPlugins.includes(plugin.id)) {
-                                  console.log('插件已存在，不重复添加:', plugin.id);
-                                  return;
-                                }
-
-                                // 向本地状态添加
-                                const newPlugins = [...localPlugins, plugin.id];
-                                setLocalPlugins(newPlugins);
-
-                                // 选中新标签
-                                setActiveTab(newPlugins.length - 1);
-
-                                // 调用store方法
-                                const layoutStore = useLayoutStore.getState();
-                                layoutStore.addPluginToTab(tabId, plugin.id);
-
-                                // 立即更新可用插件列表，确保新添加的插件不再显示
-                                setTimeout(() => updateAvailablePlugins(), 0);
-                              } catch (err) {
-                                console.error('添加插件失败:', err);
-                              }
+                              // 使用统一的添加插件函数
+                              handleAddPlugin(plugin.id);
                             }}
                             style={{
                               display: 'block',

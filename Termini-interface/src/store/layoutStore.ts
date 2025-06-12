@@ -1960,17 +1960,18 @@ export const useLayoutStore = create<LayoutState>()(
         };
       }),
       
-      // 向Tab容器添加插件
+      // 🔧 优化：向Tab容器添加插件 - 增强插件唯一性检查
       addPluginToTab: (tabId: string, pluginId: string) => set((state) => {
-        console.log(`向Tab容器 ${tabId} 添加插件: ${pluginId}`);
+        console.log(`📝 向Tab容器 ${tabId} 添加插件: ${pluginId}`);
         
-        // 检查插件是否已存在于其他位置
+        // 🔧 严格的插件存在性检查
         if (isPluginAlreadyActive(state, pluginId)) {
-          console.log(`插件 ${pluginId} 已存在，将从现有位置移除`);
-          // 从其他标签容器中移除
+          console.log(`⚠️ 插件 ${pluginId} 已在系统中存在，将从现有位置移除并重新添加`);
+          
+          // 从其他位置移除插件
           state = replaceExistingPlugin(state, pluginId);
           
-          // 确保从布局中移除
+          // 确保从直接布局中移除
           state = {
             ...state,
             layout: state.layout.filter(item => item.i !== pluginId)
@@ -1980,64 +1981,66 @@ export const useLayoutStore = create<LayoutState>()(
         // 检查Tab容器是否存在
         const tabContainer = state.tabContainers.find(tab => tab.id === tabId);
         if (!tabContainer) {
-          console.error(`未找到Tab容器: ${tabId}`);
+          console.error(`❌ 未找到Tab容器: ${tabId}`);
           return state;
         }
         
-        // 如果插件已经在这个Tab中，不做操作
+        // 🔧 严格检查：如果插件已经在目标Tab中，直接返回
         if (tabContainer.plugins.includes(pluginId)) {
-          console.log(`插件 ${pluginId} 已存在于Tab容器 ${tabId} 中`);
+          console.log(`⚠️ 插件 ${pluginId} 已存在于目标Tab容器 ${tabId} 中，跳过添加`);
           return state;
         }
         
+        // 检查插件是否存在于插件注册表中
+        const plugin = pluginRegistry.get(pluginId);
+        if (!plugin) {
+          console.error(`❌ 未找到插件注册信息: ${pluginId}`);
+          return state;
+        }
+        
+        // 🔧 确保插件在活跃插件列表中
         let { activePlugins } = state;
-        // 检查插件是否已存在于活跃插件中
-        if (!state.activePlugins.includes(pluginId)) {
-          // 先注册插件
-          const plugin = pluginRegistry.get(pluginId);
-          if (!plugin) {
-            console.error(`未找到插件: ${pluginId}`);
-            return state;
-          }
-          
-          // 添加到活跃插件列表
+        if (!activePlugins.includes(pluginId)) {
           activePlugins = [...activePlugins, pluginId];
+          console.log(`✅ 将插件 ${pluginId} 添加到活跃插件列表`);
         }
         
         // 更新Tab容器中的插件列表
         const updatedTabContainers = state.tabContainers.map(tab => {
           if (tab.id === tabId) {
+            const newPlugins = [...tab.plugins, pluginId];
+            console.log(`✅ 更新Tab容器 ${tabId}，插件列表: [${newPlugins.join(', ')}]`);
             return {
               ...tab,
-              plugins: [...tab.plugins, pluginId]
+              plugins: newPlugins
             };
           }
           return tab;
         });
         
-        // 同步插件token配置
+        // 🔧 同步插件token配置 - 从价格卡片插件同步配置
         const priceCardPlugin = pluginRegistry.get('official-price-card');
-        if (priceCardPlugin && state.activePlugins.includes('official-price-card')) {
-          const plugin = pluginRegistry.get(pluginId);
-          if (plugin) {
-            const priceCardConfig = priceCardPlugin.metadata.defaultConfig || {};
-            const currentConfig = plugin.metadata.defaultConfig || {};
-            
-            // 同步token和地址
-            if (currentConfig.token !== undefined && priceCardConfig.token) {
-              currentConfig.token = priceCardConfig.token;
-            }
-            
-            if ((currentConfig.address !== undefined || currentConfig.tokenAddress !== undefined) 
-                && priceCardConfig.address) {
-              currentConfig.address = priceCardConfig.address;
-              currentConfig.tokenAddress = priceCardConfig.address;
-            }
-            
-            // 更新插件默认配置
-            plugin.metadata.defaultConfig = {...currentConfig};
+        if (priceCardPlugin && activePlugins.includes('official-price-card')) {
+          const currentConfig = plugin.metadata.defaultConfig || {};
+          const priceCardConfig = priceCardPlugin.metadata.defaultConfig || {};
+          
+          // 同步token和地址信息
+          if (currentConfig.token !== undefined && priceCardConfig.token) {
+            currentConfig.token = priceCardConfig.token;
           }
+          
+          if ((currentConfig.address !== undefined || currentConfig.tokenAddress !== undefined) 
+              && priceCardConfig.address) {
+            currentConfig.address = priceCardConfig.address;
+            currentConfig.tokenAddress = priceCardConfig.address;
+          }
+          
+          // 更新插件默认配置
+          plugin.metadata.defaultConfig = {...currentConfig};
+          console.log(`🔄 已同步插件 ${pluginId} 的token配置`);
         }
+        
+        console.log(`✅ 插件 ${pluginId} 成功添加到Tab容器 ${tabId}`);
         
         return {
           ...state,
