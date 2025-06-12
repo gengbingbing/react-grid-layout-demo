@@ -137,7 +137,7 @@ export const themes = {
           main: "#FAFAFA",      //外层容器背景色
           sub: "#FFFFFF",       //内部盒子容器背景色
           tips: "#1D202B",
-          active:"#1E2129",
+          active:"#CFD1D6",
           select:"#FAFAFA",     // 展示容器盒子选中 Tab 后的背景色
           unselect:"#EFEFEF",   // 展示容器盒子未选中 Tab 后的背景色
         },

@@ -262,11 +262,6 @@ export default function TabContainer({
         border: 1px solid transparent;
         transition: all 0.2s;
       }
-      button[data-no-drag="true"]:hover {
-        background-color: #e2e8f0 !important;
-        border-color: #cbd5e0 !important;
-        transform: translateY(-1px);
-      }
       button[data-no-drag="true"]:active {
         transform: translateY(0px);
       }
@@ -1374,8 +1369,8 @@ export default function TabContainer({
               <div
                 key={pluginId}
                 className={`plugin-tab flex-shrink-0 inline-flex items-center rounded ${isActive
-                    ? 'bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200'
-                    : 'bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700'
+                    ? 'bg-[var(--color-bg-active)] text-[var(--color-text-tertiary)]'
+                    : 'bg-[var(--color-bg-main)] text-[var(--color-text-tertiary)] hover:bg-[var(--color-bg-active)]'
                   } px-2 py-1 cursor-pointer text-sm tab-draggable ${draggingTabId === pluginId ? 'tab-being-dragged' : ''}`}
                 onClick={(e) => {
                   // 只有在点击标签本身而不是按钮时才切换标签
@@ -1387,6 +1382,17 @@ export default function TabContainer({
                 onMouseDown={(e) => handleTabDragStart(e, pluginId, index)}
                 draggable="false"
               >
+                {/* 拖拽图标 */}
+                <div className="drag-icon flex-shrink-0 mr-2 opacity-60 group-hover:opacity-80 transition-opacity duration-200">
+                  <svg 
+                    xmlns="http://www.w3.org/2000/svg" 
+                    className="h-12 w-12" 
+                    fill="currentColor" 
+                    viewBox="0 0 24 24"
+                  >
+                    <path d="M8 6h2v2H8V6zm0 4h2v2H8v-2zm0 4h2v2H8v-2zm6-8h2v2h-2V6zm0 4h2v2h-2v-2zm0 4h2v2h-2v-2z"/>
+                  </svg>
+                </div>
                 <span className="truncate max-w-[120px]">{tabName}</span>
 
                 {/* 移除按钮 */}
@@ -1409,7 +1415,7 @@ export default function TabContainer({
           {/* 添加标签按钮 */}
           <div className="relative" onMouseDown={(e) => e.stopPropagation()}>
             <button
-              className="plugin-tab flex-shrink-0 inline-flex items-center rounded bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700 px-2 py-1 cursor-pointer text-sm non-draggable add-button"
+              className="w-[22px] h-[22px] border-2 border-[#2C303A]  plugin-tab flex-shrink-0 inline-flex items-center rounded bg-[var(--color-bg-main)] text-[var(--color-text-tertiary)] px-2 py-1 cursor-pointer text-sm non-draggable add-button"
               onClick={handleAddButtonClick}
               onMouseDown={handleButtonMouseDown}
               title="添加标签"
