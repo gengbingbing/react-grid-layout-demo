@@ -2093,6 +2093,9 @@ export const useLayoutStore = create<LayoutState>()(
             targetContainerId: targetTabId
           });
           
+          // 🎯 记录被移除的TabContainer的位置和尺寸，用于智能空间填充
+          const removedTabLayout = state.layout.find(item => item.i === sourceTabId);
+          
           updatedTabContainers = state.tabContainers
             .filter(tab => tab.id !== sourceTabId) // 移除源标签容器
             .map(tab => {
@@ -2107,8 +2110,25 @@ export const useLayoutStore = create<LayoutState>()(
           console.log('从布局中移除空的源标签容器:', sourceTabId);
           updatedLayout = state.layout.filter(item => item.i !== sourceTabId);
           
-          // 强制触发布局紧缩重排 - 重新计算所有元素位置
-          updatedLayout = compactLayoutVertically(updatedLayout);
+          // 🚀 应用智能空间填充替代简单的垂直压缩
+          if (removedTabLayout) {
+            console.log('🎯 应用智能空间填充，被移除容器信息:', {
+              id: removedTabLayout.i,
+              位置: `(${removedTabLayout.x},${removedTabLayout.y})`,
+              尺寸: `${removedTabLayout.w}x${removedTabLayout.h}`
+            });
+            
+            updatedLayout = intelligentSpaceFill(updatedLayout, {
+              x: removedTabLayout.x,
+              y: removedTabLayout.y,
+              w: removedTabLayout.w,
+              h: removedTabLayout.h
+            });
+          } else {
+            // 如果没有找到布局信息，回退到基础压缩
+            console.log('⚠️  未找到被移除容器的布局信息，使用基础压缩');
+            updatedLayout = compactLayoutVertically(updatedLayout);
+          }
         } else {
           // 如果源标签容器有多个插件，同时更新源容器和目标容器
           console.log('源标签容器有多个插件，将更新源容器和目标容器');
@@ -2166,22 +2186,22 @@ export const useLayoutStore = create<LayoutState>()(
           plugins: [...targetTab.plugins, ...pluginsToMove]
         };
         
-        // 获取源标签容器的布局信息
-        const sourceLayout = state.layout.find(item => item.i === sourceId);
+        // 🎯 记录被移除的源标签容器的布局信息，用于智能空间填充
+        const removedSourceLayout = state.layout.find(item => item.i === sourceId);
         
         // 从布局中移除源标签容器
-        const updatedLayout = state.layout.filter(item => item.i !== sourceId);
+        let updatedLayout = state.layout.filter(item => item.i !== sourceId);
         
-        // 更新目标标签容器大小
-        if (sourceLayout) {
+        // 更新目标标签容器大小和应用智能空间填充
+        if (removedSourceLayout) {
           const targetLayout = state.layout.find(item => item.i === targetId);
           if (targetLayout) {
             // 选择两者中较大的尺寸
-            const newW = Math.max(targetLayout.w, sourceLayout.w);
-            const newH = Math.max(targetLayout.h, sourceLayout.h);
+            const newW = Math.max(targetLayout.w, removedSourceLayout.w);
+            const newH = Math.max(targetLayout.h, removedSourceLayout.h);
             
             // 更新目标容器的布局
-            const finalLayout = updatedLayout.map(item => {
+            updatedLayout = updatedLayout.map(item => {
               if (item.i === targetId) {
                 return {
                   ...item,
@@ -2192,32 +2212,33 @@ export const useLayoutStore = create<LayoutState>()(
               return item;
             });
             
-            // 更新标签容器列表，移除源容器，更新目标容器
-            const updatedTabContainers = state.tabContainers
-              .filter(tab => tab.id !== sourceId)
-              .map(tab => {
-                if (tab.id === targetId) {
-                  return updatedTargetTab;
-                }
-                return tab;
-              });
-            
-            console.log('标签容器合并成功', {
-              targetId,
-              移动的插件: pluginsToMove,
-              更新后的插件: updatedTargetTab.plugins
+            console.log('🎯 目标容器扩展:', {
+              原始尺寸: `${targetLayout.w}x${targetLayout.h}`,
+              新尺寸: `${newW}x${newH}`,
+              来源尺寸: `${removedSourceLayout.w}x${removedSourceLayout.h}`
             });
-            
-            return {
-              ...state,
-              layout: finalLayout,
-              tabContainers: updatedTabContainers
-            };
           }
+          
+          // 🚀 应用智能空间填充，处理被移除源容器留下的空白
+          console.log('🎯 应用智能空间填充，被移除源容器信息:', {
+            id: removedSourceLayout.i,
+            位置: `(${removedSourceLayout.x},${removedSourceLayout.y})`,
+            尺寸: `${removedSourceLayout.w}x${removedSourceLayout.h}`
+          });
+          
+          updatedLayout = intelligentSpaceFill(updatedLayout, {
+            x: removedSourceLayout.x,
+            y: removedSourceLayout.y,
+            w: removedSourceLayout.w,
+            h: removedSourceLayout.h
+          });
+        } else {
+          console.log('⚠️  未找到源容器布局信息，使用基础压缩');
+          updatedLayout = compactLayoutVertically(updatedLayout);
         }
         
-        // 如果没有找到布局信息，至少还是要更新标签容器
-        const updatedTabContainers = state.tabContainers
+        // 更新标签容器列表，移除源容器，更新目标容器
+        const finalTabContainers = state.tabContainers
           .filter(tab => tab.id !== sourceId)
           .map(tab => {
             if (tab.id === targetId) {
@@ -2226,10 +2247,16 @@ export const useLayoutStore = create<LayoutState>()(
             return tab;
           });
         
+        console.log('标签容器合并成功', {
+          targetId,
+          移动的插件: pluginsToMove,
+          更新后的插件: updatedTargetTab.plugins
+        });
+        
         return {
           ...state,
           layout: updatedLayout,
-          tabContainers: updatedTabContainers
+          tabContainers: finalTabContainers
         };
       })
     }),
@@ -2395,3 +2422,405 @@ export function checkLayoutStorageStatus() {
 if (typeof window !== 'undefined') {
   (window as any).checkLayoutStorage = checkLayoutStorageStatus;
 }
+
+// 专门用于TabContainer移除后的智能空间填充
+const intelligentSpaceFill = (layout: Layout[], removedItemBounds: { x: number, y: number, w: number, h: number }, cols: number = 12): Layout[] => {
+  if (layout.length === 0) return layout;
+  
+  console.log('🎯 开始智能空间填充:', {
+    被移除项边界: removedItemBounds,
+    当前布局项数量: layout.length
+  });
+  
+  const filledLayout = [...layout];
+  
+  // 🔧 第一步：严格验证是否应该进行空间填充
+  // 只有在有明确的相邻容器时才进行填充
+  const shouldPerformFill = validateFillNecessity(filledLayout, removedItemBounds);
+  
+  if (!shouldPerformFill) {
+    console.log('❌ 没有发现合适的相邻容器，跳过智能填充');
+    return smartCompactLayout(filledLayout, cols);
+  }
+  
+  // 第二步：优先水平填充 - 查找可以水平扩展的相邻容器
+  const horizontalFillResult = performHorizontalFill(filledLayout, removedItemBounds, cols);
+  let updatedLayout = horizontalFillResult.layout;
+  let remainingSpace = horizontalFillResult.remainingSpace;
+  
+  console.log('💫 水平填充结果:', {
+    是否有填充: horizontalFillResult.wasFilled,
+    剩余空间: remainingSpace
+  });
+  
+  // 第三步：如果仍有剩余空间，进行垂直填充
+  if (remainingSpace && (remainingSpace.w > 0 || remainingSpace.h > 0)) {
+    const verticalFillResult = performVerticalFill(updatedLayout, remainingSpace, cols);
+    updatedLayout = verticalFillResult.layout;
+    
+    console.log('📏 垂直填充结果:', {
+      是否有填充: verticalFillResult.wasFilled
+    });
+  }
+  
+  // 第四步：应用智能布局重排，确保整体布局最优
+  const finalLayout = smartCompactLayout(updatedLayout, cols);
+  
+  console.log('✅ 智能空间填充完成');
+  
+  return finalLayout;
+};
+
+// 🔧 新增：验证是否需要进行空间填充
+const validateFillNecessity = (layout: Layout[], removedBounds: { x: number, y: number, w: number, h: number }): boolean => {
+  // 检查是否有紧邻的容器
+  const hasAdjacentContainers = layout.some(item => {
+    // 左侧紧邻
+    if (item.x + item.w === removedBounds.x) {
+      const verticalOverlap = Math.max(0, Math.min(item.y + item.h, removedBounds.y + removedBounds.h) - Math.max(item.y, removedBounds.y));
+      return verticalOverlap > 0;
+    }
+    
+    // 右侧紧邻
+    if (item.x === removedBounds.x + removedBounds.w) {
+      const verticalOverlap = Math.max(0, Math.min(item.y + item.h, removedBounds.y + removedBounds.h) - Math.max(item.y, removedBounds.y));
+      return verticalOverlap > 0;
+    }
+    
+    // 上方紧邻
+    if (item.y + item.h === removedBounds.y) {
+      const horizontalOverlap = Math.max(0, Math.min(item.x + item.w, removedBounds.x + removedBounds.w) - Math.max(item.x, removedBounds.x));
+      return horizontalOverlap > 0;
+    }
+    
+    // 下方紧邻
+    if (item.y === removedBounds.y + removedBounds.h) {
+      const horizontalOverlap = Math.max(0, Math.min(item.x + item.w, removedBounds.x + removedBounds.w) - Math.max(item.x, removedBounds.x));
+      return horizontalOverlap > 0;
+    }
+    
+    return false;
+  });
+  
+  console.log('🔍 填充必要性验证:', {
+    有相邻容器: hasAdjacentContainers,
+    被移除区域: `(${removedBounds.x},${removedBounds.y}) ${removedBounds.w}x${removedBounds.h}`
+  });
+  
+  return hasAdjacentContainers;
+};
+
+// 执行水平填充
+const performHorizontalFill = (layout: Layout[], removedBounds: { x: number, y: number, w: number, h: number }, cols: number = 12) => {
+  const filledLayout = [...layout];
+  let wasFilled = false;
+  let remainingSpace = { ...removedBounds };
+  
+  // 查找可以水平扩展的候选容器
+  const horizontalCandidates = findHorizontalFillCandidates(filledLayout, removedBounds);
+  
+  console.log('🔍 水平填充候选项:', horizontalCandidates.map(c => ({ 
+    id: c.item.i, 
+    priority: c.priority,
+    canExpand: c.canExpandWidth,
+    位置: `(${c.item.x},${c.item.y})`,
+    尺寸: `${c.item.w}x${c.item.h}`
+  })));
+  
+  if (horizontalCandidates.length > 0) {
+    // 按优先级排序：左侧相邻 > 右侧相邻 > 同行其他
+    horizontalCandidates.sort((a, b) => a.priority - b.priority);
+    
+    for (const candidate of horizontalCandidates) {
+      if (remainingSpace.w <= 0) break;
+      
+      const itemIndex = filledLayout.findIndex(item => item.i === candidate.item.i);
+      if (itemIndex === -1) continue;
+      
+      const currentItem = filledLayout[itemIndex];
+      
+      // 计算可扩展的宽度
+      let expandableWidth = 0;
+      
+      if (candidate.direction === 'right') {
+        // 向右扩展：可以占用被移除区域的左侧部分
+        const maxRightExpansion = (removedBounds.x + removedBounds.w) - (currentItem.x + currentItem.w);
+        expandableWidth = Math.min(maxRightExpansion, remainingSpace.w, candidate.canExpandWidth);
+      } else if (candidate.direction === 'left') {
+        // 向左扩展：可以占用被移除区域的右侧部分
+        const maxLeftExpansion = currentItem.x - removedBounds.x;
+        expandableWidth = Math.min(maxLeftExpansion, remainingSpace.w, candidate.canExpandWidth);
+        
+        // 向左扩展需要同时调整x坐标
+        if (expandableWidth > 0) {
+          filledLayout[itemIndex].x -= expandableWidth;
+        }
+      }
+      
+      if (expandableWidth > 0) {
+        filledLayout[itemIndex].w += expandableWidth;
+        remainingSpace.w -= expandableWidth;
+        wasFilled = true;
+        
+        console.log(`📈 水平扩展 ${currentItem.i}:`, {
+          方向: candidate.direction,
+          扩展宽度: expandableWidth,
+          新尺寸: `${filledLayout[itemIndex].w}x${filledLayout[itemIndex].h}`,
+          新位置: `(${filledLayout[itemIndex].x},${filledLayout[itemIndex].y})`,
+          剩余空间宽度: remainingSpace.w
+        });
+      }
+    }
+  }
+  
+  return {
+    layout: filledLayout,
+    wasFilled,
+    remainingSpace: remainingSpace.w > 0 || remainingSpace.h > 0 ? remainingSpace : null
+  };
+};
+
+// 查找水平填充候选项 - 修复后的版本
+const findHorizontalFillCandidates = (layout: Layout[], removedBounds: { x: number, y: number, w: number, h: number }): Array<{
+  item: Layout;
+  priority: number;
+  direction: 'left' | 'right';
+  canExpandWidth: number;
+}> => {
+  const candidates: Array<{
+    item: Layout;
+    priority: number;
+    direction: 'left' | 'right';
+    canExpandWidth: number;
+  }> = [];
+  
+  layout.forEach(item => {
+    // 🔧 严格检查垂直重叠：必须有实际的垂直范围重叠
+    const verticalOverlapStart = Math.max(item.y, removedBounds.y);
+    const verticalOverlapEnd = Math.min(item.y + item.h, removedBounds.y + removedBounds.h);
+    const hasVerticalOverlap = verticalOverlapStart < verticalOverlapEnd;
+    
+    if (!hasVerticalOverlap) return;
+    
+    let priority = 10; // 默认优先级
+    let direction: 'left' | 'right' | null = null;
+    let canExpandWidth = 0;
+    
+    // 🎯 检查是否是左侧紧邻（可以向右扩展填充）
+    if (item.x + item.w === removedBounds.x) {
+      direction = 'right';
+      priority = 1; // 最高优先级：紧邻扩展
+      canExpandWidth = removedBounds.w;
+    }
+    // 🎯 检查是否是右侧紧邻（可以向左扩展填充）
+    else if (item.x === removedBounds.x + removedBounds.w) {
+      direction = 'left';
+      priority = 2; // 次高优先级：紧邻扩展
+      canExpandWidth = removedBounds.w;
+    }
+    // 🔧 更严格的同行检查：必须完全在同一水平线上且有足够的重叠
+    else if (
+      Math.abs(item.y - removedBounds.y) <= 1 && // 几乎同一行（允许1格误差）
+      Math.abs(item.h - removedBounds.h) <= 2 && // 高度接近（允许2格误差）
+      verticalOverlapEnd - verticalOverlapStart >= Math.min(item.h, removedBounds.h) * 0.6 // 至少60%重叠
+    ) {
+      // 检查是否在合理的距离内
+      const horizontalDistance = item.x < removedBounds.x 
+        ? removedBounds.x - (item.x + item.w)
+        : item.x - (removedBounds.x + removedBounds.w);
+      
+      // 🔧 只考虑距离较近的同行元素（最多3格距离）
+      if (horizontalDistance >= 0 && horizontalDistance <= 3) {
+        if (item.x < removedBounds.x) {
+          // 在左侧，可以向右扩展一部分
+          direction = 'right';
+          priority = 5;
+          canExpandWidth = Math.min(3, removedBounds.w, horizontalDistance + removedBounds.w); // 限制扩展量
+        } else if (item.x > removedBounds.x + removedBounds.w) {
+          // 在右侧，可以向左扩展一部分
+          direction = 'left';
+          priority = 6;
+          canExpandWidth = Math.min(3, removedBounds.w, horizontalDistance + removedBounds.w); // 限制扩展量
+        }
+      }
+    }
+    
+    if (direction && canExpandWidth > 0) {
+      candidates.push({
+        item,
+        priority,
+        direction,
+        canExpandWidth
+      });
+      
+      console.log(`🎯 水平填充候选项: ${item.i}`, {
+        位置: `(${item.x},${item.y})`,
+        尺寸: `${item.w}x${item.h}`,
+        方向: direction,
+        优先级: priority,
+        可扩展宽度: canExpandWidth,
+        移除区域: `(${removedBounds.x},${removedBounds.y}) ${removedBounds.w}x${removedBounds.h}`
+      });
+    }
+  });
+  
+  return candidates;
+};
+
+// 执行垂直填充
+const performVerticalFill = (layout: Layout[], remainingSpace: { x: number, y: number, w: number, h: number }, cols: number = 12): {
+  layout: Layout[];
+  wasFilled: boolean;
+} => {
+  const filledLayout = [...layout];
+  let wasFilled = false;
+  
+  // 查找可以垂直扩展的候选容器
+  const verticalCandidates = findVerticalFillCandidates(filledLayout, remainingSpace);
+  
+  console.log('🔍 垂直填充候选项:', verticalCandidates.map(c => ({ 
+    id: c.item.i, 
+    priority: c.priority,
+    canExpand: c.canExpandHeight,
+    位置: `(${c.item.x},${c.item.y})`,
+    尺寸: `${c.item.w}x${c.item.h}`
+  })));
+  
+  if (verticalCandidates.length > 0) {
+    // 按优先级排序：上方相邻 > 下方相邻 > 同列其他
+    verticalCandidates.sort((a, b) => a.priority - b.priority);
+    
+    for (const candidate of verticalCandidates) {
+      if (remainingSpace.h <= 0) break;
+      
+      const itemIndex = filledLayout.findIndex(item => item.i === candidate.item.i);
+      if (itemIndex === -1) continue;
+      
+      const currentItem = filledLayout[itemIndex];
+      
+      // 计算可扩展的高度
+      let expandableHeight = 0;
+      
+      if (candidate.direction === 'down') {
+        // 向下扩展
+        const maxDownExpansion = (remainingSpace.y + remainingSpace.h) - (currentItem.y + currentItem.h);
+        expandableHeight = Math.min(maxDownExpansion, remainingSpace.h, candidate.canExpandHeight);
+      } else if (candidate.direction === 'up') {
+        // 向上扩展
+        const maxUpExpansion = currentItem.y - remainingSpace.y;
+        expandableHeight = Math.min(maxUpExpansion, remainingSpace.h, candidate.canExpandHeight);
+        
+        // 向上扩展需要同时调整y坐标
+        if (expandableHeight > 0) {
+          filledLayout[itemIndex].y -= expandableHeight;
+        }
+      }
+      
+      if (expandableHeight > 0) {
+        filledLayout[itemIndex].h += expandableHeight;
+        remainingSpace.h -= expandableHeight;
+        wasFilled = true;
+        
+        console.log(`📏 垂直扩展 ${currentItem.i}:`, {
+          方向: candidate.direction,
+          扩展高度: expandableHeight,
+          新尺寸: `${filledLayout[itemIndex].w}x${filledLayout[itemIndex].h}`,
+          新位置: `(${filledLayout[itemIndex].x},${filledLayout[itemIndex].y})`,
+          剩余空间高度: remainingSpace.h
+        });
+      }
+    }
+  }
+  
+  return {
+    layout: filledLayout,
+    wasFilled
+  };
+};
+
+// 查找垂直填充候选项 - 修复后的版本
+const findVerticalFillCandidates = (layout: Layout[], remainingSpace: { x: number, y: number, w: number, h: number }): Array<{
+  item: Layout;
+  priority: number;
+  direction: 'up' | 'down';
+  canExpandHeight: number;
+}> => {
+  const candidates: Array<{
+    item: Layout;
+    priority: number;
+    direction: 'up' | 'down';
+    canExpandHeight: number;
+  }> = [];
+  
+  layout.forEach(item => {
+    // 🔧 严格检查水平重叠：必须有实际的水平范围重叠
+    const horizontalOverlapStart = Math.max(item.x, remainingSpace.x);
+    const horizontalOverlapEnd = Math.min(item.x + item.w, remainingSpace.x + remainingSpace.w);
+    const hasHorizontalOverlap = horizontalOverlapStart < horizontalOverlapEnd;
+    
+    if (!hasHorizontalOverlap) return;
+    
+    let priority = 10; // 默认优先级
+    let direction: 'up' | 'down' | null = null;
+    let canExpandHeight = 0;
+    
+    // 🎯 检查是否是上方紧邻（可以向下扩展填充）
+    if (item.y + item.h === remainingSpace.y) {
+      direction = 'down';
+      priority = 1; // 最高优先级：紧邻扩展
+      canExpandHeight = remainingSpace.h;
+    }
+    // 🎯 检查是否是下方紧邻（可以向上扩展填充）
+    else if (item.y === remainingSpace.y + remainingSpace.h) {
+      direction = 'up';
+      priority = 2; // 次高优先级：紧邻扩展
+      canExpandHeight = remainingSpace.h;
+    }
+    // 🔧 更严格的同列检查：必须完全在同一垂直线上且有足够的重叠
+    else if (
+      Math.abs(item.x - remainingSpace.x) <= 1 && // 几乎同一列（允许1格误差）
+      Math.abs(item.w - remainingSpace.w) <= 2 && // 宽度接近（允许2格误差）
+      horizontalOverlapEnd - horizontalOverlapStart >= Math.min(item.w, remainingSpace.w) * 0.6 // 至少60%重叠
+    ) {
+      // 检查是否在合理的距离内
+      const verticalDistance = item.y < remainingSpace.y 
+        ? remainingSpace.y - (item.y + item.h)
+        : item.y - (remainingSpace.y + remainingSpace.h);
+      
+      // 🔧 只考虑距离较近的同列元素（最多2格距离）
+      if (verticalDistance >= 0 && verticalDistance <= 2) {
+        if (item.y < remainingSpace.y) {
+          // 在上方，可以向下扩展一部分
+          direction = 'down';
+          priority = 5;
+          canExpandHeight = Math.min(2, remainingSpace.h, verticalDistance + remainingSpace.h); // 限制扩展量
+        } else if (item.y > remainingSpace.y + remainingSpace.h) {
+          // 在下方，可以向上扩展一部分
+          direction = 'up';
+          priority = 6;
+          canExpandHeight = Math.min(2, remainingSpace.h, verticalDistance + remainingSpace.h); // 限制扩展量
+        }
+      }
+    }
+    
+    if (direction && canExpandHeight > 0) {
+      candidates.push({
+        item,
+        priority,
+        direction,
+        canExpandHeight
+      });
+      
+      console.log(`🎯 垂直填充候选项: ${item.i}`, {
+        位置: `(${item.x},${item.y})`,
+        尺寸: `${item.w}x${item.h}`,
+        方向: direction,
+        优先级: priority,
+        可扩展高度: canExpandHeight,
+        剩余空间: `(${remainingSpace.x},${remainingSpace.y}) ${remainingSpace.w}x${remainingSpace.h}`
+      });
+    }
+  });
+  
+  return candidates;
+};

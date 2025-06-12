@@ -1048,7 +1048,20 @@ export default function GridLayout() {
               // 获取store实例
               const store = useLayoutStore.getState();
               
-              // 使用movePluginBetweenTabs函数，正确处理插件移动
+              // 🎯 在合并前记录源容器的布局信息
+              const sourceTabLayout = store.layout.find(item => item.i === tabId);
+              const sourceTab = store.tabContainers.find(tab => tab.id === tabId);
+              const willRemoveSourceContainer = sourceTab && sourceTab.plugins.length <= 1;
+              
+              console.log('🎯 拖拽合并检测:', {
+                源容器: tabId,
+                目标容器: targetTabId,
+                源容器插件数量: sourceTab?.plugins.length,
+                将移除源容器: willRemoveSourceContainer,
+                源容器布局: sourceTabLayout ? `(${sourceTabLayout.x},${sourceTabLayout.y}) ${sourceTabLayout.w}x${sourceTabLayout.h}` : '未找到'
+              });
+              
+              // 使用movePluginBetweenTabs函数，它已经集成了智能空间填充
               store.movePluginBetweenTabs(tabId, targetTabId, pluginId);
               
               targetFound = true;
@@ -1080,6 +1093,43 @@ export default function GridLayout() {
               successIndicator.style.transition = 'opacity 0.3s, transform 0.3s';
               
               container.appendChild(successIndicator);
+              
+              // 如果源容器被移除，显示特殊提示
+              if (willRemoveSourceContainer) {
+                const fillIndicator = document.createElement('div');
+                fillIndicator.className = 'space-fill-indicator';
+                fillIndicator.textContent = '🎯 智能空间填充已应用';
+                fillIndicator.style.position = 'fixed';
+                fillIndicator.style.top = '20px';
+                fillIndicator.style.right = '20px';
+                fillIndicator.style.backgroundColor = 'rgba(52, 152, 219, 0.9)';
+                fillIndicator.style.color = 'white';
+                fillIndicator.style.padding = '8px 12px';
+                fillIndicator.style.borderRadius = '4px';
+                fillIndicator.style.fontSize = '12px';
+                fillIndicator.style.fontWeight = 'bold';
+                fillIndicator.style.zIndex = '1002';
+                fillIndicator.style.pointerEvents = 'none';
+                fillIndicator.style.opacity = '0';
+                fillIndicator.style.transition = 'opacity 0.3s';
+                
+                document.body.appendChild(fillIndicator);
+                
+                // 显示动画
+                setTimeout(() => {
+                  fillIndicator.style.opacity = '1';
+                }, 100);
+                
+                // 消失动画
+                setTimeout(() => {
+                  fillIndicator.style.opacity = '0';
+                  setTimeout(() => {
+                    if (fillIndicator.parentNode) {
+                      fillIndicator.parentNode.removeChild(fillIndicator);
+                    }
+                  }, 300);
+                }, 3000);
+              }
               
               // 添加消失动画
               setTimeout(() => {
