@@ -5,7 +5,7 @@ declare global {
       pluginId: string;
       tabId: string;
       startTime: number;
-      confirmedDragTime?: number;
+      confirmedDragTime?: number; // 新增：标记是否是拖拽整个容器
       isDraggingContainer?: boolean; // 新增：标记是否是拖拽整个容器
     };
     __draggedPluginPosition?: {
@@ -35,6 +35,7 @@ import { useState, useEffect, useRef } from 'react';
 import RGL, { WidthProvider } from 'react-grid-layout';
 import type { Layout } from 'react-grid-layout';
 import { useLayoutStore } from 'store/layoutStore';
+import { detectContainerInsertPosition } from 'store/layoutStore';
 import { ensurePluginsLoaded, pluginRegistry } from 'plugins/registry';
 import PluginContainer from './PluginContainer';
 import TabContainer from './TabContainer';
@@ -397,7 +398,27 @@ export default function GridLayout() {
       isDraggingContainer,
     };
     window.__isPotentialDrag = true;
-  
+    
+    // 🎯 设置网格参数，用于智能重排检测
+    if (gridRef.current && isDraggingContainer) {
+      const rect = gridRef.current.getBoundingClientRect();
+      const firstGridItem = document.querySelector('.react-grid-item');
+      const rowHeight = firstGridItem ? parseInt(window.getComputedStyle(firstGridItem).height) / 6 : 30;
+      const margin = 10;  // 默认margin
+      const cols = 12;    // 默认列数
+      const colWidth = (rect.width - margin * (cols + 1)) / cols;
+      
+      window.__gridParams = {
+        rect,
+        rowHeight,
+        margin,
+        cols,
+        colWidth
+      };
+      
+      console.log('🎯 设置网格参数:', window.__gridParams);
+    }
+
     // 强制清理悬浮提示
     setHoveredTabContainerId(null);
     setDraggedPluginId(oldItem.i);
@@ -409,6 +430,41 @@ export default function GridLayout() {
   
     let currentHoveredId: string | null = null;
   
+    // 🎯 检测TabContainer拖拽插入位置
+    const isDraggingContainer = window.__draggedPluginInfo?.isDraggingContainer;
+    const isTabContainer = newItem.i.startsWith('tab-container-');
+    
+    if (isDraggingContainer && isTabContainer) {
+      // 获取网格参数
+      if (gridRef.current && window.__gridParams) {
+        const insertDetection = detectContainerInsertPosition(
+          layout,
+          newItem.i,
+          mouseX,
+          mouseY,
+          window.__gridParams
+        );
+        
+        if (insertDetection) {
+          // 根据检测类型显示不同的预览
+          if (insertDetection.insertType === 'emptySpace') {
+            // 显示空白区域预览
+            showEmptySpacePreview(
+              insertDetection.insertPosition, 
+              insertDetection.emptySpaceSize!
+            );
+          } else {
+            // 显示插入位置提示
+            showInsertPositionIndicator(insertDetection.insertPosition, insertDetection.insertType);
+          }
+          
+          // 将插入信息存储到全局，供拖拽结束时使用
+          (window as any).__insertDetection = insertDetection;
+        }
+      }
+    }
+    
+    // 处理其他拖拽情况（插件拖拽到TabContainer）
     if (window.__draggedPluginInfo?.isDraggingContainer && !newItem.i.startsWith('tab-container-')) {
       Object.entries(tabContainerRefs.current).forEach(([tabId, ref]) => {
         if (ref && tabId !== newItem.i) {
@@ -426,41 +482,138 @@ export default function GridLayout() {
   
   // 处理拖动结束
   const onDragStop = (layout: Layout[], oldItem: Layout, newItem: Layout) => {
-    // 检查是否是自定义拖拽（标签间拖拽）
-    const isCustomDrag = window.__draggedPluginInfo?.tabId;
+    // 检查是否是TabContainer重排操作
+    const insertDetection = (window as any).__insertDetection;
+    const isContainerReposition = window.__draggedPluginInfo?.isDraggingContainer && 
+                                  newItem.i.startsWith('tab-container-') && 
+                                  insertDetection;
     
-    setTimeout(() => {
-      setDraggedPluginId(null);
-      setHoveredTabContainerId(null);
-      setIsDragOver(false);
-      setDragOverPluginId(null);
-      window.__draggedPluginInfo = undefined;
-      window.__currentDragTargetTabId = null;
-  
-      document.querySelectorAll('.plugin-drag-over, .tab-container-hover, .tab-drag-indicator').forEach(el => el.classList.remove('plugin-drag-over', 'tab-container-hover'));
-      document.querySelectorAll('.tab-drag-indicator').forEach(el => el.remove());
+    // 🎯 清理插入位置指示器和空白区域预览
+    const cleanupInsertIndicators = () => {
+      const indicators = document.querySelectorAll('.insert-position-indicator, .insert-text-indicator, .empty-space-preview, .empty-space-text');
+      indicators.forEach(indicator => {
+        if (indicator.parentNode) {
+          indicator.parentNode.removeChild(indicator);
+        }
+      });
+    };
+    
+    // 🚀 处理TabContainer智能重排或空白区域放置
+    if (isContainerReposition) {
+      // 立即清理指示器
+      cleanupInsertIndicators();
       
-      document.body.classList.remove('dragging');
+      if (insertDetection.insertType === 'emptySpace') {
+        // 🆕 处理空白区域放置
+        console.log('🎯 执行空白区域放置:', {
+          容器: newItem.i,
+          目标位置: insertDetection.insertPosition,
+          目标尺寸: insertDetection.emptySpaceSize
+        });
+        
+        try {
+          // 调用空白区域放置功能
+          const { smartPlaceInEmptySpace } = useLayoutStore.getState();
+          smartPlaceInEmptySpace(
+            newItem.i, 
+            insertDetection.insertPosition, 
+            insertDetection.emptySpaceSize!
+          );
+          
+          // 显示成功提示
+          showEmptySpaceSuccessIndicator();
+          
+        } catch (error) {
+          console.error('空白区域放置失败:', error);
+          showRepositionErrorIndicator();
+        }
+      } else {
+        // 处理常规智能重排
+        console.log('🎯 执行TabContainer智能重排:', {
+          容器: newItem.i,
+          插入位置: insertDetection.insertPosition,
+          目标行容器: insertDetection.targetRowContainers.map((c: any) => c.i)
+        });
+        
+        try {
+          // 调用智能重排功能
+          const { smartRepositionContainer } = useLayoutStore.getState();
+          smartRepositionContainer(
+            newItem.i, 
+            insertDetection.insertPosition, 
+            insertDetection.targetRowContainers
+          );
+          
+          // 显示成功提示
+          showRepositionSuccessIndicator();
+          
+        } catch (error) {
+          console.error('智能重排失败:', error);
+          showRepositionErrorIndicator();
+        }
+      }
       
-      // 确保拖拽结束后总是保存布局
-      try {
-        if (!isCustomDrag) {
+      // 保存布局
+      setTimeout(() => {
+        try {
           const { saveCurrentLayout, currentLayoutId } = useLayoutStore.getState();
           if (currentLayoutId) {
             saveCurrentLayout();
-            console.log('拖拽结束 - 布局已保存到现有布局:', currentLayoutId);
+            console.log('智能重排结束 - 布局已保存到现有布局:', currentLayoutId);
           } else {
-            saveCurrentLayout('拖拽布局保存');
-            console.log('拖拽结束 - 布局已保存为新布局');
+            saveCurrentLayout('智能重排保存');
+            console.log('智能重排结束 - 布局已保存为新布局');
           }
-          console.log('拖拽结束后布局已成功保存到本地存储');
-        } else {
-          console.log('自定义拖拽结束，布局保存将在其他地方处理');
+          console.log('智能重排结束后布局已成功保存到本地存储');
+        } catch (error) {
+          console.error('智能重排后保存布局失败:', error);
         }
-      } catch (error) {
-        console.error('拖拽结束后保存布局失败:', error);
-      }
-    }, 50);
+      }, 200);
+      
+      // 清理插入检测信息
+      delete (window as any).__insertDetection;
+      
+    } else {
+      // 处理其他类型的拖拽结束
+      // 检查是否是自定义拖拽（标签间拖拽）
+      const isCustomDrag = window.__draggedPluginInfo?.tabId;
+      
+      // 清理插入位置指示器
+      cleanupInsertIndicators();
+      
+      setTimeout(() => {
+        setDraggedPluginId(null);
+        setHoveredTabContainerId(null);
+        setIsDragOver(false);
+        setDragOverPluginId(null);
+        window.__draggedPluginInfo = undefined;
+        window.__currentDragTargetTabId = null;
+    
+        document.querySelectorAll('.plugin-drag-over, .tab-container-hover, .tab-drag-indicator').forEach(el => el.classList.remove('plugin-drag-over', 'tab-container-hover'));
+        document.querySelectorAll('.tab-drag-indicator').forEach(el => el.remove());
+        
+        document.body.classList.remove('dragging');
+        
+        // 确保拖拽结束后总是保存布局
+        try {
+          if (!isCustomDrag) {
+            const { saveCurrentLayout, currentLayoutId } = useLayoutStore.getState();
+            if (currentLayoutId) {
+              saveCurrentLayout();
+              console.log('拖拽结束 - 布局已保存到现有布局:', currentLayoutId);
+            } else {
+              saveCurrentLayout('拖拽布局保存');
+              console.log('拖拽结束 - 布局已保存为新布局');
+            }
+            console.log('拖拽结束后布局已成功保存到本地存储');
+          } else {
+            console.log('自定义拖拽结束，布局保存将在其他地方处理');
+          }
+        } catch (error) {
+          console.error('拖拽结束后保存布局失败:', error);
+        }
+      }, 50);
+    }
   };
 
   useEffect(() => {
@@ -1404,6 +1557,196 @@ export default function GridLayout() {
     }, 1000);
   };
   
+  // 🎯 显示插入位置指示器
+  const showInsertPositionIndicator = (insertPosition: { x: number, y: number } | null, insertType: string) => {
+    if (!insertPosition || !gridRef.current || !window.__gridParams) return;
+    
+    // 移除旧的指示器
+    const oldIndicators = document.querySelectorAll('.insert-position-indicator, .insert-text-indicator');
+    oldIndicators.forEach(indicator => {
+      if (indicator.parentNode) {
+        indicator.parentNode.removeChild(indicator);
+      }
+    });
+    
+    const { rect, rowHeight, margin, colWidth } = window.__gridParams;
+    
+    // 计算指示器在屏幕上的位置
+    const screenX = rect.left + insertPosition.x * (colWidth + margin);
+    const screenY = rect.top + insertPosition.y * (rowHeight + margin);
+    
+    // 创建指示器元素
+    const indicator = document.createElement('div');
+    indicator.className = 'insert-position-indicator';
+    indicator.style.position = 'fixed';
+    indicator.style.left = `${screenX}px`;
+    indicator.style.top = `${screenY}px`;
+    indicator.style.width = '4px';
+    indicator.style.height = `${rowHeight}px`;
+    indicator.style.backgroundColor = '#3498db';
+    indicator.style.borderRadius = '2px';
+    indicator.style.zIndex = '1000';
+    indicator.style.boxShadow = '0 0 10px rgba(52, 152, 219, 0.5)';
+    indicator.style.animation = 'insert-pulse 1s infinite';
+    
+    // 添加脉冲动画样式（如果不存在）
+    if (!document.querySelector('#insert-animation-style')) {
+      const style = document.createElement('style');
+      style.id = 'insert-animation-style';
+      style.textContent = `
+        @keyframes insert-pulse {
+          0%, 100% { opacity: 0.6; transform: scaleX(1); }
+          50% { opacity: 1; transform: scaleX(1.5); }
+        }
+      `;
+      document.head.appendChild(style);
+    }
+    
+    // 添加文本提示
+    const textIndicator = document.createElement('div');
+    textIndicator.className = 'insert-text-indicator';
+    textIndicator.style.position = 'fixed';
+    textIndicator.style.left = `${screenX + 10}px`;
+    textIndicator.style.top = `${screenY - 25}px`;
+    textIndicator.style.backgroundColor = 'rgba(52, 152, 219, 0.9)';
+    textIndicator.style.color = 'white';
+    textIndicator.style.padding = '4px 8px';
+    textIndicator.style.borderRadius = '4px';
+    textIndicator.style.fontSize = '12px';
+    textIndicator.style.fontWeight = 'bold';
+    textIndicator.style.zIndex = '1001';
+    textIndicator.style.pointerEvents = 'none';
+    textIndicator.textContent = insertType === 'newRow' ? '插入新行' : '插入此处';
+    
+    document.body.appendChild(indicator);
+    document.body.appendChild(textIndicator);
+    
+    console.log('✅ 插入位置指示器已显示:', {
+      位置: `(${screenX}, ${screenY})`,
+      类型: insertType
+    });
+  };
+
+  // 🎯 显示重排成功指示器
+  const showRepositionSuccessIndicator = () => {
+    const indicator = document.createElement('div');
+    indicator.className = 'reposition-success-indicator';
+    indicator.style.position = 'fixed';
+    indicator.style.top = '20px';
+    indicator.style.right = '20px';
+    indicator.style.backgroundColor = 'rgba(39, 174, 96, 0.9)';
+    indicator.style.color = 'white';
+    indicator.style.padding = '12px 20px';
+    indicator.style.borderRadius = '6px';
+    indicator.style.fontSize = '14px';
+    indicator.style.fontWeight = 'bold';
+    indicator.style.zIndex = '10000';
+    indicator.style.boxShadow = '0 4px 12px rgba(0, 0, 0, 0.15)';
+    indicator.style.opacity = '0';
+    indicator.style.transform = 'translateY(-10px)';
+    indicator.style.transition = 'all 0.3s ease';
+    indicator.innerHTML = '✅ 智能重排完成';
+    
+    document.body.appendChild(indicator);
+    
+    // 显示动画
+    setTimeout(() => {
+      indicator.style.opacity = '1';
+      indicator.style.transform = 'translateY(0)';
+    }, 10);
+    
+    // 消失动画
+    setTimeout(() => {
+      indicator.style.opacity = '0';
+      indicator.style.transform = 'translateY(-10px)';
+      setTimeout(() => {
+        if (indicator.parentNode) {
+          indicator.parentNode.removeChild(indicator);
+        }
+      }, 300);
+    }, 2500);
+  };
+
+  // 🎯 显示重排错误指示器
+  const showRepositionErrorIndicator = () => {
+    const indicator = document.createElement('div');
+    indicator.className = 'reposition-error-indicator';
+    indicator.style.position = 'fixed';
+    indicator.style.top = '20px';
+    indicator.style.right = '20px';
+    indicator.style.backgroundColor = 'rgba(231, 76, 60, 0.9)';
+    indicator.style.color = 'white';
+    indicator.style.padding = '12px 20px';
+    indicator.style.borderRadius = '6px';
+    indicator.style.fontSize = '14px';
+    indicator.style.fontWeight = 'bold';
+    indicator.style.zIndex = '10000';
+    indicator.style.boxShadow = '0 4px 12px rgba(0, 0, 0, 0.15)';
+    indicator.style.opacity = '0';
+    indicator.style.transform = 'translateY(-10px)';
+    indicator.style.transition = 'all 0.3s ease';
+    indicator.innerHTML = '❌ 重排失败';
+    
+    document.body.appendChild(indicator);
+    
+    // 显示动画
+    setTimeout(() => {
+      indicator.style.opacity = '1';
+      indicator.style.transform = 'translateY(0)';
+    }, 10);
+    
+    // 消失动画
+    setTimeout(() => {
+      indicator.style.opacity = '0';
+      indicator.style.transform = 'translateY(-10px)';
+      setTimeout(() => {
+        if (indicator.parentNode) {
+          indicator.parentNode.removeChild(indicator);
+        }
+      }, 300);
+    }, 3000);
+  };
+  
+  // 🎯 显示空白区域放置成功指示器
+  const showEmptySpaceSuccessIndicator = () => {
+    const indicator = document.createElement('div');
+    indicator.className = 'empty-space-success-indicator';
+    indicator.style.position = 'fixed';
+    indicator.style.top = '20px';
+    indicator.style.right = '20px';
+    indicator.style.backgroundColor = 'rgba(46, 204, 113, 0.9)';
+    indicator.style.color = 'white';
+    indicator.style.padding = '12px 20px';
+    indicator.style.borderRadius = '6px';
+    indicator.style.fontSize = '14px';
+    indicator.style.fontWeight = 'bold';
+    indicator.style.zIndex = '10000';
+    indicator.style.boxShadow = '0 4px 12px rgba(0, 0, 0, 0.15)';
+    indicator.style.opacity = '0';
+    indicator.style.transform = 'translateY(-10px)';
+    indicator.style.transition = 'all 0.3s ease';
+    indicator.innerHTML = '📦 空白区域放置成功';
+    
+    document.body.appendChild(indicator);
+    
+    // 显示动画
+    setTimeout(() => {
+      indicator.style.opacity = '1';
+      indicator.style.transform = 'translateY(0)';
+    }, 10);
+    
+    // 消失动画
+    setTimeout(() => {
+      indicator.style.opacity = '0';
+      indicator.style.transform = 'translateY(-10px)';
+      setTimeout(() => {
+        if (indicator.parentNode) {
+          indicator.parentNode.removeChild(indicator);
+        }
+      }, 300);
+    }, 2500);
+  };
+  
   // 清理拖拽相关的元素和状态
   const cleanupDragElements = () => {
     try {
@@ -1556,6 +1899,86 @@ export default function GridLayout() {
       </div>
     );
   }
+  
+  // 🎯 显示空白区域预览
+  const showEmptySpacePreview = (
+    position: { x: number, y: number } | null, 
+    size: { w: number, h: number }
+  ) => {
+    if (!position || !gridRef.current || !window.__gridParams) return;
+    
+    // 移除旧的预览
+    const oldPreviews = document.querySelectorAll('.empty-space-preview, .empty-space-text');
+    oldPreviews.forEach(preview => {
+      if (preview.parentNode) {
+        preview.parentNode.removeChild(preview);
+      }
+    });
+    
+    const { rect, rowHeight, margin, colWidth } = window.__gridParams;
+    
+    // 计算预览区域在屏幕上的位置和尺寸
+    const screenX = rect.left + position.x * (colWidth + margin);
+    const screenY = rect.top + position.y * (rowHeight + margin);
+    const screenW = size.w * colWidth + (size.w - 1) * margin;
+    const screenH = size.h * rowHeight + (size.h - 1) * margin;
+    
+    // 创建空白区域预览框
+    const preview = document.createElement('div');
+    preview.className = 'empty-space-preview';
+    preview.style.position = 'fixed';
+    preview.style.left = `${screenX}px`;
+    preview.style.top = `${screenY}px`;
+    preview.style.width = `${screenW}px`;
+    preview.style.height = `${screenH}px`;
+    preview.style.backgroundColor = 'rgba(46, 204, 113, 0.2)';
+    preview.style.border = '3px dashed #2ecc71';
+    preview.style.borderRadius = '8px';
+    preview.style.zIndex = '1000';
+    preview.style.boxShadow = '0 0 15px rgba(46, 204, 113, 0.4)';
+    preview.style.animation = 'empty-space-pulse 1.5s infinite';
+    
+    // 添加脉冲动画样式（如果不存在）
+    if (!document.querySelector('#empty-space-animation-style')) {
+      const style = document.createElement('style');
+      style.id = 'empty-space-animation-style';
+      style.textContent = `
+        @keyframes empty-space-pulse {
+          0%, 100% { opacity: 0.6; transform: scale(1); }
+          50% { opacity: 0.9; transform: scale(1.02); }
+        }
+      `;
+      document.head.appendChild(style);
+    }
+    
+    // 添加文本提示
+    const textIndicator = document.createElement('div');
+    textIndicator.className = 'empty-space-text';
+    textIndicator.style.position = 'fixed';
+    textIndicator.style.left = `${screenX + screenW/2}px`;
+    textIndicator.style.top = `${screenY + screenH/2}px`;
+    textIndicator.style.transform = 'translate(-50%, -50%)';
+    textIndicator.style.backgroundColor = 'rgba(46, 204, 113, 0.9)';
+    textIndicator.style.color = 'white';
+    textIndicator.style.padding = '8px 16px';
+    textIndicator.style.borderRadius = '20px';
+    textIndicator.style.fontSize = '14px';
+    textIndicator.style.fontWeight = 'bold';
+    textIndicator.style.zIndex = '1001';
+    textIndicator.style.pointerEvents = 'none';
+    textIndicator.style.whiteSpace = 'nowrap';
+    textIndicator.style.boxShadow = '0 2px 8px rgba(0, 0, 0, 0.2)';
+    textIndicator.innerHTML = `📦 放置到空白区域<br><span style="font-size: 12px; opacity: 0.9;">尺寸: ${size.w}×${size.h}</span>`;
+    
+    document.body.appendChild(preview);
+    document.body.appendChild(textIndicator);
+    
+    console.log('✅ 空白区域预览已显示:', {
+      位置: `(${screenX}, ${screenY})`,
+      尺寸: `${screenW}×${screenH}`,
+      网格尺寸: `${size.w}×${size.h}`
+    });
+  };
   
   return (
     <div ref={gridRef}>

@@ -97,6 +97,18 @@ interface LayoutState {
   updateActiveContainer?: (containerId: string) => void;
   // 活跃容器列表
   activeContainers?: string[];
+  // 🚀 新增：智能容器重排功能
+  smartRepositionContainer: (
+    containerId: string, 
+    insertPosition: { x: number, y: number }, 
+    targetRowContainers: Layout[]
+  ) => void;
+  // 🆕 新增：空白区域智能放置功能
+  smartPlaceInEmptySpace: (
+    containerId: string,
+    position: { x: number, y: number },
+    size: { w: number, h: number }
+  ) => void;
 }
 
 // 默认添加的6个插件
@@ -240,7 +252,9 @@ const smartCompactLayout = (layout: Layout[], cols: number = 12): Layout[] => {
   let compactedLayout = intelligentRearrangement(layout, cols);
   
   // 第二步：基础垂直紧缩，移除空白行
-  compactedLayout = basicVerticalCompact(compactedLayout, cols);
+  // 🚫 暂时禁用垂直压缩，避免布局混乱
+  // compactedLayout = basicVerticalCompact(compactedLayout, cols);
+  console.log('📏 垂直压缩已禁用 - 保持原有垂直位置');
   
   // 第三步：水平优化，让元素扩展填充空白区域
   compactedLayout = horizontalSpaceOptimization(compactedLayout, cols);
@@ -2258,6 +2272,52 @@ export const useLayoutStore = create<LayoutState>()(
           layout: updatedLayout,
           tabContainers: finalTabContainers
         };
+      }),
+      // 🚀 新增：智能容器重排功能
+      smartRepositionContainer: (
+        containerId: string, 
+        insertPosition: { x: number, y: number }, 
+        targetRowContainers: Layout[]
+      ) => set((state) => {
+        console.log(`智能容器重排: ${containerId} 插入到位置: (${insertPosition.x}, ${insertPosition.y})`);
+        
+        // 找到对应的标签容器
+        const tabContainer = state.tabContainers.find(tab => tab.id === containerId);
+        if (!tabContainer) {
+          console.error(`未找到容器: ${containerId}`);
+          return state;
+        }
+        
+        // 创建新的布局
+        const newLayout = smartContainerReposition(state.layout, containerId, insertPosition, targetRowContainers);
+        
+        return {
+          ...state,
+          layout: newLayout
+        };
+      }),
+      // 🆕 新增：空白区域智能放置功能
+      smartPlaceInEmptySpace: (
+        containerId: string,
+        position: { x: number, y: number },
+        size: { w: number, h: number }
+      ) => set((state) => {
+        console.log(`智能放置容器: ${containerId} 放置到位置: (${position.x}, ${position.y})`);
+        
+        // 找到对应的标签容器
+        const tabContainer = state.tabContainers.find(tab => tab.id === containerId);
+        if (!tabContainer) {
+          console.error(`未找到容器: ${containerId}`);
+          return state;
+        }
+        
+        // 创建新的布局
+        const newLayout = smartPlaceInEmptySpace(state.layout, containerId, position, size);
+        
+        return {
+          ...state,
+          layout: newLayout
+        };
       })
     }),
     {
@@ -2454,6 +2514,8 @@ const intelligentSpaceFill = (layout: Layout[], removedItemBounds: { x: number, 
   });
   
   // 第三步：如果仍有剩余空间，进行垂直填充
+  // 🚫 暂时禁用垂直填充，因为逻辑混乱
+  /*
   if (remainingSpace && (remainingSpace.w > 0 || remainingSpace.h > 0)) {
     const verticalFillResult = performVerticalFill(updatedLayout, remainingSpace, cols);
     updatedLayout = verticalFillResult.layout;
@@ -2462,9 +2524,13 @@ const intelligentSpaceFill = (layout: Layout[], removedItemBounds: { x: number, 
       是否有填充: verticalFillResult.wasFilled
     });
   }
+  */
+  
+  console.log('📏 垂直填充已禁用 - 跳过垂直方向的智能填充');
   
   // 第四步：应用智能布局重排，确保整体布局最优
   const finalLayout = smartCompactLayout(updatedLayout, cols);
+  
   
   console.log('✅ 智能空间填充完成');
   
@@ -2823,4 +2889,587 @@ const findVerticalFillCandidates = (layout: Layout[], remainingSpace: { x: numbe
   });
   
   return candidates;
+};
+
+// 🚀 新增：智能TabContainer拖拽重排功能
+// 这个函数将容器拖拽到指定位置，并智能调整其他容器的大小和位置
+const smartContainerReposition = (
+  layout: Layout[], 
+  containerId: string, 
+  insertPosition: { x: number, y: number }, 
+  targetRowContainers: Layout[],
+  cols: number = 12
+): Layout[] => {
+  console.log('🎯 开始智能容器重排:', {
+    容器ID: containerId,
+    插入位置: insertPosition,
+    目标行容器数量: targetRowContainers.length
+  });
+
+  const workingLayout = [...layout];
+  const containerToMove = workingLayout.find(item => item.i === containerId);
+  
+  if (!containerToMove) {
+    console.error('未找到要移动的容器:', containerId);
+    return layout;
+  }
+
+  // 记录原始位置信息，用于后续空白填充
+  const originalBounds = {
+    x: containerToMove.x,
+    y: containerToMove.y, 
+    w: containerToMove.w,
+    h: containerToMove.h
+  };
+
+  // 第一步：在目标位置为容器分配空间
+  const spaceAllocationResult = allocateSpaceForContainer(
+    workingLayout, 
+    containerToMove, 
+    insertPosition, 
+    targetRowContainers, 
+    cols
+  );
+
+  let updatedLayout = spaceAllocationResult.layout;
+  const finalPosition = spaceAllocationResult.finalPosition;
+
+  // 第二步：移动容器到新位置
+  updatedLayout = updatedLayout.map(item => {
+    if (item.i === containerId) {
+      return {
+        ...item,
+        x: finalPosition.x,
+        y: finalPosition.y,
+        w: finalPosition.w,
+        h: finalPosition.h
+      };
+    }
+    return item;
+  });
+
+  console.log('📍 容器移动到新位置:', {
+    容器: containerId,
+    新位置: `(${finalPosition.x},${finalPosition.y}) ${finalPosition.w}x${finalPosition.h}`,
+    原位置: `(${originalBounds.x},${originalBounds.y}) ${originalBounds.w}x${originalBounds.h}`
+  });
+
+  // 第三步：智能填充原位置留下的空白
+  updatedLayout = intelligentSpaceFill(updatedLayout, originalBounds, cols);
+
+  // 第四步：整体布局优化
+  updatedLayout = smartCompactLayout(updatedLayout, cols);
+
+  console.log('✅ 智能容器重排完成');
+  return updatedLayout;
+};
+
+// 🎯 为容器在目标位置分配空间
+const allocateSpaceForContainer = (
+  layout: Layout[], 
+  containerToMove: Layout, 
+  insertPosition: { x: number, y: number }, 
+  targetRowContainers: Layout[],
+  cols: number = 12
+): {
+  layout: Layout[];
+  finalPosition: { x: number, y: number, w: number, h: number };
+} => {
+  const workingLayout = [...layout];
+  
+  // 计算需要的空间
+  const requiredSpace = {
+    x: insertPosition.x,
+    y: insertPosition.y,
+    w: containerToMove.w,
+    h: containerToMove.h
+  };
+
+  console.log('💫 为容器分配空间:', {
+    需要的空间: `(${requiredSpace.x},${requiredSpace.y}) ${requiredSpace.w}x${requiredSpace.h}`,
+    目标行容器: targetRowContainers.map(c => c.i)
+  });
+
+  // 如果目标行为空，直接放置
+  if (targetRowContainers.length === 0) {
+    return {
+      layout: workingLayout,
+      finalPosition: requiredSpace
+    };
+  }
+
+  // 智能调整目标行中的容器大小，为新容器让出空间
+  const adjustmentResult = adjustRowContainersForInsertion(
+    workingLayout, 
+    requiredSpace, 
+    targetRowContainers, 
+    cols
+  );
+
+  return {
+    layout: adjustmentResult.layout,
+    finalPosition: adjustmentResult.finalPosition
+  };
+};
+
+// 🔧 调整行中的容器大小，为插入的容器让出空间
+const adjustRowContainersForInsertion = (
+  layout: Layout[], 
+  insertSpace: { x: number, y: number, w: number, h: number }, 
+  rowContainers: Layout[],
+  cols: number = 12
+): {
+  layout: Layout[];
+  finalPosition: { x: number, y: number, w: number, h: number };
+} => {
+  const workingLayout = [...layout];
+  
+  // 按x坐标排序容器
+  const sortedContainers = [...rowContainers].sort((a, b) => a.x - b.x);
+  
+  console.log('🔧 调整行容器以插入新容器:', {
+    插入空间: `(${insertSpace.x},${insertSpace.y}) ${insertSpace.w}x${insertSpace.h}`,
+    行容器: sortedContainers.map(c => `${c.i}:(${c.x},${c.y}) ${c.w}x${c.h}`)
+  });
+
+  // 找到插入位置的左右容器
+  let leftContainers: Layout[] = [];
+  let rightContainers: Layout[] = [];
+  
+  sortedContainers.forEach(container => {
+    if (container.x + container.w <= insertSpace.x) {
+      leftContainers.push(container);
+    } else if (container.x >= insertSpace.x + insertSpace.w) {
+      rightContainers.push(container);
+    }
+  });
+
+  // 如果插入位置与现有容器重叠，需要调整
+  const overlappingContainers = sortedContainers.filter(container => {
+    return !(container.x + container.w <= insertSpace.x || container.x >= insertSpace.x + insertSpace.w);
+  });
+
+  if (overlappingContainers.length > 0) {
+    console.log('🔀 发现重叠容器，需要调整:', overlappingContainers.map(c => c.i));
+    
+    // 策略：压缩重叠的容器，为新容器让出空间
+    const totalAvailableWidth = cols;
+    const requiredWidth = insertSpace.w;
+    
+    // 计算重叠容器的总宽度
+    const overlappingTotalWidth = overlappingContainers.reduce((sum, c) => sum + c.w, 0);
+    
+    // 如果可以通过压缩让出空间
+    if (overlappingTotalWidth > requiredWidth) {
+      const compressionRatio = (overlappingTotalWidth - requiredWidth) / overlappingTotalWidth;
+      
+      console.log('📏 通过压缩让出空间:', {
+        重叠容器总宽度: overlappingTotalWidth,
+        需要宽度: requiredWidth,
+        压缩比例: compressionRatio
+      });
+
+      // 按比例压缩重叠的容器
+      overlappingContainers.forEach(container => {
+        const newWidth = Math.max(3, Math.floor(container.w * compressionRatio)); // 最小宽度3
+        const containerIndex = workingLayout.findIndex(item => item.i === container.i);
+        
+        if (containerIndex !== -1) {
+          workingLayout[containerIndex] = {
+            ...workingLayout[containerIndex],
+            w: newWidth
+          };
+          
+          console.log(`📐 压缩容器 ${container.i}: ${container.w} -> ${newWidth}`);
+        }
+      });
+
+      // 重新排列压缩后的容器位置
+      let currentX = 0;
+      const sameRowContainers = workingLayout
+        .filter(item => item.y === insertSpace.y && item.i !== insertSpace.x.toString())
+        .sort((a, b) => a.x - b.x);
+
+      sameRowContainers.forEach(container => {
+        if (currentX === insertSpace.x) {
+          currentX += insertSpace.w; // 为新容器预留空间
+        }
+        
+        const containerIndex = workingLayout.findIndex(item => item.i === container.i);
+        if (containerIndex !== -1) {
+          workingLayout[containerIndex] = {
+            ...workingLayout[containerIndex],
+            x: currentX
+          };
+          currentX += workingLayout[containerIndex].w;
+        }
+      });
+    } else {
+      // 如果压缩不够，将重叠的容器移动到其他位置
+      console.log('🔄 压缩不够，移动重叠容器到其他位置');
+      
+      overlappingContainers.forEach(container => {
+        const newPosition = findContainerAlternativePosition(workingLayout, container, cols);
+        const containerIndex = workingLayout.findIndex(item => item.i === container.i);
+        
+        if (containerIndex !== -1 && newPosition) {
+          workingLayout[containerIndex] = {
+            ...workingLayout[containerIndex],
+            x: newPosition.x,
+            y: newPosition.y
+          };
+          
+          console.log(`🚀 移动容器 ${container.i} 到新位置: (${newPosition.x},${newPosition.y})`);
+        }
+      });
+    }
+  }
+
+  // 调整右侧容器的位置
+  rightContainers.forEach(container => {
+    const containerIndex = workingLayout.findIndex(item => item.i === container.i);
+    if (containerIndex !== -1) {
+      const newX = Math.min(cols - container.w, container.x + insertSpace.w);
+      workingLayout[containerIndex] = {
+        ...workingLayout[containerIndex],
+        x: newX
+      };
+      
+      console.log(`➡️  调整右侧容器 ${container.i} 位置: ${container.x} -> ${newX}`);
+    }
+  });
+
+  return {
+    layout: workingLayout,
+    finalPosition: insertSpace
+  };
+};
+
+// 🔍 为容器寻找替代位置
+const findContainerAlternativePosition = (layout: Layout[], container: Layout, cols: number = 12): { x: number, y: number } | null => {
+  // 创建网格占用图
+  const maxY = Math.max(...layout.map(item => item.y + item.h), 10);
+  const grid: boolean[][] = Array(maxY + 5).fill(null).map(() => Array(cols).fill(false));
+  
+  // 标记已占用的位置（排除当前容器）
+  layout.forEach(item => {
+    if (item.i !== container.i) {
+      for (let y = item.y; y < item.y + item.h; y++) {
+        for (let x = item.x; x < item.x + item.w; x++) {
+          if (grid[y] && grid[y][x] !== undefined) {
+            grid[y][x] = true;
+          }
+        }
+      }
+    }
+  });
+
+  // 寻找第一个可用位置
+  for (let y = 0; y < grid.length; y++) {
+    for (let x = 0; x <= cols - container.w; x++) {
+      if (canPlaceAtPosition(grid, x, y, container.w, container.h, cols, grid.length)) {
+        return { x, y };
+      }
+    }
+  }
+
+  // 如果没找到，在底部添加新行
+  return { x: 0, y: maxY + 1 };
+};
+
+// 🎯 检测TabContainer拖拽插入位置
+export const detectContainerInsertPosition = (
+  layout: Layout[], 
+  draggedContainerId: string, 
+  mouseX: number, 
+  mouseY: number,
+  gridParams: {
+    rect: DOMRect;
+    rowHeight: number;
+    margin: number;
+    cols: number;
+    colWidth: number;
+  }
+): {
+  insertPosition: { x: number, y: number } | null;
+  targetRowContainers: Layout[];
+  insertType: 'between' | 'newRow' | 'replace' | 'emptySpace';
+  emptySpaceSize?: { w: number, h: number };
+} | null => {
+  const { rect, rowHeight, margin, cols, colWidth } = gridParams;
+  
+  // 将鼠标位置转换为网格坐标
+  const gridX = Math.floor((mouseX - rect.left) / (colWidth + margin));
+  const gridY = Math.floor((mouseY - rect.top) / (rowHeight + margin));
+  
+  // 限制在有效范围内
+  const clampedX = Math.max(0, Math.min(gridX, cols - 1));
+  const clampedY = Math.max(0, gridY);
+  
+  // 排除被拖拽的容器
+  const otherContainers = layout.filter(item => item.i !== draggedContainerId);
+  
+  console.log('🎯 检测插入位置:', {
+    鼠标网格坐标: `(${clampedX}, ${clampedY})`,
+    容器总数: otherContainers.length
+  });
+  
+  // 🆕 优先检测空白区域
+  const emptySpaceDetection = detectEmptySpaceAt(otherContainers, clampedX, clampedY, cols);
+  if (emptySpaceDetection) {
+    console.log('✅ 检测到空白区域:', emptySpaceDetection);
+    return {
+      insertPosition: { x: emptySpaceDetection.x, y: emptySpaceDetection.y },
+      targetRowContainers: [],
+      insertType: 'emptySpace',
+      emptySpaceSize: { w: emptySpaceDetection.w, h: emptySpaceDetection.h }
+    };
+  }
+  
+  // 检测同行容器（用于between插入）
+  const targetRow = clampedY;
+  const rowContainers = otherContainers.filter(item => 
+    item.y <= targetRow && item.y + item.h > targetRow
+  ).sort((a, b) => a.x - b.x);
+  
+  if (rowContainers.length === 0) {
+    // 空行 - 新行插入
+    return {
+      insertPosition: { x: 0, y: clampedY },
+      targetRowContainers: [],
+      insertType: 'newRow'
+    };
+  }
+  
+  // 检测容器间插入位置
+  for (let i = 0; i <= rowContainers.length; i++) {
+    let insertX: number;
+    
+    if (i === 0) {
+      // 行首插入
+      insertX = 0;
+      if (clampedX < rowContainers[0].x) {
+        return {
+          insertPosition: { x: insertX, y: targetRow },
+          targetRowContainers: rowContainers,
+          insertType: 'between'
+        };
+      }
+    } else if (i === rowContainers.length) {
+      // 行尾插入
+      const lastContainer = rowContainers[rowContainers.length - 1];
+      insertX = lastContainer.x + lastContainer.w;
+      if (clampedX >= insertX) {
+        return {
+          insertPosition: { x: insertX, y: targetRow },
+          targetRowContainers: rowContainers,
+          insertType: 'between'
+        };
+      }
+    } else {
+      // 容器间插入
+      const leftContainer = rowContainers[i - 1];
+      const rightContainer = rowContainers[i];
+      const leftEdge = leftContainer.x + leftContainer.w;
+      const rightEdge = rightContainer.x;
+      
+      if (clampedX >= leftEdge && clampedX < rightEdge) {
+        return {
+          insertPosition: { x: leftEdge, y: targetRow },
+          targetRowContainers: rowContainers,
+          insertType: 'between'
+        };
+      }
+    }
+  }
+  
+  return null;
+};
+
+// 🆕 检测指定位置的空白区域
+const detectEmptySpaceAt = (
+  layout: Layout[], 
+  targetX: number, 
+  targetY: number, 
+  cols: number = 12
+): { x: number, y: number, w: number, h: number } | null => {
+  // 检查目标位置是否被占用
+  const isOccupied = layout.some(item => 
+    targetX >= item.x && 
+    targetX < item.x + item.w && 
+    targetY >= item.y && 
+    targetY < item.y + item.h
+  );
+  
+  if (isOccupied) {
+    return null; // 位置被占用，不是空白区域
+  }
+  
+  // 寻找这个空白区域的边界
+  let spaceX = targetX;
+  let spaceY = targetY;
+  let spaceW = 1;
+  let spaceH = 1;
+  
+  // 🔍 向左扩展，找到空白区域的左边界
+  while (spaceX > 0) {
+    const testX = spaceX - 1;
+    const hasContainer = layout.some(item => 
+      testX >= item.x && 
+      testX < item.x + item.w && 
+      targetY >= item.y && 
+      targetY < item.y + item.h
+    );
+    
+    if (hasContainer) break;
+    spaceX = testX;
+    spaceW++;
+  }
+  
+  // 🔍 向右扩展，找到空白区域的右边界
+  let rightBoundary = spaceX + spaceW;
+  while (rightBoundary < cols) {
+    const hasContainer = layout.some(item => 
+      rightBoundary >= item.x && 
+      rightBoundary < item.x + item.w && 
+      targetY >= item.y && 
+      targetY < item.y + item.h
+    );
+    
+    if (hasContainer) break;
+    rightBoundary++;
+  }
+  spaceW = rightBoundary - spaceX;
+  
+  // 🔍 向上扩展，找到空白区域的上边界
+  while (spaceY > 0) {
+    const testY = spaceY - 1;
+    let rowHasContainer = false;
+    
+    // 检查这一行在我们的宽度范围内是否有容器
+    for (let x = spaceX; x < spaceX + spaceW; x++) {
+      const hasContainer = layout.some(item => 
+        x >= item.x && 
+        x < item.x + item.w && 
+        testY >= item.y && 
+        testY < item.y + item.h
+      );
+      
+      if (hasContainer) {
+        rowHasContainer = true;
+        break;
+      }
+    }
+    
+    if (rowHasContainer) break;
+    spaceY = testY;
+    spaceH++;
+  }
+  
+  // 🔍 向下扩展，找到空白区域的下边界
+  let bottomBoundary = spaceY + spaceH;
+  const maxY = Math.max(0, ...layout.map(item => item.y + item.h));
+  
+  while (bottomBoundary <= maxY + 2) { // 允许向下扩展到布局外
+    let rowHasContainer = false;
+    
+    // 检查这一行在我们的宽度范围内是否有容器
+    for (let x = spaceX; x < spaceX + spaceW; x++) {
+      const hasContainer = layout.some(item => 
+        x >= item.x && 
+        x < item.x + item.w && 
+        bottomBoundary >= item.y && 
+        bottomBoundary < item.y + item.h
+      );
+      
+      if (hasContainer) {
+        rowHasContainer = true;
+        break;
+      }
+    }
+    
+    if (rowHasContainer) break;
+    bottomBoundary++;
+  }
+  spaceH = bottomBoundary - spaceY;
+  
+  // 🎯 优化空白区域尺寸
+  // 确保宽度合理（最小2格，最大占用可用宽度）
+  spaceW = Math.max(2, Math.min(spaceW, cols - spaceX));
+  // 确保高度合理（最小2格，最大8格）
+  spaceH = Math.max(2, Math.min(spaceH, 8));
+  
+  console.log('🔍 空白区域分析:', {
+    目标位置: `(${targetX}, ${targetY})`,
+    检测区域: `(${spaceX}, ${spaceY}) ${spaceW}x${spaceH}`,
+    布局最大Y: maxY
+  });
+  
+  return {
+    x: spaceX,
+    y: spaceY,
+    w: spaceW,
+    h: spaceH
+  };
+};
+
+// 🆕 空白区域智能放置算法
+const smartPlaceInEmptySpace = (
+  layout: Layout[], 
+  containerId: string, 
+  position: { x: number, y: number }, 
+  size: { w: number, h: number }
+): Layout[] => {
+  console.log('🎯 执行空白区域智能放置:', {
+    容器: containerId,
+    目标位置: `(${position.x}, ${position.y})`,
+    目标尺寸: `${size.w}x${size.h}`
+  });
+  
+  const updatedLayout = [...layout];
+  
+  // 找到要移动的容器
+  const containerIndex = updatedLayout.findIndex(item => item.i === containerId);
+  if (containerIndex === -1) {
+    console.error(`容器 ${containerId} 未找到`);
+    return layout;
+  }
+  
+  const originalContainer = updatedLayout[containerIndex];
+  console.log(`📦 原始容器信息:`, {
+    位置: `(${originalContainer.x}, ${originalContainer.y})`,
+    尺寸: `${originalContainer.w}x${originalContainer.h}`
+  });
+  
+  // 🎯 记录原始位置，用于后续空间填充
+  const originalBounds = {
+    x: originalContainer.x,
+    y: originalContainer.y,
+    w: originalContainer.w,
+    h: originalContainer.h
+  };
+  
+  // 🚀 更新容器到新位置和新尺寸
+  updatedLayout[containerIndex] = {
+    ...originalContainer,
+    x: position.x,
+    y: position.y,
+    w: size.w,
+    h: size.h
+  };
+  
+  console.log(`✅ 容器已放置到空白区域:`, {
+    新位置: `(${position.x}, ${position.y})`,
+    新尺寸: `${size.w}x${size.h}`
+  });
+  
+  // 🔧 对原始位置进行智能空间填充
+  let finalLayout = intelligentSpaceFill(updatedLayout, originalBounds);
+  
+  // 🎯 应用最终的布局优化
+  finalLayout = smartCompactLayout(finalLayout);
+  
+  console.log('✅ 空白区域放置完成');
+  
+  return finalLayout;
 };
